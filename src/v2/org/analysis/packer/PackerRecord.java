@@ -13,7 +13,13 @@ public class PackerRecord {
 	
 	public String getPackerTechniqueRecord ()
 	{
-		return this.pTechRecord.substring(1, this.pTechRecord.length());
+//		return this.pTechRecord.substring(1, this.pTechRecord.length());
+		
+		if (this.pTechRecord.length() > 1) {
+			return this.pTechRecord.substring(1, this.pTechRecord.length());
+		}
+		
+		return "";
 	}
 	
 	public void updatePackerTechniqueRecord (String tech)
