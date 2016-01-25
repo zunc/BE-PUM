@@ -1,11 +1,11 @@
 package v2.org.analysis.value;
 
-import v2.org.analysis.complement.BitVector;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import v2.org.analysis.complement.BitVector;
 
 public class HybridValue implements Value {
 	private Value left, right;
@@ -84,16 +84,18 @@ public class HybridValue implements Value {
 	public void setConnector(String con) {
 		String t = normalizeOp(con);
 
-		for (int i = 0; i < HybridValue.MAX_CON; i++)
+		for (int i = 0; i < HybridValue.MAX_CON; i++) {
 			if (this.con_mean[i].equals(t)) {
 				this.connector = i;
 				return;
 			}
+		}
 	}
 
 	private String normalizeOp(String con) {
-		if (con.toLowerCase().equals("mode"))
+		if (con.toLowerCase().equals("mode")) {
 			return "%";
+		}
 
 		return con.toLowerCase();
 	}
@@ -111,15 +113,16 @@ public class HybridValue implements Value {
 	public Value movFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
+		if (exp instanceof LongValue) {
 			result = new LongValue(((LongValue) exp).getValue());
-		else if (exp instanceof SymbolValue)
+		} else if (exp instanceof SymbolValue) {
 			result = new SymbolValue(((SymbolValue) exp).getVarName());
-		else if (exp instanceof HybridValue)
+		} else if (exp instanceof HybridValue) {
 			result = new HybridValue(((HybridValue) exp).getLeft(), ((HybridValue) exp).getConnector(),
 					((HybridValue) exp).getRight());
-		else if (exp instanceof TopValue)
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -127,20 +130,23 @@ public class HybridValue implements Value {
 	public Value addFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "+", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "+", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "+", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "+", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "+", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "+", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
+	@Override
 	public HybridValue clone() {
-		if (right == null)
+		if (right == null) {
 			return new HybridValue(left.clone(), connector, null);
+		}
 
 		return new HybridValue(left.clone(), connector, right.clone());
 	}
@@ -149,14 +155,15 @@ public class HybridValue implements Value {
 	public Value subFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "-", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "-", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "-", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "-", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "-", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "-", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -164,42 +171,45 @@ public class HybridValue implements Value {
 	public Value unsignedMulFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
 	@Override
 	public Value signedMulFunction(Value exp, int size) {
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
 	@Override
 	public Value signedMulFunction(Value exp) {
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "*", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "*", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -207,28 +217,30 @@ public class HybridValue implements Value {
 	public Value unsignedDivFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "/", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "/", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "/", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "/", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "/", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "/", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
 	@Override
 	public Value signedDivFunction(Value exp) {
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "/", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "/", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "/", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "/", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "/", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "/", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -236,14 +248,15 @@ public class HybridValue implements Value {
 	public Value andFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "and", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "and", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "and", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "and", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "and", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "and", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -251,35 +264,37 @@ public class HybridValue implements Value {
 	public Value orFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "or", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "or", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "or", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "or", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "or", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "or", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
 	@Override
 	public Value notFunction() {
 		// TODO Auto-generated method stub
-		return this.clone();
+		return this;
 	}
 
 	@Override
 	public Value xorFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -287,14 +302,15 @@ public class HybridValue implements Value {
 	public Value rrFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
@@ -302,64 +318,67 @@ public class HybridValue implements Value {
 	public Value rlFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "xor", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "xor", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
 	@Override
 	public String toStringPreFix() {
 		// TODO Auto-generated method stub
-		if (getConnector().equals("!="))
+		if (getConnector().equals("!=")) {
 			return "(not(=" + " " + left.toStringPreFix() + " " + right.toStringPreFix() + "))";
+		}
 		return "(" + getBVConnector() + " " + left.toStringPreFix() + " " + right.toStringPreFix() + ")";
 	}
 
 	private String getBVConnector() {
 		// TODO Auto-generated method stub
 		String result = getConnector();
-		if (result.equals("and"))
+		if (result.equals("and")) {
 			result = "bvand";
-		else if (result.equals("or"))
+		} else if (result.equals("or")) {
 			result = "bvor";
-		else if (result.equals("not"))
+		} else if (result.equals("not")) {
 			result = "bvnot";
-		else if (result.equals("xor"))
+		} else if (result.equals("xor")) {
 			result = "bvxor";
-		else if (result.equals("mod") || result.equals("%"))
+		} else if (result.equals("mod") || result.equals("%")) {
 			result = "bvsmod";
-		else if (result.equals("+"))
+		} else if (result.equals("+")) {
 			result = "bvadd";
-		else if (result.equals("-"))
+		} else if (result.equals("-")) {
 			result = "bvsub";
-		else if (result.equals("*"))
+		} else if (result.equals("*")) {
 			result = "bvmul";
-		else if (result.equals("/"))
+		} else if (result.equals("/")) {
 			result = "bvsdiv";
-		else if (result.equals("<="))
+		} else if (result.equals("<=")) {
 			result = "bvsle";
-		else if (result.equals("<"))
+		} else if (result.equals("<")) {
 			result = "bvslt";
-		else if (result.equals(">="))
+		} else if (result.equals(">=")) {
 			result = "bvsge";
-		else if (result.equals(">"))
+		} else if (result.equals(">")) {
 			result = "bvsgt";
-		else if (result.equals("=="))
+		} else if (result.equals("==")) {
 			result = "=";
-		else if (result.equals("u<="))
+		} else if (result.equals("u<=")) {
 			result = "bvule";
-		else if (result.equals("u<"))
+		} else if (result.equals("u<")) {
 			result = "bvult";
-		else if (result.equals("u>="))
+		} else if (result.equals("u>=")) {
 			result = "bvuge";
-		else if (result.equals("u>"))
+		} else if (result.equals("u>")) {
 			result = "bvugt";
+		}
 
 		return result;
 	}
@@ -371,53 +390,68 @@ public class HybridValue implements Value {
 		left.setValueMap(z3Value);
 		right.setValueMap(z3Value);
 		Value l = left.evaluate(z3Value);
-		if (!(l instanceof LongValue))
+		if (!(l instanceof LongValue)) {
 			return this;
+		}
 		LongValue l1 = (LongValue) l;
 
 		Value r = right.evaluate(z3Value);
-		if (!(r instanceof LongValue))
+		if (!(r instanceof LongValue)) {
 			return this;
+		}
 		LongValue r1 = (LongValue) r;
 
-		if (getConnector().equals("+"))
+		if (getConnector().equals("+")) {
 			return new LongValue(BitVector.add(r1.getValue(), l1.getValue()));
+		}
 
-		if (getConnector().equals("-"))
+		if (getConnector().equals("-")) {
 			return new LongValue(BitVector.sub(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("*"))
+		if (getConnector().equals("*")) {
 			return new LongValue(BitVector.signedMul(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("/"))
+		if (getConnector().equals("/")) {
 			return new LongValue(BitVector.unsignedDiv(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("mod") || getConnector().equals("%"))
+		if (getConnector().equals("mod") || getConnector().equals("%")) {
 			return new LongValue(BitVector.mod(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("pow") || getConnector().equals("^"))
+		if (getConnector().equals("pow") || getConnector().equals("^")) {
 			return new LongValue(BitVector.pow(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("and"))
+		if (getConnector().equals("and")) {
 			return new LongValue(BitVector.and(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("or"))
+		if (getConnector().equals("or")) {
 			return new LongValue(BitVector.or(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals("xor"))
+		if (getConnector().equals("xor")) {
 			return new LongValue(BitVector.xor(l1.getValue(), r1.getValue()));
+		}
 
-		if (getConnector().equals(">"))
+		if (getConnector().equals(">")) {
 			return new BooleanValue(BitVector.gt(((LongValue) l).getValue(), ((LongValue) r).getValue()));
+		}
 
-		if (getConnector().equals(">="))
+		if (getConnector().equals(">=")) {
 			return new BooleanValue(BitVector.ge(((LongValue) l).getValue(), ((LongValue) r).getValue()));
+		}
 
-		if (getConnector().equals("<"))
+		if (getConnector().equals("<")) {
 			return new BooleanValue(BitVector.lt(((LongValue) l).getValue(), ((LongValue) r).getValue()));
+		}
 
-		if (getConnector().equals("<="))
+		if (getConnector().equals("<=")) {
 			return new BooleanValue(BitVector.le(((LongValue) l).getValue(), ((LongValue) r).getValue()));
+		}
 
 		return this;
 	}
@@ -461,7 +495,7 @@ public class HybridValue implements Value {
 	@Override
 	public Value powFunction(int i) {
 		// TODO Auto-generated method stub
-		return new HybridValue(this.clone(), "pow", new LongValue(i));
+		return new HybridValue(this, "pow", new LongValue(i));
 	}
 
 	@Override
@@ -470,14 +504,16 @@ public class HybridValue implements Value {
 		ArrayList<String> result = new ArrayList<String>();
 		if (left != null) {
 			List<String> temp = left.getVariable();
-			if (temp != null)
+			if (temp != null) {
 				result.addAll(temp);
+			}
 		}
 
 		if (right != null) {
 			List<String> temp = right.getVariable();
-			if (temp != null)
+			if (temp != null) {
 				result.addAll(temp);
+			}
 		}
 
 		return result;
@@ -487,28 +523,30 @@ public class HybridValue implements Value {
 	public Value modFunction(Value exp) {
 		// TODO Auto-generated method stub
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "%", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "%", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "%", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "%", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "%", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "%", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 
 	@Override
 	public Value powFunction(Value exp) {
 		Value result = null;
-		if (exp instanceof LongValue)
-			result = new HybridValue(this.clone(), "^", exp);
-		else if (exp instanceof SymbolValue)
-			result = new HybridValue(this.clone(), "^", exp);
-		else if (exp instanceof HybridValue)
-			result = new HybridValue(this.clone(), "^", exp);
-		else if (exp instanceof TopValue)
+		if (exp instanceof LongValue) {
+			result = new HybridValue(this, "^", exp);
+		} else if (exp instanceof SymbolValue) {
+			result = new HybridValue(this, "^", exp);
+		} else if (exp instanceof HybridValue) {
+			result = new HybridValue(this, "^", exp);
+		} else if (exp instanceof TopValue) {
 			return new TopValue();
+		}
 		return result;
 	}
 }

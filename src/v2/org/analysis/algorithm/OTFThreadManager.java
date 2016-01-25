@@ -20,7 +20,7 @@ import v2.org.analysis.path.BPPath;
  */
 public class OTFThreadManager {
 
-	private static final boolean IS_MULTI_THREAD = true;
+	private static final boolean IS_MULTI_THREAD = false;
 	private static final int DEFAULT_NUM_OF_CORES = 1;
 
 	/**

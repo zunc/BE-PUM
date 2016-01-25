@@ -55,7 +55,7 @@ public class Environment {
 		// register.mov("edx", new
 		// LongValue(Program.getProgram().getEntryPoint()
 		// .getValue()));
-//		register.mov("edx", new LongValue(0x7C90E4F4));
+		register.mov("edx", new LongValue(0x7C90E4F4));
 		register.mov("esi", new LongValue(0xFFFFFFFF));
 //		register.mov("ecx", new LongValue(0x12FFB0));
 		register.mov("edi", new LongValue(0x7C910208));

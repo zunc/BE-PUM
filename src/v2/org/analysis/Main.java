@@ -44,12 +44,8 @@ import org.jakstab.util.Characters;
 import org.jakstab.util.Logger;
 
 import v2.org.analysis.algorithm.OTFModelGeneration;
-import v2.org.analysis.apihandle.winapi.kernel32.Kernel32DLL;
 import v2.org.analysis.cfg.BPCFG;
-import v2.org.analysis.statistics.FileProcess;
 import antlr.ANTLRException;
-
-import com.sun.jna.WString;
 
 public class Main {
 	static {
@@ -597,31 +593,31 @@ public class Main {
 					+ String.format("%8d", cfg.getInstructionCount()));
 			System.out.println("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
 			System.out.println("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
-			FileProcess fullResultFile = program.getFullResultFile();
+//			FileProcess fullResultFile = program.getFullResultFile();
 
-			Kernel32DLL.INSTANCE.SetCurrentDirectory(new WString(System.getProperty("user.dir")));
-			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
-			fullResultFile.appendFile("   Statistics for On-The-Fly Model Generation of BE-PUM");
-			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
-			fullResultFile.appendFile("   Filename:                     " + program.getFileName());
-			fullResultFile.appendFile("   Runtime:                     "
-					+ String.format("%8dms", (overallEndTime - overallStartTime)));
-			fullResultFile.appendFile("   Instructions:                        "
-					+ String.format("%8d", cfg.getInstructionCount()));
-			fullResultFile.appendFile("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
-			fullResultFile.appendFile("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
+//			Kernel32DLL.INSTANCE.SetCurrentDirectory(new WString(System.getProperty("user.dir")));
+//			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
+//			fullResultFile.appendFile("   Statistics for On-The-Fly Model Generation of BE-PUM");
+//			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
+//			fullResultFile.appendFile("   Filename:                     " + program.getFileName());
+//			fullResultFile.appendFile("   Runtime:                     "
+//					+ String.format("%8dms", (overallEndTime - overallStartTime)));
+//			fullResultFile.appendFile("   Instructions:                        "
+//					+ String.format("%8d", cfg.getInstructionCount()));
+//			fullResultFile.appendFile("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
+//			fullResultFile.appendFile("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
 
-			FileProcess resultFile = program.getResultFile();
-			resultFile.appendFile(program.getFileName() + "\t"
-					+ String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
-					+ String.format("%8d", cfg.getVertexCount()) + "\t" + String.format("%8d", cfg.getEdgeCount())
-					+ "\t" + program.getTechnique() + "\t" + program.getDetailTechnique());
-
-			program.getResultFileTemp().appendInLine(program.getDetailTechnique());
-			program.getResultFileTemp().appendInLine(
-					'\t' + String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
-							+ String.format("%8d", cfg.getVertexCount()) + "\t"
-							+ String.format("%8d", cfg.getEdgeCount()));
+//			FileProcess resultFile = program.getResultFile();
+//			resultFile.appendFile(program.getFileName() + "\t"
+//					+ String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
+//					+ String.format("%8d", cfg.getVertexCount()) + "\t" + String.format("%8d", cfg.getEdgeCount())
+//					+ "\t" + program.getTechnique() + "\t" + program.getDetailTechnique());
+//
+//			program.getResultFileTemp().appendInLine(program.getDetailTechnique());
+//			program.getResultFileTemp().appendInLine(
+//					'\t' + String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
+//							+ String.format("%8d", cfg.getVertexCount()) + "\t"
+//							+ String.format("%8d", cfg.getEdgeCount()));
 
 			// Comparison between IDA and BE-PUM
 			// String f = program.generatePathFileName(baseFileName);
@@ -630,9 +626,9 @@ public class Main {
 			// PHONG: 20150508
 			// DETECT VIA OTF IF COMPLETED
 			//////////////////////////////////////////////////////////////////////
-			program.SetAnalyzingTime(overallEndTime - overallStartTime); 
-			program.getDetection().updateBackupDetectionState(program, otfMG);
-			program.getDetection().setToLog(program);
+//			program.SetAnalyzingTime(overallEndTime - overallStartTime); 
+//			program.getDetection().updateBackupDetectionState(program, otfMG);
+//			program.getDetection().setToLog(program);
 			//////////////////////////////////////////////////////////////////////
 			
 			try {
