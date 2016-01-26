@@ -284,11 +284,18 @@ public class APIHandle {
 		/**********************************************
 		 * Special API that I hadn't found the define *
 		 **********************************************/
+		if (t[0].equals("") || t[0] == null) {
+			System.out.println("\tName of API is null");
+			return;
+		}
+			
+		
 		if (t[0].toLowerCase().startsWith("ord(")) {
 			System.out.println("\t\tCAN NOT FIND API DEFINE");
 			Value x = stack.pop();
 			System.out.println("Argument: " + x);
 			env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+			return;
 		}
 
 		String className = findClassName(t[0].toLowerCase()/*
