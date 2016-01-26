@@ -45,6 +45,7 @@ import org.jakstab.util.Logger;
 
 import v2.org.analysis.algorithm.OTFModelGeneration;
 import v2.org.analysis.cfg.BPCFG;
+import v2.org.analysis.statistics.FileProcess;
 import antlr.ANTLRException;
 
 public class Main {
@@ -607,11 +608,11 @@ public class Main {
 //			fullResultFile.appendFile("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
 //			fullResultFile.appendFile("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
 
-//			FileProcess resultFile = program.getResultFile();
-//			resultFile.appendFile(program.getFileName() + "\t"
-//					+ String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
-//					+ String.format("%8d", cfg.getVertexCount()) + "\t" + String.format("%8d", cfg.getEdgeCount())
-//					+ "\t" + program.getTechnique() + "\t" + program.getDetailTechnique());
+			FileProcess resultFile = program.getResultFile();
+			resultFile.appendFile(program.getFileName() + "\t"
+					+ String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
+					+ String.format("%8d", cfg.getVertexCount()) + "\t" + String.format("%8d", cfg.getEdgeCount())
+					);
 //
 //			program.getResultFileTemp().appendInLine(program.getDetailTechnique());
 //			program.getResultFileTemp().appendInLine(

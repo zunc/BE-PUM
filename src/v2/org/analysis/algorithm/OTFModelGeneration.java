@@ -397,9 +397,10 @@ public class OTFModelGeneration implements Algorithm {
 	private void backupState(BPState curState) {
 		// TODO Auto-generated method stub
 		program.generageCFG("/asm/cfg/" + program.getFileName() + "_test");
-//		program.getResultFileTemp().appendInLine(
-//				program.getDetailTechnique() + " Nodes:" + program.getBPCFG().getVertexCount() + " Edges:"
-//						+ program.getBPCFG().getEdgeCount() + " ");
+		program.getResultFileTemp().appendInLine("\t"
+						+ String.format("%8dms", (System.currentTimeMillis() - overallStartTime)) + "\t"
+						+ String.format("%8d", program.getBPCFG().getVertexCount()) + "\t" + String.format("%8d", program.getBPCFG().getEdgeCount())
+				);
 	}
 
 //	private void backupStateAll(BPState curState, FileProcess bkFile) {
