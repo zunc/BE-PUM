@@ -25,7 +25,8 @@ public class PEB {
 		curState.getEnvironement().getMemory()
 				.setByteMemoryValue(PEB_Base_Address + 1, new LongValue(ReadImageFileExecOptions));
 		// Update PEB_2
-		BeingDebugged = 1;
+//		BeingDebugged = 1;
+		BeingDebugged = 0;
 		curState.getEnvironement().getMemory().setByteMemoryValue(PEB_Base_Address + 2, new LongValue(BeingDebugged));
 		// Update PEB_3
 		SpareBool = 0;
