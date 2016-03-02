@@ -47,6 +47,7 @@ public class PackerHelper {
 		}
 		else if (op instanceof X86MemoryOperand)
 		{
+//			return curState.getEnvironement().getMemory().getDoubleWordMemoryValue((X86MemoryOperand)op);
 			return curState.getEnvironement().getMemory().getExDoubleWordMemoryValue((X86MemoryOperand)op);
 		}
 		else if (op instanceof X86AbsoluteAddress) 

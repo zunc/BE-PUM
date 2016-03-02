@@ -25,7 +25,7 @@ public class PackerUtility {
 		packerResultFile.appendFile(resultFirst);
 	}
 	
-	public static void setToLog (Program prog, String backupDetectionState, String backupDetectionCountState, String backupDetectionRecordState)
+	public static void setToLog (Program prog, String backupDetectionState, String backupDetectionCountState)
 	{
 		String curDetectionFile = prog.getFileName();
 		
@@ -38,12 +38,8 @@ public class PackerUtility {
 		String packerResultCountFileName = Program.getPackerResultCountFileName();
 		String contentC = backupDetectionCountState;
 		writeFileUpdate(curDetectionFile, packerResultCountFile, packerResultCountFileName, contentC);
-	
-		FileProcess packerResultRecordFile = prog.getPackerResultRecordFile();
-		String packerResultRecordFileName = Program.getPackerResultRecordFileName();
-		String contentR = backupDetectionRecordState;
-		writeFileUpdate(curDetectionFile, packerResultRecordFile, packerResultRecordFileName, contentR);
 	}
+	
 	
 	public static void writeFileUpdate (String curDetectionFile, FileProcess file, 
 			String fileName, String content)

@@ -20,7 +20,7 @@ public class Register {
 
 	private Value dr0, dr1, dr2, dr3, dr4, dr5, dr6, dr7;
 	private Value mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7;
-
+		
 	@Override
 	public Register clone() {
 		Register ret = new Register();
@@ -71,7 +71,7 @@ public class Register {
 		ret.setRegisterValue("fs", fs.clone());
 		ret.setRegisterValue("ss", ss.clone());
 		ret.setRegisterValue("gs", gs.clone());
-
+		
 		ret.setRegisterValue("dr0", dr0.clone());
 		ret.setRegisterValue("dr1", dr1.clone());
 		ret.setRegisterValue("dr2", dr2.clone());
@@ -80,7 +80,7 @@ public class Register {
 		ret.setRegisterValue("dr5", dr5.clone());
 		ret.setRegisterValue("dr6", dr6.clone());
 		ret.setRegisterValue("dr7", dr7.clone());
-
+		
 		ret.setRegisterValue("mm0", mm0.clone());
 		ret.setRegisterValue("mm1", mm1.clone());
 		ret.setRegisterValue("mm2", mm2.clone());
@@ -89,7 +89,7 @@ public class Register {
 		ret.setRegisterValue("mm5", mm5.clone());
 		ret.setRegisterValue("mm6", mm6.clone());
 		ret.setRegisterValue("mm7", mm7.clone());
-
+		
 		return ret;
 	}
 
@@ -133,7 +133,7 @@ public class Register {
 		fs = new SymbolValue("fs");
 		gs = new SymbolValue("gs");
 		ss = new SymbolValue("ss");
-
+		
 		dr0 = new SymbolValue("dr0");
 		dr1 = new SymbolValue("dr1");
 		dr2 = new SymbolValue("dr2");
@@ -142,7 +142,7 @@ public class Register {
 		dr5 = new SymbolValue("dr5");
 		dr6 = new SymbolValue("dr6");
 		dr7 = new SymbolValue("dr7");
-
+		
 		mm0 = new SymbolValue("mm0");
 		mm1 = new SymbolValue("mm1");
 		mm2 = new SymbolValue("mm2");
@@ -243,23 +243,23 @@ public class Register {
 		if (reg.equals("cs")) {
 			return cs;
 		}
-
+		
 		if (reg.equals("ds")) {
 			return ds;
 		}
-
+		
 		if (reg.equals("es")) {
 			return es;
 		}
-
+		
 		if (reg.equals("fs")) {
 			return fs;
 		}
-
+		
 		if (reg.equals("gs")) {
 			return gs;
 		}
-
+		
 		if (reg.equals("ss")) {
 			return ss;
 		}
@@ -267,107 +267,107 @@ public class Register {
 		if (reg.equals("dr0")) {
 			return dr0;
 		}
-
+		
 		if (reg.equals("dr1")) {
 			return dr1;
 		}
-
+		
 		if (reg.equals("dr2")) {
 			return dr2;
 		}
-
+		
 		if (reg.equals("dr3")) {
 			return dr3;
 		}
-
+		
 		if (reg.equals("dr4")) {
 			return dr4;
 		}
-
+		
 		if (reg.equals("dr5")) {
 			return dr5;
 		}
-
+		
 		if (reg.equals("dr6")) {
 			return dr6;
 		}
-
+		
 		if (reg.equals("dr7")) {
 			return dr7;
 		}
-
+		
 		if (reg.equals("mm0")) {
 			return mm0;
 		}
-
+		
 		if (reg.equals("mm1")) {
 			return mm1;
 		}
-
+		
 		if (reg.equals("mm2")) {
 			return mm2;
 		}
-
+		
 		if (reg.equals("mm3")) {
 			return mm3;
 		}
-
+		
 		if (reg.equals("mm4")) {
 			return mm4;
 		}
-
+		
 		if (reg.equals("mm5")) {
 			return mm5;
 		}
-
+		
 		if (reg.equals("mm6")) {
 			return mm6;
 		}
-
+		
 		if (reg.equals("mm7")) {
 			return mm7;
 		}
-
+		
 		return null;
 	}
 
 	public void setRegisterValue(String registerName, Value value) {
 		String reg = checkRegisterName(registerName);
 		Value v = this.normalizeValue(value, registerName);
-
-		if (reg.equals("mm0")) {
+		
+		if (reg.equals("mm0")){
 			mm0 = v;
-		} else if (reg.equals("mm1")) {
+		}else if (reg.equals("mm1")){
 			mm1 = v;
-		} else if (reg.equals("mm2")) {
+		}else if (reg.equals("mm2")){
 			mm2 = v;
-		} else if (reg.equals("mm3")) {
+		}else if (reg.equals("mm3")){
 			mm3 = v;
-		} else if (reg.equals("mm4")) {
+		}else if (reg.equals("mm4")){
 			mm4 = v;
-		} else if (reg.equals("mm5")) {
+		}else if (reg.equals("mm5")){
 			mm5 = v;
-		} else if (reg.equals("mm6")) {
+		}else if (reg.equals("mm6")){
 			mm6 = v;
-		} else if (reg.equals("mm7")) {
+		}else if (reg.equals("mm7")){
 			mm7 = v;
-		} else if (reg.equals("dr0")) {
+		}else if (reg.equals("dr0")){
 			dr0 = v;
-		} else if (reg.equals("dr1")) {
+		}else if (reg.equals("dr1")){
 			dr1 = v;
-		} else if (reg.equals("dr2")) {
+		}else if (reg.equals("dr2")){
 			dr2 = v;
-		} else if (reg.equals("dr3")) {
+		}else if (reg.equals("dr3")){
 			dr3 = v;
-		} else if (reg.equals("dr4")) {
+		}else if (reg.equals("dr4")){
 			dr4 = v;
-		} else if (reg.equals("dr5")) {
+		}else if (reg.equals("dr5")){
 			dr5 = v;
-		} else if (reg.equals("dr6")) {
+		}else if (reg.equals("dr6")){
 			dr6 = v;
-		} else if (reg.equals("dr7")) {
+		}else if (reg.equals("dr7")){
 			dr7 = v;
-		} else if (reg.equals("cs")) {
+		}else if (reg.equals("cs")) {
 			cs = v;
 		} else if (reg.equals("ds")) {
 			ds = v;
@@ -379,7 +379,7 @@ public class Register {
 			gs = v;
 		} else if (reg.equals("ss")) {
 			ss = v;
-		}
+		} 
 
 		if (v instanceof LongValue) {
 			long p = ((LongValue) v).getValue();
@@ -729,7 +729,7 @@ public class Register {
 				bp = v;
 			} else if (reg.equals("eip")) {
 				eip = v;
-			}
+			}			
 		}
 	}
 
@@ -1360,17 +1360,9 @@ public class Register {
 
 	@Override
 	public String toString() {
-
-		// Yen Nguyen: Change to String.format for higher performance
-		// @formatter:off
-		String ret = 
-				String.format("eax=%s,ebx=%s,ecx=%s,edx=%s,esp=%s,ebp=%s,esi=%s,edi=%s", 
-				eax.toString(), ebx.toString(),
-				ecx.toString(), edx.toString(),
-				esp.toString(), ebp.toString(),
-				esi.toString(), edi.toString());
-		// @formatter:on
-
+		String ret = "eax=" + eax.toString() + ", " + "ebx=" + ebx.toString() + ", " + "ecx=" + ecx.toString() + ", "
+				+ "edx=" + edx.toString() + ", " + "esp=" + esp.toString() + ", " + "ebp=" + ebp.toString() + ", "
+				+ "esi=" + esi.toString() + ", " + "edi=" + edi.toString();
 		// fp.appendFile(ret);
 		/*
 		 * "eax=" + eax.toString() + ", al=" + al.toString() + ", " + "ebx=" +
@@ -1567,7 +1559,7 @@ public class Register {
 		setRegisterValue("edi", edi.evaluate(z3Value));
 		setRegisterValue("esp", esp.evaluate(z3Value));
 		setRegisterValue("ebp", ebp.evaluate(z3Value));
-
+		
 	}
 
 	public void reset() {
@@ -1598,8 +1590,8 @@ public class Register {
 		edi = new SymbolValue("edi");
 		di = new SymbolValue("di");
 
-		// esp = new SymbolValue("esp");
-		// sp = new SymbolValue("sp");
+		//esp = new SymbolValue("esp");
+		//sp = new SymbolValue("sp");
 
 		ebp = new SymbolValue("ebp");
 		bp = new SymbolValue("bp");

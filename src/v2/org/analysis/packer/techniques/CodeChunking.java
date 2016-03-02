@@ -6,9 +6,7 @@ import org.jakstab.Program;
 import org.jakstab.asm.Instruction;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
-import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
-import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.packer.PackerSavedState;
 import v2.org.analysis.path.BPState;
 
@@ -71,7 +69,6 @@ public class CodeChunking implements PackerTechnique {
 						|| !PackerHelper.IsExisted(savedChunkCodeStates, jmpStateC.getInsLoc()))
 				{
 					numOfCodeChunking++;
-					PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.CODE_CHUNKING));
 					chunkCodeStates = PackerHelper.ClearStates(chunkCodeStates);
 					savedChunkCodeStates.add(jmpStateA.getInsLoc());
 					savedChunkCodeStates.add(jmpStateB.getInsLoc());

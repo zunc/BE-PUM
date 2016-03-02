@@ -5,8 +5,6 @@ import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86MemoryOperand;
 
 import v2.org.analysis.environment.Environment;
-import v2.org.analysis.packer.PackerConstants;
-import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
@@ -59,7 +57,6 @@ public class SEH implements PackerTechnique {
 							&& memAddr.getSegmentRegister().toString() == "%fs" && base) 
 					{
 						numOfSEH++;
-						PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.SEH));
 					}
 				}
 			}

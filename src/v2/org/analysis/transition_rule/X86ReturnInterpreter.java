@@ -98,7 +98,7 @@ public class X86ReturnInterpreter {
 			}
 		} else if (inst.getName().startsWith("iretd")) {
 			;
-		} else if (inst.getName().startsWith("iret")) {
+		} else if (inst.getName().startsWith("iret") || inst.getName().startsWith("lret")) {
 
 			// PHONG: CHECK FOR RETURN AT ADDRESS: 004097f0
 			// if (curState.getLocation().toString().contains("4097f0")){

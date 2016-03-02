@@ -10,9 +10,7 @@ import org.jakstab.asm.x86.X86ArithmeticInstruction;
 import org.jakstab.asm.x86.X86CondJmpInstruction;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
-import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
-import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.packer.PackerSavedState;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
@@ -98,7 +96,6 @@ public class Checksumming implements PackerTechnique {
 					if (nextIns instanceof X86CondJmpInstruction)
 					{
 						numOfChecksumming++;
-						PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.CHECKSUMMING));
 						checksumState.reset();
 						useCheckingLoop = false;
 					}

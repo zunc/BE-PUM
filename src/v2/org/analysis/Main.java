@@ -44,12 +44,9 @@ import org.jakstab.util.Characters;
 import org.jakstab.util.Logger;
 
 import v2.org.analysis.algorithm.OTFModelGeneration;
-import v2.org.analysis.apihandle.winapi.kernel32.Kernel32DLL;
 import v2.org.analysis.cfg.BPCFG;
 import v2.org.analysis.statistics.FileProcess;
 import antlr.ANTLRException;
-
-import com.sun.jna.WString;
 
 public class Main {
 	static {
@@ -295,9 +292,9 @@ public class Main {
 //		in = "api_testv2.exe"; // 2064 2151 26s ?
 		in = "api_test.exe"; // 158 160 0.1s x
 //		in = "api_test_upx.exe"; // 323 353 6s x
-//		in = "api_test_fsg.exe"; // 244 268 3s x
-//		in = "api_test_pecompact.exe"; // 1127 1178 28s x
-//		in = "api_test_npack.exe"; // 602 639 10s x 
+		in = "api_test_fsg.exe"; // 244 268 3s x
+		in = "api_test_pecompact.exe"; // 1127 1178 28s x
+		in = "api_test_npack.exe"; // 602 639 10s x 
 //		in = "api_test_yoda.1.2.exe"; // 625 659 173s x
 //		in = "api_test_yoda.1.3.exe"; // 924 960 163s x
 //		in = "api_test_petite_2.3.exe"; // 1569 1637 86s x
@@ -359,9 +356,9 @@ public class Main {
 //		in = "Email-Worm.Win32.Mydoom.az"; // 641 651 
 //		in = "003ba46362d1c2643a690cd7e912441b0ee04ee0f8026789f677b873389c0361";
 		
-		pathVirus = "asm/";
-//		in = "peb.exe";		
-		in = "api_test_pecompact.exe";		
+		pathVirus = "asm/packer/";
+		in = "peb.exe";		
+		in = "api_test_telock.exe";		
 		String path = pathVirus + in;
 		isGui = false;
 		// YenNguyen: For jar file export
@@ -597,31 +594,31 @@ public class Main {
 					+ String.format("%8d", cfg.getInstructionCount()));
 			System.out.println("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
 			System.out.println("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
-			FileProcess fullResultFile = program.getFullResultFile();
+//			FileProcess fullResultFile = program.getFullResultFile();
 
-			Kernel32DLL.INSTANCE.SetCurrentDirectory(new WString(System.getProperty("user.dir")));
-			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
-			fullResultFile.appendFile("   Statistics for On-The-Fly Model Generation of BE-PUM");
-			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
-			fullResultFile.appendFile("   Filename:                     " + program.getFileName());
-			fullResultFile.appendFile("   Runtime:                     "
-					+ String.format("%8dms", (overallEndTime - overallStartTime)));
-			fullResultFile.appendFile("   Instructions:                        "
-					+ String.format("%8d", cfg.getInstructionCount()));
-			fullResultFile.appendFile("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
-			fullResultFile.appendFile("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
+//			Kernel32DLL.INSTANCE.SetCurrentDirectory(new WString(System.getProperty("user.dir")));
+//			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
+//			fullResultFile.appendFile("   Statistics for On-The-Fly Model Generation of BE-PUM");
+//			fullResultFile.appendFile(Characters.DOUBLE_LINE_FULL_WIDTH);
+//			fullResultFile.appendFile("   Filename:                     " + program.getFileName());
+//			fullResultFile.appendFile("   Runtime:                     "
+//					+ String.format("%8dms", (overallEndTime - overallStartTime)));
+//			fullResultFile.appendFile("   Instructions:                        "
+//					+ String.format("%8d", cfg.getInstructionCount()));
+//			fullResultFile.appendFile("   Nodes:                        " + String.format("%8d", cfg.getVertexCount()));
+//			fullResultFile.appendFile("   Edges:                        " + String.format("%8d", cfg.getEdgeCount()));
 
 			FileProcess resultFile = program.getResultFile();
 			resultFile.appendFile(program.getFileName() + "\t"
 					+ String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
 					+ String.format("%8d", cfg.getVertexCount()) + "\t" + String.format("%8d", cfg.getEdgeCount())
-					+ "\t" + program.getTechnique() + "\t" + program.getDetailTechnique());
-
-			program.getResultFileTemp().appendInLine(program.getDetailTechnique());
-			program.getResultFileTemp().appendInLine(
-					'\t' + String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
-							+ String.format("%8d", cfg.getVertexCount()) + "\t"
-							+ String.format("%8d", cfg.getEdgeCount()));
+					);
+//
+//			program.getResultFileTemp().appendInLine(program.getDetailTechnique());
+//			program.getResultFileTemp().appendInLine(
+//					'\t' + String.format("%8dms", (overallEndTime - overallStartTime)) + "\t"
+//							+ String.format("%8d", cfg.getVertexCount()) + "\t"
+//							+ String.format("%8d", cfg.getEdgeCount()));
 
 			// Comparison between IDA and BE-PUM
 			// String f = program.generatePathFileName(baseFileName);
@@ -630,9 +627,9 @@ public class Main {
 			// PHONG: 20150508
 			// DETECT VIA OTF IF COMPLETED
 			//////////////////////////////////////////////////////////////////////
-			program.SetAnalyzingTime(overallEndTime - overallStartTime); 
-			program.getDetection().updateBackupDetectionState(program, otfMG);
-			program.getDetection().setToLog(program);
+//			program.SetAnalyzingTime(overallEndTime - overallStartTime); 
+//			program.getDetection().updateBackupDetectionState(program, otfMG);
+//			program.getDetection().setToLog(program);
 			//////////////////////////////////////////////////////////////////////
 			
 			try {

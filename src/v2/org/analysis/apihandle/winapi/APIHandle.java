@@ -451,7 +451,6 @@ public class APIHandle {
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			} else if (funcName.startsWith("InitializeSListHead")) {
 				Value x1 = stack.pop();
-
 				System.out.println("Argument: " + x1);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			} else {

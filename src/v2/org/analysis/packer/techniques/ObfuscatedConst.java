@@ -8,9 +8,7 @@ import org.jakstab.asm.Instruction;
 import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86ArithmeticInstruction;
 
-import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
-import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.path.BPState;
 
 public class ObfuscatedConst implements PackerTechnique {
@@ -51,7 +49,6 @@ public class ObfuscatedConst implements PackerTechnique {
 				if (op1 instanceof Immediate || op2 instanceof Immediate)
 				{
 					numOfObfuscatedConst++;
-					PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.OBFUSCATED_CONST));
 					savedObfuscatedConstState.add(new Long(curState.getLocation().getValue()));
 				}
 			}

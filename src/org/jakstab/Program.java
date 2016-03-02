@@ -162,7 +162,6 @@ public final class Program {
 	final static String fullResultFileTXT = "data/data/fullResult.txt";
 	final static String packerResultFileTXT = "data/data/packerResult.txt";
 	final static String packerResultCountFileTXT = "data/data/packerResultCount.txt";
-	final static String packerResultRecordFileTXT = "data/data/packerResultRecord.txt";
 	final static String stopAddFile = "data/data/stopFile.txt";
 	static final int MAX_BYTE_PER_INSTRUCTION = 15;
 	public static final String pathLibrary = "data/lib/win32/";
@@ -201,7 +200,7 @@ public final class Program {
 	private Harness harness;
 	Disassembler disassembler;
 	private FileProcess resultFile, fullResultFile, resultFile_Temp, logFile, stopFile;
-	private FileProcess packerResultFile, packerResultCountFile, packerResultRecordFile;
+	private FileProcess packerResultFile, packerResultCountFile;
 	private TargetOS targetOS;
 
 	private Instruction analyzedInstruction = null;;
@@ -240,9 +239,6 @@ public final class Program {
 		
 		setPackerResultCountFile(new FileProcess(packerResultCountFileTXT));
 		this.packerResultCountFile.appendFile("");
-		
-		setPackerResultRecordFile(new FileProcess(packerResultRecordFileTXT));
-		this.packerResultRecordFile.appendFile("");
 		
 		pDetection = new PackerDetection();
 	}
@@ -2221,20 +2217,6 @@ public final class Program {
 	public static String getPackerResultCountFileName ()
 	{
 		return packerResultCountFileTXT;
-	}
-	
-	///////////////////////////////////////////////
-	public void setPackerResultRecordFile(FileProcess packerResultRecordFile) {
-		this.packerResultRecordFile = packerResultRecordFile;
-	}
-
-	public FileProcess getPackerResultRecordFile() {
-		return packerResultRecordFile;
-	}
-	
-	public static String getPackerResultRecordFileName ()
-	{
-		return packerResultRecordFileTXT;
 	}
 	
 	////////////////////////////////////////////////

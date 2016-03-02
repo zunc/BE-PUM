@@ -156,6 +156,7 @@ public class Environment {
 			
 			md5.Update(register.toString(), null);
 			return md5.asHex();
+//			return "";
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

@@ -10,7 +10,6 @@ package v2.org.analysis.apihandle.winapi.msvcrt.functions;
 import v2.org.analysis.apihandle.winapi.msvcrt.MSVCRTAPI;
 import v2.org.analysis.apihandle.winapi.msvcrt.MSVCRTDLL;
 import v2.org.analysis.value.LongValue;
-import v2.org.analysis.value.SymbolValue;
 
 /**
  * Sets the current application type.
@@ -43,8 +42,6 @@ public class __set_app_type extends MSVCRTAPI {
 
 		int at = (int) t1;
 		MSVCRTDLL.INSTANCE.__set_app_type(at);
-		
-		register.setRegisterValue("eax", new SymbolValue("api_eax___set_app_type"));
 	}
 
 }

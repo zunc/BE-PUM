@@ -24,9 +24,8 @@ public class PackerDetection {
 	private String detectViaTechniques;
 	private String detectViaTechniquesFrequency;
 	
-	private String backupDetectionState 		= "";
-	private String backupDetectionCountState 	= "";
-	private String backupDetectionRecordState 	= "";
+	private String backupDetectionState = "";
+	private String backupDetectionCountState = "";
 	
 	public PackerDetection ()
 	{
@@ -271,13 +270,6 @@ public class PackerDetection {
 		resultC += nodes + "\t" + edges + "\t" + times + "\t" + convergence + "\t";
 		
 		this.backupDetectionCountState = resultC;	
-		
-		// Update packer record
-		String viaTechniquesRecord = this.getTechniques().getTechniquesRecord();
-		String resultR = fileName + "\t" + viaHeader + "\t";
-		resultR += viaTechniquesRecord;
-		
-		this.backupDetectionRecordState = resultR;
 	}
 	
 	public boolean fileIsPacked ()
@@ -297,6 +289,6 @@ public class PackerDetection {
 	
 	public void setToLog(Program prog)
 	{
-		PackerUtility.setToLog(prog, backupDetectionState, backupDetectionCountState, backupDetectionRecordState);
+		PackerUtility.setToLog(prog, backupDetectionState, backupDetectionCountState);
 	}
 }

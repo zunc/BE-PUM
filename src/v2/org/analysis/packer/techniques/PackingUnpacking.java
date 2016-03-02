@@ -9,9 +9,7 @@ import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86CondJmpInstruction;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
-import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
-import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.packer.PackerSavedState;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
@@ -73,7 +71,6 @@ public class PackingUnpacking implements PackerTechnique {
 					if (((LongValue) aValD).getValue() <= decryptionState.getInsLoc())
 					{
 						numOfPackingUnpacking++;
-						PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.PACKING_UNPACKING));
 						savedDecryptionStates.add(decryptionState);
 						decryptionState.reset();
 					}

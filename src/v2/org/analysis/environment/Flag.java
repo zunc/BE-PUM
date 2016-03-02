@@ -19,7 +19,7 @@ import v2.org.analysis.value.Value;
  * @author NMHai
  */
 public class Flag {
-
+	
 	private final static int AFLAG_BIT = 4;
 	private final static int CFLAG_BIT = 0;
 	private final static int DFLAG_BIT = 10;
@@ -29,7 +29,7 @@ public class Flag {
 	private final static int SFLAG_BIT = 7;
 	private final static int TFLAG_BIT = 8;
 	private final static int ZFLAG_BIT = 6;
-
+	
 	private Value aFlag, cFlag, dFlag, iFlag, oFlag, pFlag, sFlag, tFlag, zFlag;
 
 	public Flag() {
@@ -996,7 +996,7 @@ public class Flag {
 
 			// Leave Auxilarry Flag undefined
 			// if (t == 0)
-			aFlag = new BooleanValue(false);
+			aFlag = new BooleanValue(false);			
 		} else {
 			// Clear Carry Flag
 			cFlag = new BooleanValue(false);
@@ -1010,7 +1010,7 @@ public class Flag {
 
 			// R_ZF:bool = 0:u32 == T_t_84:u32
 			zFlag = new HybridBooleanValue(temp, "==", new LongValue(0));
-
+			
 			aFlag = new BooleanValue(false);
 		}
 
@@ -1095,7 +1095,7 @@ public class Flag {
 
 			// R_ZF:bool = 0:u32 == T_t_84:u32
 			zFlag = new HybridBooleanValue(t, "==", new LongValue(0));
-
+			
 			aFlag = new BooleanValue(false);
 		}
 	}
@@ -1831,8 +1831,7 @@ public class Flag {
 			// *1* %CF := ((op1 < 0) & (op2 < 0))
 			// | ((result >= 0) & ((op1 < 0) | (op2 < 0)))
 			cFlag = new BooleanValue(((d >= 0) & (s < 0)) | ((t < 0) & ((d >= 0) | (s < 0))));
-			// cFlag = new BooleanValue(((d < 0) & (s < 0)) | ((t >= 0) & ((d <
-			// 0) | (s < 0))));
+			//cFlag = new BooleanValue(((d < 0) & (s < 0)) | ((t >= 0) & ((d < 0) | (s < 0))));
 			// R_CF:bool =
 			// extract:32:32:[pad:u33(T_orig1:u32) + pad:u33(T_orig2:u32) +
 			// pad:u33(R_CF:bool)]
@@ -1841,8 +1840,7 @@ public class Flag {
 			// *1* %OF := ((op1 < 0) & (op2 < 0) & (result >= 0))
 			// | ((op1 >= 0) & (op2 >= 0) & (result < 0))
 			oFlag = new BooleanValue(((d < 0) & (s >= 0) & (t > 0)) | ((d >= 0) & (s < 0) & (t < 0)));
-			// oFlag = new BooleanValue(((d < 0) & (s < 0) & (t >= 0)) | ((d >=
-			// 0) & (s >= 0) & (t < 0)));
+			//oFlag = new BooleanValue(((d < 0) & (s < 0) & (t >= 0)) | ((d >= 0) & (s >= 0) & (t < 0)));
 
 			// R_OF:bool =
 			// high:bool((T_orig1:u32 ^ ~T_orig2:u32) & (T_orig1:u32 ^
@@ -2016,7 +2014,7 @@ public class Flag {
 
 			// R_ZF:bool = 0:u32 == T_t_84:u32
 			zFlag = new HybridBooleanValue(t, "==", new LongValue(0));
-
+			
 			aFlag = new BooleanValue(false);
 		}
 	}
@@ -2314,31 +2312,17 @@ public class Flag {
 		this.zFlag = zFlag;
 	}
 
-	// @Override
-	// public String toString() {
-	// return "cf=" + cFlag.toString() + ", " + "pf=" + pFlag.toString() + ", "
-	// + "af=" + aFlag.toString() + ", "
-	// + "zf=" + zFlag.toString() + ", " + "sf=" + sFlag.toString() + ", " +
-	// "tf=" + tFlag.toString() + ", "
-	// + "df=" + dFlag.toString() + ", " + "of=" + oFlag.toString() + ", " +
-	// "if=" + iFlag.toString();
-	// }
-
 	@Override
 	public String toString() {
-		// Yen Nguyen: Change to String.format for higher performance
-		// @formatter:off
-		return String.format("cf=%s,pf=%s,af=%s,zf=%s,sf=%s,tf=%s,df=%s,of=%s,if=%s", 
-				cFlag.toString(), pFlag.toString(), aFlag.toString(), 
-				zFlag.toString(), sFlag.toString(), tFlag.toString(), 
-				dFlag.toString(), oFlag.toString(), iFlag.toString());
-		// @formatter:on
+		return "cf=" + cFlag.toString() + ", " + "pf=" + pFlag.toString() + ", " + "af=" + aFlag.toString() + ", "
+				+ "zf=" + zFlag.toString() + ", " + "sf=" + sFlag.toString() + ", " + "tf=" + tFlag.toString() + ", "
+				+ "df=" + dFlag.toString() + ", " + "of=" + oFlag.toString() + ", " + "if=" + iFlag.toString();
 	}
 
 	public void setFlagValue(String flag, Value value) {
 		// TODO Auto-generated method stub
 		String temp = flag.toLowerCase();
-
+		
 		if (temp.contains("cf")) {
 			cFlag = value;
 		} else if (temp.contains("pf")) {
@@ -2372,10 +2356,12 @@ public class Flag {
 		setFlagValue("pf", pFlag.evaluate(z3Value));
 		setFlagValue("zf", zFlag.evaluate(z3Value));
 	}
-
+	
 	// PHONG - 20150916
-	public void setAllFlagValue(Value value) {
-		if (value instanceof LongValue) {
+	public void setAllFlagValue (Value value)
+	{
+		if (value instanceof LongValue)
+		{
 			long eflag = ((LongValue) value).getValue();
 			cFlag = new BooleanValue((eflag & (1L << CFLAG_BIT)) != 0);
 			pFlag = new BooleanValue((eflag & (1L << PFLAG_BIT)) != 0);
