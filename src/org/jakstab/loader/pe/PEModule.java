@@ -234,7 +234,8 @@ public class PEModule extends AbstractCOFFModule {
 							/*
 							 * Thunk contains ordinal value in low 31 bits. (for
 							 * 64 bit files this would be the lower 63 bits.
-							 */
+							 */				
+							
 							int ord = (int) (thunk & 0x7FFFFFFF);												
 							String ordName = extractNameFromOrdinalNumber(libraryFileName, ord);
 							if (ordName == null) {
@@ -341,7 +342,7 @@ public class PEModule extends AbstractCOFFModule {
 				long expTableRVA = pe.getDataDirectory()[ImageDataDirectory.EXPORT_TABLE_INDEX].VirtualAddress;
 				if (expTableRVA > 0) { // We have an export table
 					logger.debug("-- Reading export table...");
-					buf.seek(getFilePointerRVA(expTableRVA));
+					buf.seek(getFilePointerRVA(expTableRVA, section));
 					ImageExportDirectory imageExportDirectory = new ImageExportDirectory(buf);
 
 					buf.seek(getFilePointerRVA(imageExportDirectory.AddressOfFunctions));
@@ -352,20 +353,20 @@ public class PEModule extends AbstractCOFFModule {
 						long rva = buf.readDWORD();
 						if (rva > 0) {
 							tmpEntries[i] = new ExportEntry((int) (i + imageExportDirectory.Base), new AbsoluteAddress(rva
-									+ getBaseAddress()));
+									+ pe.getImageBase()));
 							eatEntries++;
 						}
 					}
 
-					long namePtr = getFilePointerRVA(imageExportDirectory.AddressOfNames);
-					long ordPtr = getFilePointerRVA(imageExportDirectory.AddressOfNameOrdinals);
+					long namePtr = getFilePointerRVA(imageExportDirectory.AddressOfNames,section);
+					long ordPtr = getFilePointerRVA(imageExportDirectory.AddressOfNameOrdinals,section);
 					for (int i = 0; i < imageExportDirectory.NumberOfNames; i++) {
 						// read next ENT entry
 						buf.seek(namePtr);
 						long rva = buf.readDWORD();
 						namePtr = buf.getCurrent();
 						// read export name
-						buf.seek(getFilePointerRVA(rva));
+						buf.seek(getFilePointerRVA(rva,section));
 						String expName = buf.readASCII();
 						// read next EOT entry
 						buf.seek(ordPtr);
@@ -398,6 +399,48 @@ public class PEModule extends AbstractCOFFModule {
 		return null;
 	}
 	
+	private long getFilePointerRVA(long rva, SectionHeader[] section) {
+		// TODO Auto-generated method stub
+		int sct = getSectionNumberByRVA(rva, section);
+
+		/*
+		 * if
+		 * (Program.getProgram().getFileName().equals("Flooder.Win32.AngryPing"
+		 * )) return (rva - getSectionHeader(sct).VirtualAddress) +
+		 * getSectionHeader(sct).PointerToRawData;
+		 */
+		if (sct < 0) {
+//			return -1;
+			return rva;
+		}
+
+		if (rva - section[sct].VirtualAddress > section[sct].SizeOfRawData) {
+//			return -1;
+			return rva;
+		}
+		return (rva - section[sct].VirtualAddress) + section[sct].PointerToRawData;
+	}
+
+	private int getSectionNumberByRVA(long rva, SectionHeader[] section) {
+		// TODO Auto-generated method stub
+		if (rva < 0) {
+			return -1;
+		}
+		for (int i = 0; i < section.length; i++) {
+			if (section[i].VirtualAddress <= rva
+					&& (section[i].VirtualAddress + section[i].SizeOfRawData) > rva) {
+				return i;
+				/*
+				 * if (fileName.equals("Flooder.Win32.AngryPing")) { for (int i
+				 * = getNumberOfSections() - 1; i >=0; i--) if
+				 * (getSectionHeader(i).VirtualAddress <= rva) return i; }
+				 */
+			}
+		}
+
+		return -1;
+	}
+
 	private long getFilePointerRVA(long rva) {
 		// TODO Auto-generated method stub
 		int sct = getSectionNumberByRVA(rva);

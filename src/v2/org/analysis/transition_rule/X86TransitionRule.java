@@ -239,12 +239,6 @@ public class X86TransitionRule extends TransitionRule {
 		// return true;
 		// }
 
-		if (env.getSystem().getKernel().isInside(addr)) {
-			return true;
-		}
-		if (env.getSystem().getUser32().isInside(addr)) {
-			return true;
-		}
 		if (env.getSystem().getFileHandle().isInsideFile(addr)) {
 			return true;
 		}

@@ -42,6 +42,7 @@ public class __set_app_type extends MSVCRTAPI {
 
 		int at = (int) t1;
 		MSVCRTDLL.INSTANCE.__set_app_type(at);
+		register.mov("eax", new LongValue(at));
 	}
 
 }

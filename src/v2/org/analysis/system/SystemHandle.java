@@ -3,9 +3,6 @@ package v2.org.analysis.system;
 import v2.org.analysis.system.dll.abstracts.LibImage;
 
 public class SystemHandle {
-	private LibImage kernelHandle;
-	private LibImage userHandle;
-	private LibImage advapiHandle;
 	private FileHandle fileHandle;
 	private HeapHandle heapHandle;
 	private SEHHandle seh;
@@ -16,19 +13,7 @@ public class SystemHandle {
 	private String path = "C:/Windows";
 
 	// PHONG: Check if it is being in process of Virtual Memory
-	private boolean inVirtualMemory;
-
-	public LibImage getKernel() {
-		return kernelHandle;
-	}
-
-	public LibImage getUser32() {
-		return userHandle;
-	}
-
-	public LibImage getAdvapi32Handle() {
-		return advapiHandle;
-	}
+	private boolean inVirtualMemory;	
 	
 	public FileHandle getFileHandle() {
 		return fileHandle;
@@ -42,10 +27,7 @@ public class SystemHandle {
 		this.seh = seh;
 	}
 
-	public SystemHandle() {
-		kernelHandle = new LibImage(LibImage.KERNEL32PATH);
-		userHandle = new LibImage(LibImage.USER32PATH);
-		advapiHandle = new LibImage(LibImage.ADVAPI32PATH);
+	public SystemHandle() {		
 		seh = new SEHHandle();
 		fileHandle = new FileHandle();
 		fileHandle.setPath(path);
@@ -64,19 +46,23 @@ public class SystemHandle {
 	public long getLibraryHandle(String libraryName) {
 		// TODO Auto-generated method stub
 		String libName = libraryName.toLowerCase();
-		if (libName.equals("kernel32.dll") || libName.contains("kernel32")) {
-			return getKernel().getBaseAddress();
-		}
+//		if (libName.equals("kernel32.dll") || libName.contains("kernel32")) {
+//			return getKernel().getBaseAddress();
+//		}
+//
+//		if (libName.equals("user32.dll") || libName.contains("user32")) {
+//			return getUser32().getBaseAddress();
+//		}
+//		
+//		if (libName.equals("advapi32.dll") || libName.contains("advapi32")) {
+//			return getAdvapi32().getBaseAddress();
+//		}
+//		
+//		if (libName.equals("msvcrt.dll") || libName.contains("msvcrt")) {
+//			return getMsvcrt().getBaseAddress();
+//		}
 
-		if (libName.equals("user32.dll") || libName.contains("user32")) {
-			return getUser32().getBaseAddress();
-		}
-		
-		if (libName.equals("advapi32.dll") || libName.contains("advapi32")) {
-			return getAdvapi32Handle().getBaseAddress();
-		}
-
-		Library l = libraryHandle.getLibrary(libName);
+		LibAbstract l = libraryHandle.getLibrary(libName);
 
 		if (l != null) {
 			return l.getBaseAddress();
@@ -87,25 +73,10 @@ public class SystemHandle {
 
 	public long getProcAddress(long libraryHandle, String functionName) {
 		// TODO Auto-generated method stub
-		LibImage kernel = getKernel();
-		if (kernel.getBaseAddress() == libraryHandle) {
-			return kernel.getProcAddress(functionName);
-		}
-
-		LibImage user = getUser32();
-		if (user.getBaseAddress() == libraryHandle) {
-			return user.getProcAddress(functionName);
-		}
-		
-		LibImage advapi = getAdvapi32Handle();
-		if (advapi.getBaseAddress() == libraryHandle) {
-			return advapi.getProcAddress(functionName);
-		}
-
-		Library l = this.libraryHandle.getLibrary(libraryHandle);
+		LibAbstract l = this.libraryHandle.getLibrary(libraryHandle);
 
 		if (l != null) {
-			return l.getAPIAddr(functionName);
+			return l.getProcAddress(functionName);
 		}
 
 		return 0;
@@ -259,22 +230,7 @@ public class SystemHandle {
 	}*/
 	
 	public String getLibraryName(long libraryHandle) {
-		LibImage kernel = getKernel();
-		if (kernel.getBaseAddress() == libraryHandle) {
-			return kernel.getLibraryName();
-		}
-
-		LibImage user = getUser32();
-		if (user.getBaseAddress() == libraryHandle) {
-			return user.getLibraryName();
-		}
-		
-		LibImage advapi = getAdvapi32Handle();
-		if (advapi.getBaseAddress() == libraryHandle) {
-			return advapi.getLibraryName();
-		}
-
-		Library l = this.libraryHandle.getLibrary(libraryHandle);
+		LibAbstract l = this.libraryHandle.getLibrary(libraryHandle);
 
 		if (l != null) {
 			return l.getLibraryName();
@@ -283,4 +239,9 @@ public class SystemHandle {
 		return null;
 
 	}
+
+	public LibImage getKernel() {
+		// TODO Auto-generated method stub
+		return libraryHandle.getKernel();
+	}	
 }

@@ -395,16 +395,9 @@ public class Memory {
 		}
 
 		// If not exist, try to find it in the dynamic-link library
-		if (env.getSystem().getKernel().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getKernel().readByte((int) address));
-		}
-
-		if (env.getSystem().getUser32().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getUser32().readByte((int) address));
-		}
-
-		if (env.getSystem().getAdvapi32Handle().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getAdvapi32Handle().readByte((int) address));
+		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
+		if (libName != null && libName != ""){
+			return new LongValue(env.getSystem().getLibraryHandle().readByte(libName, (int) address));
 		}
 
 		if (env.getSystem().getFileHandle().isInsideFile(new AbsoluteAddress(address))) {
@@ -456,16 +449,13 @@ public class Memory {
 	}
 
 	public Value getWordMemoryValue(long address) {
-		if (env.getSystem().getKernel().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getKernel().readWord((int) address));
-		}
-
-		if (env.getSystem().getUser32().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getUser32().readWord((int) address));
-		}
-
-		if (env.getSystem().getAdvapi32Handle().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getAdvapi32Handle().readWord((int) address));
+//		if (env.getSystem().getKernel().isInside(new AbsoluteAddress(address))) {
+//			return new LongValue(env.getSystem().getKernel().readWord((int) address));
+//		}
+//
+		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
+		if (libName != null && libName != ""){
+			return new LongValue(env.getSystem().getLibraryHandle().readWord(libName, (int) address));
 		}
 
 		if (env.getSystem().getFileHandle().isInsideFile(new AbsoluteAddress(address))) {
@@ -505,16 +495,9 @@ public class Memory {
 
 	public Value getDoubleWordMemoryValue(long address) {
 
-		if (env.getSystem().getKernel().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getKernel().readDoubleWord((int) address));
-		}
-
-		if (env.getSystem().getUser32().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getUser32().readDoubleWord((int) address));
-		}
-
-		if (env.getSystem().getAdvapi32Handle().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getAdvapi32Handle().readDoubleWord((int) address));
+		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
+		if (libName != null && libName != ""){
+			return new LongValue(env.getSystem().getLibraryHandle().readDoubleWord(libName, (int) address));
 		}
 
 		if (env.getSystem().getFileHandle().isInsideFile(new AbsoluteAddress(address))) {
@@ -1089,16 +1072,9 @@ public class Memory {
 
 	private Value getDoubleWordMemoryValueEx(long address) {
 		// TODO Auto-generated method stub
-		if (env.getSystem().getKernel().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getKernel().readDoubleWord((int) address));
-		}
-
-		if (env.getSystem().getUser32().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getUser32().readDoubleWord((int) address));
-		}
-
-		if (env.getSystem().getAdvapi32Handle().isInside(new AbsoluteAddress(address))) {
-			return new LongValue(env.getSystem().getAdvapi32Handle().readDoubleWord((int) address));
+		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
+		if (libName != null && libName != ""){
+			return new LongValue(env.getSystem().getLibraryHandle().readDoubleWord(libName, (int) address));
 		}
 
 		if (env.getSystem().getFileHandle().isInsideFile(new AbsoluteAddress(address))) {

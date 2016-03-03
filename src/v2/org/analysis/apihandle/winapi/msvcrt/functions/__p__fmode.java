@@ -10,12 +10,12 @@ package v2.org.analysis.apihandle.winapi.msvcrt.functions;
 import org.jakstab.asm.DataType;
 import org.jakstab.asm.x86.X86MemoryOperand;
 
-import com.sun.jna.Pointer;
-import com.sun.jna.ptr.IntByReference;
-
 import v2.org.analysis.apihandle.winapi.msvcrt.MSVCRTAPI;
 import v2.org.analysis.apihandle.winapi.msvcrt.MSVCRTDLL;
 import v2.org.analysis.value.LongValue;
+
+import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
 /**
  * Points to the _fmode global variable, which specifies the default file
@@ -36,9 +36,14 @@ public class __p__fmode extends MSVCRTAPI {
 	@Override
 	public void execute() {
 		IntByReference ret = MSVCRTDLL.INSTANCE.__p__fmode();
+		
+		long peer = Pointer.nativeValue(ret.getPointer());		
 
-		memory.setDoubleWordMemoryValue(new X86MemoryOperand(DataType.INT32, Pointer.nativeValue(ret.getPointer())),
+		memory.setDoubleWordMemoryValue(new X86MemoryOperand(DataType.INT32, peer),
 				new LongValue(ret.getValue()));
+		register.mov("eax", new LongValue(peer));
+//		memory.setDoubleWordMemoryValue(new X86MemoryOperand(DataType.INT32, Pointer.nativeValue(ret.getPointer())),
+//				new SymbolValue("p_fmode_" + ret.getValue()));
 	}
 
 }

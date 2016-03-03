@@ -1,20 +1,18 @@
 package v2.org.analysis.system.dll.abstracts;
 
-import org.jakstab.asm.AbsoluteAddress;
-
-import v2.org.analysis.complement.Convert;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LibImage {
-	// YenNguyen
-	public static final String ADVAPI32PATH = "data/data/advapi32.dll";
-	public static final String USER32PATH = "data/data/user32.dll";
-	public static final String KERNEL32PATH = "data/data/kernel32.dll";
+import org.jakstab.asm.AbsoluteAddress;
 
+import v2.org.analysis.complement.Convert;
+import v2.org.analysis.system.LibAbstract;
+import v2.org.analysis.system.LibraryHandle;
+
+public class LibImage extends LibAbstract{
+	// YenNguyen
 	private long baseAddress; // 7C800000
 	private Map<AbsoluteAddress, String> exportTable;
 	private LibPEHandler peHandler;
@@ -23,6 +21,7 @@ public class LibImage {
 	private String libName = "kernel32.dll";
 	private byte[] value;
 
+	@Override
 	public long getBaseAddress() {
 		return baseAddress;
 	}
@@ -51,7 +50,7 @@ public class LibImage {
 	}
 
 	private void initExportTable() {
-		if (this.path.equals(LibImage.KERNEL32PATH)) {
+		if (this.path.equals(LibraryHandle.KERNEL32PATH)) {
 			exportTable.put(new AbsoluteAddress(2088899403), "GetWindowsDirectoryA@kernel32.dll");
 			exportTable.put(new AbsoluteAddress(2088849274), "GetSystemDirectoryA@kernel32.dll");
 			exportTable.put(new AbsoluteAddress(2088980502), "GetCurrentDirectoryA@kernel32.dll");
@@ -170,21 +169,24 @@ public class LibImage {
 
 	private long getRVAAddress(long address) {
 		long t = peHandler.getRVA(address);
-		if (t < 0)
+		if (t < 0) {
 			return address;
-		else
+		}
+		else {
 			return t;
 		// return in.getValueOperand();
+		}
 	}
-
+	@Override
 	public int readByte(int offset) {
 		int off = (int) getRVAAddress(offset - this.baseAddress);
 		// int off = (int) (offset - this.baseAddress);
-		if (off < 0 || off >= value.length)
+		if (off < 0 || off >= value.length) {
 			return Integer.MIN_VALUE;
+		}
 		return value[off];
 	}
-
+	@Override
 	public long readWord(int index) {
 		/*
 		 * int ret = 0; ret = readByte(index + 1); ret |= readByte(index + 1) <<
@@ -195,7 +197,7 @@ public class LibImage {
 		temp += Convert.longToHex(readByte(index), 8);
 		return Convert.hexToLong(temp);
 	}
-
+	@Override
 	public long readDoubleWord(int index) {
 		// int ret = 0;
 		/*
@@ -212,6 +214,7 @@ public class LibImage {
 		return Convert.hexToLong(temp);
 	}
 
+	@Override
 	public long getProcAddress(String functionName) {
 		// TODO Auto-generated method stub
 		/*
@@ -228,9 +231,11 @@ public class LibImage {
 
 	public boolean isInside(AbsoluteAddress addr) {
 		// TODO Auto-generated method stub
-		return addr.getValue() >= this.baseAddress && addr.getValue() < (this.baseAddress + getLength());
+		return addr.getValue() >= this.baseAddress && 
+				addr.getValue() < (this.baseAddress + getLength());
 	}
 
+	@Override
 	public String getProcName(long v) {
 		// TODO Auto-generated method stub
 		/*
@@ -242,11 +247,18 @@ public class LibImage {
 		return peHandler.getExportName(v);
 	}
 
+	@Override
 	public String getLibraryName() {
 		return libName;
 	}
 
 	public void setLibraryName(String libName) {
 		this.libName = libName;
+	}
+
+	@Override
+	public Map<AbsoluteAddress, String> getExportTable() {
+		// TODO Auto-generated method stub
+		return exportTable;
 	}
 }

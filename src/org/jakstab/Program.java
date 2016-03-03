@@ -346,19 +346,7 @@ public final class Program {
 		String api = "";
 		if (stubLibrary != null && stubLibrary instanceof Win32StubLibrary) {
 			api = ((Win32StubLibrary) stubLibrary).getAPIName(value);
-		}
-
-		if (api == "") {
-			api = env.getSystem().getKernel().getProcName(value);
-		}
-
-		if (api == "") {
-			api = env.getSystem().getUser32().getProcName(value);
-		}
-		
-		if (api == "") {
-			api = env.getSystem().getAdvapi32Handle().getProcName(value);
-		}
+		}		
 
 		if (api == "") {
 			api = env.getSystem().getLibraryHandle().getAPIName(value);

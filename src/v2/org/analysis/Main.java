@@ -358,7 +358,7 @@ public class Main {
 		
 		pathVirus = "asm/packer/";
 		in = "peb.exe";		
-		in = "api_test_telock.exe";		
+		in = "hostname.exe";		
 		String path = pathVirus + in;
 		isGui = false;
 		// YenNguyen: For jar file export

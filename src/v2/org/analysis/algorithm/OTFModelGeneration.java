@@ -110,6 +110,7 @@ public class OTFModelGeneration implements Algorithm {
 		// Update at first -----------------------------
 		TIB.setBeUpdated(true);
 		TIB.updateTIB(curState);
+		
 		// ---------------------------------------------
 
 		// PHONG - 20150801 /////////////////////////////
@@ -289,12 +290,12 @@ public class OTFModelGeneration implements Algorithm {
 					}
 					*/
 				
-					////////////////////////////////// VIA OTF ////////////////////////////////////////
-					if (detectPacker)
-					{
-						program.getDetection().getTechniques().updateChecking(curState, program);
-					}
-					///////////////////////////////////////////////////////////////////////////////////
+//					////////////////////////////////// VIA OTF ////////////////////////////////////////
+//					if (detectPacker)
+//					{
+//						program.getDetection().getTechniques().updateChecking(curState, program);
+//					}
+//					///////////////////////////////////////////////////////////////////////////////////
 					 
 					long overallEndTimeTemp = System.currentTimeMillis();
 					// Output file each 60s
@@ -305,15 +306,15 @@ public class OTFModelGeneration implements Algorithm {
 						
 						////////////////////////////////////////////////////
 						// Write to packer result file after each 60s
-						if (detectPacker)
-						{
-							program.SetAnalyzingTime(System.currentTimeMillis()
-							- overallStartTime); 
-							program.getDetection().packedByTechniques();
-							program.getDetection().packedByTechniquesFrequency();
-							program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
-							program.getDetection().setToLog(program);
-						}					
+//						if (detectPacker)
+//						{
+//							program.SetAnalyzingTime(System.currentTimeMillis()
+//							- overallStartTime); 
+//							program.getDetection().packedByTechniques();
+//							program.getDetection().packedByTechniquesFrequency();
+//							program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
+//							program.getDetection().setToLog(program);
+//						}					
 						
 						if (inst != null && inst.getName().contains("addb")
 								&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
@@ -335,10 +336,10 @@ public class OTFModelGeneration implements Algorithm {
 					inst = curState.getInstruction();
 					location = curState.getLocation();	
 					
-//							compareOlly(curState);
-//							if (location != null && location.toString().contains("404091")) {
-//								System.out.println("Debug");
-//							}
+//					compareOlly(curState);
+//					if (location != null && location.toString().contains("10012ec")) {
+//							System.out.println("Debug");
+//					}
 									
 					// PHONG: 20150506 - Update TIB
 					// --------------------------------------
