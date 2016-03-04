@@ -357,8 +357,10 @@ public class Main {
 //		in = "003ba46362d1c2643a690cd7e912441b0ee04ee0f8026789f677b873389c0361";
 		
 		pathVirus = "asm/packer/";
+		pathVirus = "asm/vx.netlux.org/";
 		in = "peb.exe";		
-		in = "hostname.exe";		
+		in = "hostname.exe";
+		in = "Net-Worm.Win32.Sasser.a";
 		String path = pathVirus + in;
 		isGui = false;
 		// YenNguyen: For jar file export

@@ -9,21 +9,13 @@ package v2.org.analysis.apihandle.winapi.kernel32.functions;
 
 import v2.org.analysis.apihandle.winapi.kernel32.Kernel32API;
 import v2.org.analysis.apihandle.winapi.kernel32.Kernel32DLL;
-
-import org.jakstab.asm.AbsoluteAddress;
-import org.jakstab.asm.Instruction;
+import v2.org.analysis.value.LongValue;
 
 import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinDef.BOOL;
 import com.sun.jna.platform.win32.WinDef.UINT;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
-
-import v2.org.analysis.environment.Environment;
-import v2.org.analysis.environment.Register;
-import v2.org.analysis.environment.Stack;
-import v2.org.analysis.path.BPState;
-import v2.org.analysis.value.LongValue;
-import v2.org.analysis.value.Value;
 
 /**
  * Terminates the specified process and all of its threads.
@@ -55,6 +47,16 @@ public class TerminateProcess extends Kernel32API {
 	public void execute() {
 		long t1 = this.params.get(0);
 		long t2 = this.params.get(1);
+		
+		HANDLE handle = Kernel32.INSTANCE.GetCurrentProcess();
+		long value = Pointer.nativeValue(handle.getPointer());
+		System.out.println("HandleProcess=" + t1 + ", CurrentID=" + value);
+		
+		if (t1 == value) {
+			System.out.println("Stop current Process");
+			curState.setFeasiblePath(false);
+			return;
+		}
 
 		HANDLE hProcess = new HANDLE(new Pointer(t1));
 		UINT uExitCode = new UINT(t2);

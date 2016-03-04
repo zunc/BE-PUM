@@ -7,11 +7,11 @@
  */
 package v2.org.analysis.apihandle.winapi.kernel32.functions;
 
-import com.sun.jna.platform.win32.WinDef.DWORD;
-
 import v2.org.analysis.apihandle.winapi.kernel32.Kernel32API;
 import v2.org.analysis.apihandle.winapi.kernel32.Kernel32DLL;
 import v2.org.analysis.value.LongValue;
+
+import com.sun.jna.platform.win32.WinDef.DWORD;
 
 /**
  * Suspends the execution of the current thread until the time-out interval
