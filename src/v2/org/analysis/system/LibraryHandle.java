@@ -105,6 +105,10 @@ public class LibraryHandle {
 		if (msvcrtHandle.getBaseAddress() == libraryHandle) {
 			return msvcrtHandle;
 		}
+		
+		if (ws2Handle.getBaseAddress() == libraryHandle) {
+			return ws2Handle;
+		}
 
 		for (LibAbstract l : libraryName) {
 			if (l.getBaseAddress() == libraryHandle) {

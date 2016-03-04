@@ -38,9 +38,17 @@ public class GetProcAddress extends Kernel32API {
 		 * x1).getValue(), ((ValueLongExp) x2).getValue(), program);
 		 */
 		long t1 = this.params.get(0);
-		long t2 = this.params.get(1);
+		long t2 = this.params.get(1);		
+		
 		String lpProcName = memory.getText(this, t2);
 		this.mProcInputValue = t2;
+		
+		if (lpProcName == null || 
+				lpProcName.length() == 0 || lpProcName == "") {
+			System.out.println("Get ProcAddres from Ordinal Number!");
+			String libName = curState.getEnvironement().getSystem().getLibraryName(t1);
+			lpProcName = Program.getProgram().getNameFromOrdinalNumber(libName, t2);
+		}
 
 		long ret = this.execute(t1, lpProcName);
 

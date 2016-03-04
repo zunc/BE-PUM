@@ -274,7 +274,10 @@ public class OTFModelGeneration implements Algorithm {
 				
 				// long overallStartTimePath = System.currentTimeMillis();
 				while (true) {
-					
+					if (!curState.checkFeasiblePath()) {
+						path.destroy();
+						break;
+					}
 					/*
 					if (curState != null && curState.getLocation() != null)
 					{
@@ -337,9 +340,12 @@ public class OTFModelGeneration implements Algorithm {
 					location = curState.getLocation();	
 					
 //					compareOlly(curState);
-//					if (location != null && location.toString().contains("10012ec")) {
-//							System.out.println("Debug");
-//					}
+					if (location != null && location.toString().contains("408ac6")) {
+							System.out.println("Debug instruction at " + location + ": " + inst.getName() + " " 
+									+ inst.getOperand(0).toString());
+							System.out.println(curState.getEnvironement().getRegister().toString());
+							System.out.println(path.getTrace().toString());
+					}
 									
 					// PHONG: 20150506 - Update TIB
 					// --------------------------------------

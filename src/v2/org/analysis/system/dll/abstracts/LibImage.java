@@ -18,7 +18,7 @@ public class LibImage extends LibAbstract{
 	private LibPEHandler peHandler;
 	// Map <Integer, ByteClass> image;
 	private int length;
-	private String libName = "kernel32.dll";
+	private String libName;
 	private byte[] value;
 
 	@Override
@@ -143,6 +143,7 @@ public class LibImage extends LibAbstract{
 		FileInputStream fileInputStream = null;
 
 		File file = new File(this.path);
+		libName = file.getName();
 
 		length = (int) file.length();
 		value = new byte[this.length];

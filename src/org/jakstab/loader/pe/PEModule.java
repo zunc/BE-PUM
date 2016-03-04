@@ -25,7 +25,6 @@ package org.jakstab.loader.pe;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -235,9 +234,8 @@ public class PEModule extends AbstractCOFFModule {
 							 * Thunk contains ordinal value in low 31 bits. (for
 							 * 64 bit files this would be the lower 63 bits.
 							 */				
-							
 							int ord = (int) (thunk & 0x7FFFFFFF);												
-							String ordName = extractNameFromOrdinalNumber(libraryFileName, ord);
+							String ordName = Program.getProgram().getNameFromOrdinalNumber(libraryFileName, ord);
 							if (ordName == null) {
 								ordName = "ord(" + ord + ")";
 							}
@@ -282,165 +280,7 @@ public class PEModule extends AbstractCOFFModule {
 		symbolFinder = new PESymbolFinder(this);
 	}
 
-	private String extractNameFromOrdinalNumber(String libraryFileName, int ord) {
-		// TODO Auto-generated method stub
-		File f = new File(Program.pathLibrary);
-		final String t = libraryFileName.toLowerCase();
-		File[] matchingFiles = f.listFiles(new FilenameFilter() {
-		    @Override
-			public boolean accept(File dir, String name) {
-		        return name.toLowerCase().equals(t);
-		    }
-		});
-		
-		if (matchingFiles.length > 0) {
-			return extractOrdinalName(matchingFiles[0], ord);
-		}
-		
-		return null;
-	}
-
-	private String extractOrdinalName(File file, int ordinal){
-		// TODO Auto-generated method stub
-		if (file != null) {
-			try {
-				InputStream inStream = new FileInputStream(file);				
-				BinaryFileInputBuffer buf = new BinaryFileInputBuffer(inStream);
-				try {
-					MSDOS_Stub msdos = new MSDOS_Stub(buf);
-					buf.seek(msdos.getHeaderAddress());
-				} catch (Exception e) {
-					System.out.println("MS-DOS executables are not supported.");
-					buf.seek(getPEHeaderAddress(buf));
-				}
-
-				// Verify PE signature ///////////
-
-				if (!buf.match(PE_Header.PE_TAG)) {
-					throw new BinaryParseException("PEModule: Missing PE signature");
-				}
-				// ////////////////////////////////
-				COFF_Header coff = new COFF_Header(buf);
-				// long optionalHeaderPos = inBuf.getCurrent();
-				// long sectionPos = optionalHeaderPos +
-				// coff_header.getSizeOfOptionalHeader();
-				long posOptionalHeader = buf.getCurrent();
-				PE_Header pe = new PE_Header(buf);
-				long posSectionHeader = posOptionalHeader + coff.getSizeOfOptionalHeader();
-				// /// Parse Section Headers and sections /////////////////////////
-				// if (sectionPos != tempSectionPos)
-				buf.seek(posSectionHeader);
-				long alignment = pe.getFileAlignment();
-				SectionHeader[] section = new SectionHeader[coff.getNumberOfSections()];
-				for (int i = 0; i < coff.getNumberOfSections(); i++) {
-					section[i] = new SectionHeader(buf, alignment);
-				}
-				// if (sectionPos != tempSectionPos)
-				// inBuf.seek(tempSectionPos);
-				// ///////////////////////////////////////////////////////////////
-
-				long expTableRVA = pe.getDataDirectory()[ImageDataDirectory.EXPORT_TABLE_INDEX].VirtualAddress;
-				if (expTableRVA > 0) { // We have an export table
-					logger.debug("-- Reading export table...");
-					buf.seek(getFilePointerRVA(expTableRVA, section));
-					ImageExportDirectory imageExportDirectory = new ImageExportDirectory(buf);
-
-					buf.seek(getFilePointerRVA(imageExportDirectory.AddressOfFunctions));
-					// Parse EAT
-					ExportEntry[] tmpEntries = new ExportEntry[(int) imageExportDirectory.NumberOfFunctions];
-					int eatEntries = 0;
-					for (int i = 0; i < tmpEntries.length; i++) {
-						long rva = buf.readDWORD();
-						if (rva > 0) {
-							tmpEntries[i] = new ExportEntry((int) (i + imageExportDirectory.Base), new AbsoluteAddress(rva
-									+ pe.getImageBase()));
-							eatEntries++;
-						}
-					}
-
-					long namePtr = getFilePointerRVA(imageExportDirectory.AddressOfNames,section);
-					long ordPtr = getFilePointerRVA(imageExportDirectory.AddressOfNameOrdinals,section);
-					for (int i = 0; i < imageExportDirectory.NumberOfNames; i++) {
-						// read next ENT entry
-						buf.seek(namePtr);
-						long rva = buf.readDWORD();
-						namePtr = buf.getCurrent();
-						// read export name
-						buf.seek(getFilePointerRVA(rva,section));
-						String expName = buf.readASCII();
-						// read next EOT entry
-						buf.seek(ordPtr);
-						int ord = buf.readWORD();
-						ordPtr = buf.getCurrent();
-						tmpEntries[ord].setName(expName);
-						if (tmpEntries[ord].getOrdinal() == ordinal) {
-							return expName;
-						}
-					}
-					exportEntries = new ExportEntry[eatEntries];
-					int j = 0;
-					for (int i = 0; i < tmpEntries.length; i++) {
-						if (tmpEntries[i] != null) {
-							exportEntries[j++] = tmpEntries[i];
-						}
-					}
-					logger.debug("-- Got " + exportEntries.length + " exported symbols.");
-				} else {
-					logger.debug("-- File contains no exports");
-				}				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (BinaryParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}		
-		return null;
-	}
 	
-	private long getFilePointerRVA(long rva, SectionHeader[] section) {
-		// TODO Auto-generated method stub
-		int sct = getSectionNumberByRVA(rva, section);
-
-		/*
-		 * if
-		 * (Program.getProgram().getFileName().equals("Flooder.Win32.AngryPing"
-		 * )) return (rva - getSectionHeader(sct).VirtualAddress) +
-		 * getSectionHeader(sct).PointerToRawData;
-		 */
-		if (sct < 0) {
-//			return -1;
-			return rva;
-		}
-
-		if (rva - section[sct].VirtualAddress > section[sct].SizeOfRawData) {
-//			return -1;
-			return rva;
-		}
-		return (rva - section[sct].VirtualAddress) + section[sct].PointerToRawData;
-	}
-
-	private int getSectionNumberByRVA(long rva, SectionHeader[] section) {
-		// TODO Auto-generated method stub
-		if (rva < 0) {
-			return -1;
-		}
-		for (int i = 0; i < section.length; i++) {
-			if (section[i].VirtualAddress <= rva
-					&& (section[i].VirtualAddress + section[i].SizeOfRawData) > rva) {
-				return i;
-				/*
-				 * if (fileName.equals("Flooder.Win32.AngryPing")) { for (int i
-				 * = getNumberOfSections() - 1; i >=0; i--) if
-				 * (getSectionHeader(i).VirtualAddress <= rva) return i; }
-				 */
-			}
-		}
-
-		return -1;
-	}
-
 	private long getFilePointerRVA(long rva) {
 		// TODO Auto-generated method stub
 		int sct = getSectionNumberByRVA(rva);
