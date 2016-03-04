@@ -36,7 +36,6 @@ public class WSAStartup extends Ws2_32API {
 
 		int ret = Ws2_32DLL.INSTANCE.WSAStartup(wVersionRequested, lpWSAData);
 
-		System.out.println("Return value:" + ret);
 		register.mov("eax", new LongValue(ret));
 
 		// public WORD wVersion; // unsigned short 16bits

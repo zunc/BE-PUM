@@ -26,7 +26,6 @@ public class WSACleanup extends Ws2_32API {
 	public void execute() {
 		int ret = Ws2_32DLL.INSTANCE.WSACleanup();
 
-		System.out.println("Return value:" + ret);
 		register.mov("eax", new LongValue(ret));
 	}
 

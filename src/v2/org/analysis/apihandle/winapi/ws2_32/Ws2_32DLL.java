@@ -32,6 +32,21 @@ public interface Ws2_32DLL extends StdCallLibrary {
 
 	int listen(int s, int backlog);
 
+	/**
+	 * The gethostname function retrieves the standard host name for the local
+	 * computer.
+	 * 
+	 * @param name
+	 *            [out] A pointer to a buffer that receives the local host name.
+	 * 
+	 * @param namelen
+	 *            [in] The length, in bytes, of the buffer pointed to by the
+	 *            name parameter.
+	 * 
+	 * @return If no error occurs, gethostname returns zero. Otherwise, it
+	 *         returns SOCKET_ERROR and a specific error code can be retrieved
+	 *         by calling WSAGetLastError.
+	 */
 	int gethostname(byte[] name, int namelen);
 
 	hostent gethostbyname(String name);
