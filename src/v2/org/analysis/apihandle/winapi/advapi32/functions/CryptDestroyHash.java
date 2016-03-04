@@ -7,12 +7,12 @@
  */
 package v2.org.analysis.apihandle.winapi.advapi32.functions;
 
-import com.sun.jna.platform.win32.BaseTSD.ULONG_PTR;
-import com.sun.jna.platform.win32.WinDef.BOOL;
-
 import v2.org.analysis.apihandle.winapi.advapi32.Advapi32API;
 import v2.org.analysis.apihandle.winapi.advapi32.Advapi32DLL;
 import v2.org.analysis.value.LongValue;
+
+import com.sun.jna.platform.win32.BaseTSD.ULONG_PTR;
+import com.sun.jna.platform.win32.WinDef.BOOL;
 
 /**
  * The CryptDestroyHash function destroys the hash object referenced by the
@@ -46,7 +46,6 @@ public class CryptDestroyHash extends Advapi32API {
 
 		long value = ret.longValue();
 		register.mov("eax", new LongValue(value));
-		System.out.println("Return Value: " + value);
 	}
 
 }

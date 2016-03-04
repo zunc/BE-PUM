@@ -16,6 +16,8 @@ import com.sun.jna.platform.win32.WinDef.WORD;
 import com.sun.jna.platform.win32.WinNT.ACL;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.platform.win32.WinNT.HANDLEByReference;
+import com.sun.jna.platform.win32.WinNT.LUID;
+import com.sun.jna.platform.win32.WinNT.TOKEN_PRIVILEGES;
 import com.sun.jna.platform.win32.WinReg.HKEY;
 import com.sun.jna.platform.win32.WinReg.HKEYByReference;
 import com.sun.jna.ptr.ByteByReference;
@@ -485,4 +487,103 @@ public interface Advapi32DLL extends StdCallLibrary {
 	/* _In_ */HANDLE ProcessHandle,
 	/* _In_ */DWORD DesiredAccess,
 	/* _Out_ */HANDLEByReference TokenHandle);
+
+	/**
+	 * The AdjustTokenPrivileges function enables or disables privileges in the
+	 * specified access token. Enabling or disabling privileges in an access
+	 * token requires TOKEN_ADJUST_PRIVILEGES access.
+	 * 
+	 * @param TokenHandle
+	 *            A handle to the access token that contains the privileges to
+	 *            be modified. The handle must have TOKEN_ADJUST_PRIVILEGES
+	 *            access to the token. If the PreviousState parameter is not
+	 *            NULL, the handle must also have TOKEN_QUERY access.
+	 * 
+	 * @param DisableAllPrivileges
+	 *            Specifies whether the function disables all of the token's
+	 *            privileges. If this value is TRUE, the function disables all
+	 *            privileges and ignores the NewState parameter. If it is FALSE,
+	 *            the function modifies privileges based on the information
+	 *            pointed to by the NewState parameter.
+	 * 
+	 * @param NewState
+	 *            A pointer to a TOKEN_PRIVILEGES structure that specifies an
+	 *            array of privileges and their attributes. If the
+	 *            DisableAllPrivileges parameter is FALSE, the
+	 *            AdjustTokenPrivileges function enables, disables, or removes
+	 *            these privileges for the token. The following table describes
+	 *            the action taken by the AdjustTokenPrivileges function, based
+	 *            on the privilege attribute.
+	 * 
+	 * @param BufferLength
+	 *            Specifies the size, in bytes, of the buffer pointed to by the
+	 *            PreviousState parameter. This parameter can be zero if the
+	 *            PreviousState parameter is NULL.
+	 * 
+	 * @param PreviousState
+	 *            A pointer to a buffer that the function fills with a
+	 *            TOKEN_PRIVILEGES structure that contains the previous state of
+	 *            any privileges that the function modifies. That is, if a
+	 *            privilege has been modified by this function, the privilege
+	 *            and its previous state are contained in the TOKEN_PRIVILEGES
+	 *            structure referenced by PreviousState. If the PrivilegeCount
+	 *            member of TOKEN_PRIVILEGES is zero, then no privileges have
+	 *            been changed by this function. This parameter can be NULL. If
+	 *            you specify a buffer that is too small to receive the complete
+	 *            list of modified privileges, the function fails and does not
+	 *            adjust any privileges. In this case, the function sets the
+	 *            variable pointed to by the ReturnLength parameter to the
+	 *            number of bytes required to hold the complete list of modified
+	 *            privileges.
+	 * 
+	 * @param ReturnLength
+	 *            A pointer to a variable that receives the required size, in
+	 *            bytes, of the buffer pointed to by the PreviousState
+	 *            parameter. This parameter can be NULL if PreviousState is
+	 *            NULL.
+	 * 
+	 * @return If the function succeeds, the return value is nonzero. To
+	 *         determine whether the function adjusted all of the specified
+	 *         privileges, call GetLastError, which returns one of the following
+	 *         values when the function succeeds:
+	 */
+	BOOL AdjustTokenPrivileges(
+	/* _In_ */HANDLE TokenHandle,
+	/* _In_ */BOOL DisableAllPrivileges,
+	/* _In_opt_ */TOKEN_PRIVILEGES NewState,
+	/* _In_ */DWORD BufferLength,
+	/* _Out_opt_ */TOKEN_PRIVILEGES PreviousState,
+	/* _Out_opt_ */DWORDByReference ReturnLength);
+
+	/**
+	 * The LookupPrivilegeValue function retrieves the locally unique identifier
+	 * (LUID) used on a specified system to locally represent the specified
+	 * privilege name.
+	 * 
+	 * @param lpSystemName
+	 *            A pointer to a null-terminated string that specifies the name
+	 *            of the system on which the privilege name is retrieved. If a
+	 *            null string is specified, the function attempts to find the
+	 *            privilege name on the local system.
+	 * 
+	 * @param lpName
+	 *            A pointer to a null-terminated string that specifies the name
+	 *            of the privilege, as defined in the Winnt.h header file. For
+	 *            example, this parameter could specify the constant,
+	 *            SE_SECURITY_NAME, or its corresponding string,
+	 *            "SeSecurityPrivilege".
+	 * 
+	 * @param lpLuid
+	 *            A pointer to a variable that receives the LUID by which the
+	 *            privilege is known on the system specified by the lpSystemName
+	 *            parameter.
+	 * 
+	 * @return If the function succeeds, the function returns nonzero. If the
+	 *         function fails, it returns zero. To get extended error
+	 *         information, call GetLastError.
+	 */
+	BOOL LookupPrivilegeValue(
+	/* _In_opt_ */String lpSystemName,
+	/* _In_ */String lpName,
+	/* _Out_ */LUID lpLuid);
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <APIMap>
 	<DLL name="advapi32">
+		<API funcName="adjusttokenprivileges" className="v2.org.analysis.apihandle.winapi.advapi32.functions.AdjustTokenPrivileges" />
 		<API funcName="cryptacquirecontext" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptAcquireContext" />
 		<API funcName="cryptcreatehash" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptCreateHash" />
 		<API funcName="cryptdecrypt" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptDecrypt" />
@@ -10,6 +11,7 @@
 		<API funcName="crypthashdata" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptHashData" />
 		<API funcName="cryptreleasecontext" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptReleaseContext" />
 		<API funcName="isvalidacl" className="v2.org.analysis.apihandle.winapi.advapi32.functions.IsValidAcl" />
+		<API funcName="lookupprivilegevalue" className="v2.org.analysis.apihandle.winapi.advapi32.functions.LookupPrivilegeValue" />
 		<API funcName="openprocesstoken" className="v2.org.analysis.apihandle.winapi.advapi32.functions.OpenProcessToken" />
 		<API funcName="openthreadtoken" className="v2.org.analysis.apihandle.winapi.advapi32.functions.OpenThreadToken" />
 		<API funcName="regclosekey" className="v2.org.analysis.apihandle.winapi.advapi32.functions.RegCloseKey" />
