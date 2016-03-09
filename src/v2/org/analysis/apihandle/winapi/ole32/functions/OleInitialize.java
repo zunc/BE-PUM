@@ -7,12 +7,12 @@
  */
 package v2.org.analysis.apihandle.winapi.ole32.functions;
 
-import com.sun.jna.platform.win32.WinDef.LPVOID;
-import com.sun.jna.platform.win32.WinNT.HRESULT;
-
 import v2.org.analysis.apihandle.winapi.ole32.Ole32API;
 import v2.org.analysis.apihandle.winapi.ole32.Ole32DLL;
 import v2.org.analysis.value.LongValue;
+
+import com.sun.jna.platform.win32.WinDef.LPVOID;
+import com.sun.jna.platform.win32.WinNT.HRESULT;
 
 /**
  * @author Yen Nguyen
@@ -34,7 +34,6 @@ public class OleInitialize extends Ole32API {
 		long value = ret.longValue();
 		
 		register.mov("eax", new LongValue(value));
-		System.out.println("Return Value: " + value);
 	}
 
 }

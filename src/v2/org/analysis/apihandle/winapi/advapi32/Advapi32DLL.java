@@ -586,4 +586,20 @@ public interface Advapi32DLL extends StdCallLibrary {
 	/* _In_opt_ */String lpSystemName,
 	/* _In_ */String lpName,
 	/* _Out_ */LUID lpLuid);
+
+	/**
+	 * Stops a system shutdown that has been initiated.
+	 * 
+	 * @param lpMachineName
+	 *            [in, optional] The network name of the computer where the
+	 *            shutdown is to be stopped. If lpMachineName is NULL or an
+	 *            empty string, the function stops the shutdown on the local
+	 *            computer.
+	 * 
+	 * @return If the function succeeds, the return value is nonzero. If the
+	 *         function fails, the return value is zero. To get extended error
+	 *         information, call GetLastError.
+	 */
+	BOOL AbortSystemShutdown(
+	/* _In_opt_ */String lpMachineName);
 }

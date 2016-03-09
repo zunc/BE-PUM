@@ -68,4 +68,35 @@ public interface Ole32DLL extends StdCallLibrary {
 	 * @return This function returns S_OK to indicate success.
 	 */
 	HRESULT CoFileTimeNow(FILETIME lpFileTime);
+
+	/**
+	 * Initializes the COM library on the current thread and identifies the
+	 * concurrency model as single-thread apartment (STA). New applications
+	 * should call CoInitializeEx instead of CoInitialize. If you want to use
+	 * the Windows Runtime, you must call Windows::Foundation::Initialize
+	 * instead.
+	 * 
+	 * @param pvReserved
+	 *            This parameter is reserved and must be NULL.
+	 * 
+	 * @return This function can return the standard return values E_INVALIDARG,
+	 *         E_OUTOFMEMORY, and E_UNEXPECTED, as well as the following values.
+	 */
+	HRESULT CoInitialize(
+	/* _In_opt_ */LPVOID pvReserved);
+
+	/**
+	 * Closes the COM library on the current thread, unloads all DLLs loaded by
+	 * the thread, frees any other resources that the thread maintains, and
+	 * forces all RPC connections on the thread to close.
+	 */
+	void CoUninitialize();
+
+	// HRESULT CoCreateInstance(
+	// /*_In_*/ REFCLSID rclsid,
+	// /*_In_*/ LPUNKNOWN pUnkOuter,
+	// /*_In_*/ DWORD dwClsContext,
+	// /*_In_*/ REFIID riid,
+	// /*_Out_*/ PointerByReference ppv
+	// );
 }

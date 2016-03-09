@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <APIMap>
 	<DLL name="advapi32">
+		<API funcName="abortsystemshutdown" className="v2.org.analysis.apihandle.winapi.advapi32.functions.AbortSystemShutdown" />
 		<API funcName="adjusttokenprivileges" className="v2.org.analysis.apihandle.winapi.advapi32.functions.AdjustTokenPrivileges" />
 		<API funcName="cryptacquirecontext" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptAcquireContext" />
 		<API funcName="cryptcreatehash" className="v2.org.analysis.apihandle.winapi.advapi32.functions.CryptCreateHash" />
@@ -310,6 +311,8 @@
 	<DLL name="ole32">
 		<API funcName="cocreateguid" className="v2.org.analysis.apihandle.winapi.ole32.functions.CoCreateGuid" />
 		<API funcName="cofiletimenow" className="v2.org.analysis.apihandle.winapi.ole32.functions.CoFileTimeNow" />
+		<API funcName="coinitialize" className="v2.org.analysis.apihandle.winapi.ole32.functions.CoInitialize" />
+		<API funcName="couninitialize" className="v2.org.analysis.apihandle.winapi.ole32.functions.CoUninitialize" />
 		<API funcName="oleinitialize" className="v2.org.analysis.apihandle.winapi.ole32.functions.OleInitialize" />
 		<API funcName="oleuninitialize" className="v2.org.analysis.apihandle.winapi.ole32.functions.OleUninitialize" />
 	</DLL>
@@ -414,6 +417,7 @@
 		<API funcName="updatewindow" className="v2.org.analysis.apihandle.winapi.user32.functions.UpdateWindow" />
 	</DLL>
 	<DLL name="wininet">
+		<API funcName="internetopen" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetOpen" />
 		<API funcName="internetsetoption" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetSetOption" />
 	</DLL>
 	<DLL name="winspool">
