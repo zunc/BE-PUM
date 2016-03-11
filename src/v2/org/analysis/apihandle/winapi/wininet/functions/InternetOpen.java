@@ -92,7 +92,7 @@ public class InternetOpen extends Ole32API {
 
 		HANDLE ret = WininetDLL.INSTANCE.InternetOpen(lpszAgent, dwAccessType, lpszProxyName, lpszProxyBypass, dwFlags);
 
-		register.mov("eax", new LongValue(Pointer.nativeValue(ret.getPointer())));
+		register.mov("eax", (ret == null) ? new LongValue(0) : new LongValue(Pointer.nativeValue(ret.getPointer())));
 	}
 
 }

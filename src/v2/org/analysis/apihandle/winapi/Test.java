@@ -8,15 +8,13 @@ package v2.org.analysis.apihandle.winapi;
 
 import org.apache.log4j.Logger;
 
-import v2.org.analysis.apihandle.winapi.kernel32.Kernel32DLLwithoutOption;
-import v2.org.analysis.apihandle.winapi.kernel32.functions.GetProcAddress;
-import v2.org.analysis.apihandle.winapi.kernel32.functions.LoadLibrary;
 import v2.org.analysis.apihandle.winapi.structures.WinNTn.RTL_CRITICAL_SECTION;
+import v2.org.analysis.apihandle.winapi.wininet.WininetDLL;
 
-import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
-import com.sun.jna.platform.win32.WinDef.HMODULE;
+import com.sun.jna.platform.win32.WinDef.DWORD;
 import com.sun.jna.platform.win32.WinDef.LONG;
+import com.sun.jna.platform.win32.WinNT.HANDLE;
 
 //import com.sun.jna.platform.win32.WinBase.STARTUPINFO;
 
@@ -420,18 +418,19 @@ public class Test {
 		// System.out.println(new String(buf));
 		// x = 1;
 
-		LoadLibrary loadLibrary = new LoadLibrary();
-		long lib = loadLibrary.execute("msvbvm60");
-		System.out.println(lib);
-		
-		GetProcAddress getProcAddress = new GetProcAddress();
-
-		HMODULE hModule = new HMODULE();
-		hModule.setPointer(new Pointer(lib));
-
-		long proc = Kernel32DLLwithoutOption.INSTANCE.GetProcAddress(hModule, new Pointer(0x204));
-//		long proc = getProcAddress.execute(lib, "MethCallEngine");
-		System.out.println(proc);
+		// LoadLibrary loadLibrary = new LoadLibrary();
+		// long lib = loadLibrary.execute("msvbvm60");
+		// System.out.println(lib);
+		//
+		// GetProcAddress getProcAddress = new GetProcAddress();
+		//
+		// HMODULE hModule = new HMODULE();
+		// hModule.setPointer(new Pointer(lib));
+		//
+		// long proc = Kernel32DLLwithoutOption.INSTANCE.GetProcAddress(hModule,
+		// new Pointer(0x204));
+		// // long proc = getProcAddress.execute(lib, "MethCallEngine");
+		// System.out.println(proc);
 
 		// try {
 		// countDownLatch.await();
@@ -440,6 +439,10 @@ public class Test {
 		// e.printStackTrace();
 		// }
 
+		HANDLE ret = WininetDLL.INSTANCE.InternetOpen("WinInet Example", new DWORD(1), null,
+				null, null);
+
+		System.out.println(ret == null);
 		System.out.println("OUT");
 	}
 
@@ -457,7 +460,6 @@ public class Test {
 interface Listener {
 	void run();
 }
-
 
 class A {
 	public static int a = 2;

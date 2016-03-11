@@ -13,13 +13,14 @@ import com.sun.jna.platform.win32.WinDef.DWORD;
 import com.sun.jna.platform.win32.WinDef.LPVOID;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.win32.StdCallLibrary;
+import com.sun.jna.win32.W32APIOptions;
 
 /**
  * @author Yen Nguyen
  *
  */
 public interface WininetDLL extends StdCallLibrary {
-	WininetDLL INSTANCE = (WininetDLL) Native.loadLibrary("wininet", WininetDLL.class);
+	WininetDLL INSTANCE = (WininetDLL) Native.loadLibrary("wininet", WininetDLL.class, W32APIOptions.DEFAULT_OPTIONS);
 	WininetDLL SYNC_INSTANCE = (WininetDLL) Native.synchronizedLibrary(INSTANCE);
 
 	/**
