@@ -7,30 +7,20 @@
  */
 package v2.org.analysis.apihandle.winapi.kernel32.functions;
 
+import java.nio.ByteBuffer;
+
+import org.jakstab.asm.DataType;
+import org.jakstab.asm.x86.X86MemoryOperand;
+
+import v2.org.analysis.apihandle.winapi.kernel32.Kernel32API;
+import v2.org.analysis.value.LongValue;
+
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.BaseTSD.ULONG_PTR;
 import com.sun.jna.platform.win32.Kernel32;
 import com.sun.jna.platform.win32.WinBase.OVERLAPPED;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.ptr.IntByReference;
-
-import v2.org.analysis.apihandle.winapi.kernel32.Kernel32API;
-
-import org.jakstab.asm.AbsoluteAddress;
-import org.jakstab.asm.DataType;
-import org.jakstab.asm.Instruction;
-import org.jakstab.asm.x86.X86MemoryOperand;
-
-import v2.org.analysis.environment.Environment;
-import v2.org.analysis.environment.Memory;
-import v2.org.analysis.environment.Register;
-import v2.org.analysis.environment.Stack;
-import v2.org.analysis.path.BPState;
-import v2.org.analysis.value.LongValue;
-import v2.org.analysis.value.Value;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 /**
  * Reads data from the specified file or input/output (I/O) device. Reads occur
@@ -121,8 +111,7 @@ public class ReadFile extends Kernel32API {
 		try {
 			byte[] bufferArray = lpBuffer.array();
 			for (int i = 0; i < bufferArray.length; i++) {
-				memory.setByteMemoryValue(new X86MemoryOperand(DataType.INT8, t2 + i), new LongValue(
-						(long) bufferArray[i]));
+				memory.setByteMemoryValue(t2 + i, new LongValue(bufferArray[i]));
 			}
 			// System.out.println("Data: " + str);
 		} catch (Exception e) {

@@ -249,6 +249,7 @@
 		<API funcName="waitnamedpipe" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WaitNamedPipe" />
 		<API funcName="widechartomultibyte" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WideCharToMultiByte" />
 		<API funcName="winexec" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WinExec" />
+		<API funcName="writeconsole" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WriteConsole" />
 		<API funcName="writefile" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WriteFile" />
 		<API funcName="writeprivateprofilestring" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WritePrivateProfileString" />
 		<API funcName="writeprocessmemory" className="v2.org.analysis.apihandle.winapi.kernel32.functions.WriteProcessMemory" />
@@ -417,7 +418,10 @@
 		<API funcName="updatewindow" className="v2.org.analysis.apihandle.winapi.user32.functions.UpdateWindow" />
 	</DLL>
 	<DLL name="wininet">
+		<API funcName="internetclosehandle" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetCloseHandle" />
 		<API funcName="internetopen" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetOpen" />
+		<API funcName="internetopenurl" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetOpenUrl" />
+		<API funcName="internetreadfile" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetReadFile" />
 		<API funcName="internetsetoption" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetSetOption" />
 	</DLL>
 	<DLL name="winspool">

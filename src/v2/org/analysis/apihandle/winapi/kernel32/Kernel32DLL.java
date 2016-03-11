@@ -3937,4 +3937,43 @@ public interface Kernel32DLL extends StdCallLibrary {
 	/* _In_ */int dwFlags,
 	/* _In_opt_ */String lpModuleName,
 	/* _Out_ */HANDLEByReference phModule);
+
+	/**
+	 * Writes a character string to a console screen buffer beginning at the
+	 * current cursor location.
+	 * 
+	 * @param hConsoleOutput
+	 *            A handle to the console screen buffer. The handle must have
+	 *            the GENERIC_WRITE access right. For more information, see
+	 *            Console Buffer Security and Access Rights.
+	 * 
+	 * @param lpBuffer
+	 *            A pointer to a buffer that contains characters to be written
+	 *            to the console screen buffer. The storage for this buffer is
+	 *            allocated from a shared heap for the process that is 64 KB in
+	 *            size. The maximum size of the buffer will depend on heap
+	 *            usage.
+	 * 
+	 * @param nNumberOfCharsToWrite
+	 *            The number of characters to be written. If the total size of
+	 *            the specified number of characters exceeds the available heap,
+	 *            the function fails with ERROR_NOT_ENOUGH_MEMORY.
+	 * 
+	 * @param lpNumberOfCharsWritten
+	 *            A pointer to a variable that receives the number of characters
+	 *            actually written.
+	 * 
+	 * @param lpReserved
+	 *            Reserved; must be NULL.
+	 * 
+	 * @return If the function succeeds, the return value is nonzero. If the
+	 *         function fails, the return value is zero. To get extended error
+	 *         information, call GetLastError.
+	 */
+	BOOL WriteConsole(
+	/* _In_ */HANDLE hConsoleOutput,
+	/* _In_ */String lpBuffer,
+	/* _In_ */DWORD nNumberOfCharsToWrite,
+	/* _Out_ */DWORDByReference lpNumberOfCharsWritten,
+	/* _Reserved_ */LPVOID lpReserved);
 }
