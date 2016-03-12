@@ -586,6 +586,12 @@ public class Memory {
 		int numOfBytes = (api.is64bit()) ? 2 : 1;
 		return getText(addr, numOfBytes);
 	}
+	
+	public String getText(int num, long addr) {
+		// ASCII - 1-byte per char
+		// Unicode - 2-byte per char
+		return getText(addr, num);
+	}
 
 	public Value getMemoryValue(long dest, Instruction inst) {
 		// YenNguyen: Change from conditions of "endWith(String)" method to
