@@ -418,7 +418,9 @@
 		<API funcName="updatewindow" className="v2.org.analysis.apihandle.winapi.user32.functions.UpdateWindow" />
 	</DLL>
 	<DLL name="wininet">
+		<API funcName="ftpgetfile" className="v2.org.analysis.apihandle.winapi.wininet.functions.FtpGetFile" />
 		<API funcName="internetclosehandle" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetCloseHandle" />
+		<API funcName="internetconnect" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetConnect" />
 		<API funcName="internetopen" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetOpen" />
 		<API funcName="internetopenurl" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetOpenUrl" />
 		<API funcName="internetreadfile" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetReadFile" />

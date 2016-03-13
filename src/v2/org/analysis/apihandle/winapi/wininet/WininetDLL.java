@@ -197,4 +197,116 @@ public interface WininetDLL extends StdCallLibrary {
 	 */
 	BOOL InternetCloseHandle(
 	/* _In_ */HANDLE hInternet);
+
+	/**
+	 * Opens an File Transfer Protocol (FTP) or HTTP session for a given site.
+	 * 
+	 * @param hInternet
+	 *            Handle returned by a previous call to InternetOpen.
+	 * 
+	 * @param lpszServerName
+	 *            Pointer to a null-terminated string that specifies the host
+	 *            name of an Internet server. Alternately, the string can
+	 *            contain the IP number of the site, in ASCII dotted-decimal
+	 *            format (for example, 11.0.1.45).
+	 * 
+	 * @param nServerPortTransmission
+	 *            Control Protocol/Internet Protocol (TCP/IP) port on the
+	 *            server. These flags set only the port that is used. The
+	 *            service is set by the value of dwService. This parameter can
+	 *            be one of the following values.
+	 * 
+	 * @param lpszUsername
+	 *            Pointer to a null-terminated string that specifies the name of
+	 *            the user to log on. If this parameter is NULL, the function
+	 *            uses an appropriate default. For the FTP protocol, the default
+	 *            is "anonymous".
+	 * 
+	 * @param lpszPassword
+	 *            Pointer to a null-terminated string that contains the password
+	 *            to use to log on. If both lpszPassword and lpszUsername are
+	 *            NULL, the function uses the default "anonymous" password. In
+	 *            the case of FTP, the default password is the user's email
+	 *            name. If lpszPassword is NULL, but lpszUsername is not NULL,
+	 *            the function uses a blank password.
+	 * 
+	 * @param dwService
+	 *            Type of service to access. This parameter can be one of the
+	 *            following values.
+	 * 
+	 * @param dwFlags
+	 *            Options specific to the service used. If dwService is
+	 *            INTERNET_SERVICE_FTP, INTERNET_FLAG_PASSIVE causes the
+	 *            application to use passive FTP semantics.
+	 * 
+	 * @param dwContext
+	 *            Pointer to a variable that contains an application-defined
+	 *            value that is used to identify the application context for the
+	 *            returned handle in callbacks.
+	 * 
+	 * @return Returns a valid handle to the session if the connection is
+	 *         successful, or NULL otherwise. To retrieve extended error
+	 *         information, call GetLastError. An application can also use
+	 *         InternetGetLastResponseInfo to determine why access to the
+	 *         service was denied.
+	 */
+	HANDLE InternetConnect(
+	/* _In_ */HANDLE hInternet,
+	/* _In_ */String lpszServerName,
+	/* _In_ */short nServerPort,
+	/* _In_ */String lpszUsername,
+	/* _In_ */String lpszPassword,
+	/* _In_ */int dwService,
+	/* _In_ */int dwFlags,
+	/* _In_ */DWORD_PTR dwContext);
+
+	/**
+	 * Retrieves a file from the FTP server and stores it under the specified
+	 * file name, creating a new local file in the process.
+	 * 
+	 * @param hConnect
+	 *            Handle to an FTP session.
+	 * 
+	 * @param lpszRemoteFile
+	 *            Pointer to a null-terminated string that contains the name of
+	 *            the file to be retrieved.
+	 * 
+	 * @param lpszNewFile
+	 *            Pointer to a null-terminated string that contains the name of
+	 *            the file to be created on the local system.
+	 * 
+	 * @param fFailIfExists
+	 *            Indicates whether the function should proceed if a local file
+	 *            of the specified name already exists. If fFailIfExists is TRUE
+	 *            and the local file exists, FtpGetFile fails.
+	 * 
+	 * @param dwFlagsAndAttributes
+	 *            File attributes for the new file. This parameter can be any
+	 *            combination of the FILE_ATTRIBUTE_* flags used by the
+	 *            CreateFile function.
+	 * 
+	 * @param dwFlags
+	 *            Controls how the function will handle the file download. The
+	 *            first set of flag values indicates the conditions under which
+	 *            the transfer occurs. These transfer type flags can be used in
+	 *            combination with the second set of flags that control caching.
+	 * 
+	 * @param dwContext
+	 *            Pointer to a variable that contains the application-defined
+	 *            value that associates this search with any application data.
+	 *            This is used only if the application has already called
+	 *            InternetSetStatusCallback to set up a status callback
+	 *            function.
+	 * 
+	 * @return Returns TRUE if successful, or FALSE otherwise. To get a specific
+	 *         error message, call GetLastError.
+	 */
+	boolean FtpGetFile(
+	/* _In_ */HANDLE hConnect,
+	/* _In_ */String lpszRemoteFile,
+	/* _In_ */String lpszNewFile,
+	/* _In_ */boolean fFailIfExists,
+	/* _In_ */int dwFlagsAndAttributes,
+	/* _In_ */int dwFlags,
+	/* _In_ */DWORD_PTR dwContext);
 }
