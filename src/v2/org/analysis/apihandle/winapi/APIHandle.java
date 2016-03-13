@@ -449,7 +449,8 @@ public class APIHandle {
 				Value x4 = stack.pop();
 				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
-			} else if (funcName.startsWith("PStoreCreateInstance")) {
+			} 
+			else if (funcName.startsWith("PStoreCreateInstance")) {
 				Value x1 = stack.pop();
 				Value x2 = stack.pop();
 				Value x3 = stack.pop();
@@ -463,22 +464,25 @@ public class APIHandle {
 				Value x4 = stack.pop();
 				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
-			} else if (funcName.startsWith("EnumWindows")) {
+			} 
+			else if (funcName.startsWith("EnumWindows")) {
 				Value x1 = stack.pop();
 				Value x2 = stack.pop();
 				
 				System.out.println("Argument: " + x1 + ", " + x2);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
-			} else if (funcName.startsWith("CoCreateInstance")) {
-				Value x1 = stack.pop();
-				Value x2 = stack.pop();
-				Value x3 = stack.pop();
-				Value x4 = stack.pop();
-				Value x5 = stack.pop();
-				
-				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4 + ", " + x5);
-				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
-			} else if (funcName.startsWith("InternetConnectW")) {
+			} 
+//			else if (funcName.startsWith("CoCreateInstance")) {
+//				Value x1 = stack.pop();
+//				Value x2 = stack.pop();
+//				Value x3 = stack.pop();
+//				Value x4 = stack.pop();
+//				Value x5 = stack.pop();
+//				
+//				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4 + ", " + x5);
+//				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+//			} 
+			else if (funcName.startsWith("InternetConnectW")) {
 				Value x1 = stack.pop();
 				Value x2 = stack.pop();
 				Value x3 = stack.pop();
