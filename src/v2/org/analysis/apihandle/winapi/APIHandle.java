@@ -449,6 +449,82 @@ public class APIHandle {
 				Value x4 = stack.pop();
 				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+			} 
+			else if (funcName.startsWith("PStoreCreateInstance")) {
+				Value x1 = stack.pop();
+				Value x2 = stack.pop();
+				Value x3 = stack.pop();
+				Value x4 = stack.pop();
+				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4);
+				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+			} else if (funcName.startsWith("RaiseException")) {
+				Value x1 = stack.pop();
+				Value x2 = stack.pop();
+				Value x3 = stack.pop();
+				Value x4 = stack.pop();
+				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4);
+				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+			} 
+			else if (funcName.startsWith("EnumWindows")) {
+				Value x1 = stack.pop();
+				Value x2 = stack.pop();
+				
+				System.out.println("Argument: " + x1 + ", " + x2);
+				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+			} 
+//			else if (funcName.startsWith("CoCreateInstance")) {
+//				Value x1 = stack.pop();
+//				Value x2 = stack.pop();
+//				Value x3 = stack.pop();
+//				Value x4 = stack.pop();
+//				Value x5 = stack.pop();
+//				
+//				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4 + ", " + x5);
+//				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+//			} 
+			else if (funcName.startsWith("InternetConnectW")) {
+				Value x1 = stack.pop();
+				Value x2 = stack.pop();
+				Value x3 = stack.pop();
+				Value x4 = stack.pop();
+				Value x5 = stack.pop();
+				Value x6 = stack.pop();
+				Value x7 = stack.pop();
+				Value x8 = stack.pop();
+				String lpszServerName = "";
+				if (x2 != null && x2 instanceof LongValue) {
+					lpszServerName = env.getMemory().getText(2, ((LongValue)x2).getValue());
+				}
+				
+				String nServerPort = "";
+				if (x3 != null && x3 instanceof LongValue) {
+					nServerPort = "" + ((LongValue)x3).getValue();
+				}
+				
+				String lpszUsername = "";
+				if (x4 != null && x4 instanceof LongValue) {
+					lpszUsername = env.getMemory().getText(2, ((LongValue)x4).getValue());
+				}
+				
+				String lpszPassword = "";
+				if (x5 != null && x5 instanceof LongValue) {
+					lpszPassword = env.getMemory().getText(2, ((LongValue)x5).getValue());
+				}
+				
+				String dwService  = "";
+				if (x6 != null && x6 instanceof LongValue) {
+					dwService  = "" + ((LongValue)x6).getValue();
+				}
+				
+				System.out.println("lpszServerName:" + lpszServerName +", " + 
+						"nServerPort:" + nServerPort +", " + 
+						"lpszUsername:" + lpszUsername +", " + 
+						"lpszPassword:" + lpszPassword +", " + 
+						"dwService:" + dwService +", ");
+				
+				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4 
+						 + ", " + x5 + ", " + x6 + ", " + x7 + ", " + x8);
+				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			} else if (funcName.startsWith("InitializeSListHead")) {
 				Value x1 = stack.pop();
 				System.out.println("Argument: " + x1);

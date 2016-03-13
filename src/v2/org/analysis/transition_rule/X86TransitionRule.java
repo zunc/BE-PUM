@@ -1003,18 +1003,25 @@ public class X86TransitionRule extends TransitionRule {
 		Program.getProgram().setDetailTechnique("SetUpException:" + curState.getLocation() + " ");
 		System.out.println("Set Up Exception: " + curState.getLocation());
 		Environment env = curState.getEnvironement();
-
-		env.getSystem()
+		Value stack0 = env.getStack().getValueStackFromIndex(0);
+		Value esp = env.getRegister().getRegisterValue("esp");
+		Value stack4 = env.getStack().getValueStackFromIndex(4);
+		
+		if (stack0 != null && stack0 instanceof LongValue  
+				&& stack4 != null && stack4 instanceof LongValue
+				&& esp != null && esp instanceof LongValue) {
+			env.getSystem()
 				.getSEHHandler()
 				.getStart()
 				.setNextSEHRecord(((LongValue) env.getStack().getValueStackFromIndex(0)).getValue(),
 						((LongValue) env.getRegister().getRegisterValue("esp")).getValue());
-		env.getSystem()
+			env.getSystem()
 				.getSEHHandler()
 				.getStart()
 				.setSEHHandler(((LongValue) env.getStack().getValueStackFromIndex(4)).getValue(),
 						((LongValue) env.getRegister().getRegisterValue("esp")).getValue() + 4);
-		env.getSystem().getSEHHandler().setSEHReady(true);
+			env.getSystem().getSEHHandler().setSEHReady(true);
+		}
 		TIB.setBeUpdated(true);
 	}
 
