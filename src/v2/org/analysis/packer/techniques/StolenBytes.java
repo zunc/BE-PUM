@@ -3,7 +3,9 @@ package v2.org.analysis.packer.techniques;
 import org.jakstab.Program;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
+import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
@@ -41,6 +43,7 @@ public class StolenBytes implements PackerTechnique {
 					if (apiName.contains("VirtualAlloc"))
 					{
 						numOfStolenBytes++;
+						PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.STOLEN_BYTES));
 					}
 				}
 			}

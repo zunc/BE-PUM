@@ -10,7 +10,9 @@ import org.jakstab.asm.x86.X86JmpInstruction;
 import org.jakstab.asm.x86.X86MemoryOperand;
 import org.jakstab.asm.x86.X86Register;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
+import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.path.BPState;
 
 public class IndirectJump implements PackerTechnique {
@@ -50,6 +52,7 @@ public class IndirectJump implements PackerTechnique {
 			if (dest instanceof X86Register || dest instanceof X86MemoryOperand)
 			{
 				numOfIndirectCall++;
+				PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.INDIRECT_JUMP));
 			}
 		}
 		else if (ins instanceof X86JmpInstruction || ins instanceof X86CondJmpInstruction)
@@ -58,6 +61,7 @@ public class IndirectJump implements PackerTechnique {
 			if (dest instanceof X86Register || dest instanceof X86MemoryOperand)
 			{
 				numOfIndirectJump++;
+				PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.INDIRECT_JUMP));
 			}
 		}
 		savedIndirectState.add(new Long(curState.getLocation().getValue()));

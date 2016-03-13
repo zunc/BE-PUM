@@ -115,13 +115,13 @@ public class OTFModelGeneration implements Algorithm {
 
 		// PHONG - 20150801 /////////////////////////////
 		// Packer Detection via Header
-//		System.out.println("================PACKER DETECTION VIA HEADER ======================");
-//		if (OTFModelGeneration.detectPacker)
-//		{
-//			program.getDetection().detectViaHeader(program);
-//			program.getDetection().setToLogFirst(program);
-//		}
-//		System.out.println("==================================================================");
+		System.out.println("================PACKER DETECTION VIA HEADER ======================");
+		if (OTFModelGeneration.detectPacker)
+		{
+			program.getDetection().detectViaHeader(program);
+			program.getDetection().setToLogFirst(program);
+		}
+		System.out.println("==================================================================");
 		/////////////////////////////////////////////////
 		
 		synchronized (OTFThreadManager.getInstance()) {
@@ -241,10 +241,10 @@ public class OTFModelGeneration implements Algorithm {
 //			}
 //		}
 		// PHONG - 20150724
-//		System.out.println("================PACKER DETECTION VIA OTF======================");
-//		program.getDetection().packedByTechniques();
-//		program.getDetection().packedByTechniquesFrequency();
-//		System.out.println("==============================================================");
+		System.out.println("================PACKER DETECTION VIA OTF======================");
+		program.getDetection().packedByTechniques();
+		program.getDetection().packedByTechniquesFrequency();
+		System.out.println("==============================================================");
 	}
 
 	public class OTFThread extends OTFThreadBase {
@@ -262,6 +262,7 @@ public class OTFModelGeneration implements Algorithm {
 			this.curState = path.getCurrentState();
 			this.inst = this.curState.getInstruction();
 			this.location = this.curState.getLocation();
+			mMessage = location.toString();
 		}
 
 		@Override
@@ -274,6 +275,11 @@ public class OTFModelGeneration implements Algorithm {
 				
 				// long overallStartTimePath = System.currentTimeMillis();
 				while (true) {
+					//////////////////////////////////VIA OTF ////////////////////////////////////////
+					if (detectPacker) {
+						program.getDetection().getTechniques().updateChecking(curState, program);
+					}
+					///////////////////////////////////////////////////////////////////////////////////
 					if (!curState.checkFeasiblePath()) {
 						path.destroy();
 						break;
@@ -291,14 +297,7 @@ public class OTFModelGeneration implements Algorithm {
 							}
 						}
 					}
-					*/
-				
-//					////////////////////////////////// VIA OTF ////////////////////////////////////////
-//					if (detectPacker)
-//					{
-//						program.getDetection().getTechniques().updateChecking(curState, program);
-//					}
-//					///////////////////////////////////////////////////////////////////////////////////
+					*/					
 					 
 					long overallEndTimeTemp = System.currentTimeMillis();
 					// Output file each 60s
@@ -309,15 +308,15 @@ public class OTFModelGeneration implements Algorithm {
 						
 						////////////////////////////////////////////////////
 						// Write to packer result file after each 60s
-//						if (detectPacker)
-//						{
-//							program.SetAnalyzingTime(System.currentTimeMillis()
-//							- overallStartTime); 
-//							program.getDetection().packedByTechniques();
-//							program.getDetection().packedByTechniquesFrequency();
-//							program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
-//							program.getDetection().setToLog(program);
-//						}					
+						if (detectPacker)
+						{
+							program.SetAnalyzingTime(System.currentTimeMillis()
+							- overallStartTime); 
+							program.getDetection().packedByTechniques();
+							program.getDetection().packedByTechniquesFrequency();
+							program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
+							program.getDetection().setToLog(program);
+						}					
 						
 						if (inst != null && inst.getName().contains("addb")
 								&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
@@ -368,16 +367,16 @@ public class OTFModelGeneration implements Algorithm {
 						rule.getNewState(path, pathList, true);
 					}
 					
-//					if (OTFModelGeneration.detectPacker && isOEP(curState.getLocation(), program.getFileName())) {
-//						program.SetAnalyzingTime(System.currentTimeMillis()
-//								- overallStartTime); 
-//						program.getDetection().packedByTechniques();
-//						program.getDetection().packedByTechniquesFrequency();
-//						program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
-//						program.getDetection().setToLog(program);
-//						
-//						OTFModelGeneration.detectPacker = false;
-//					}
+					if (OTFModelGeneration.detectPacker && isOEP(curState.getLocation(), program.getFileName())) {
+						program.SetAnalyzingTime(System.currentTimeMillis()
+								- overallStartTime); 
+						program.getDetection().packedByTechniques();
+						program.getDetection().packedByTechniquesFrequency();
+						program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
+						program.getDetection().setToLog(program);
+						
+						OTFModelGeneration.detectPacker = false;
+					}
 					
 					
 					///////// AFTER LOOP ///////////
@@ -387,19 +386,19 @@ public class OTFModelGeneration implements Algorithm {
 		}
 	}
 	
-//	private boolean isOEP(AbsoluteAddress location, String fileName) {
-//		// TODO Auto-generated method stub
-//		return (location != null) && (fileName.contains("api_test") && location.toString().contains("401000")
-//				|| fileName.contains("bof") && location.toString().contains("401000")
-//				|| fileName.contains("demo1") && location.toString().contains("401000")
-//				|| fileName.contains("demo2") && location.toString().contains("401000")
-//				|| fileName.contains("Aztec") && location.toString().contains("401000")
-//				|| fileName.contains("Benny") && location.toString().contains("401000")
-//				|| fileName.contains("Cabanas") && location.toString().contains("401000")
-//				|| fileName.contains("Adson") && location.toString().contains("401000")
-//				|| fileName.contains("api_testv2") && location.toString().contains("401131")
-//				);
-//	}
+	private boolean isOEP(AbsoluteAddress location, String fileName) {
+		// TODO Auto-generated method stub
+		return (location != null) && (fileName.contains("api_test") && location.toString().contains("401000")
+				|| fileName.contains("bof") && location.toString().contains("401000")
+				|| fileName.contains("demo1") && location.toString().contains("401000")
+				|| fileName.contains("demo2") && location.toString().contains("401000")
+				|| fileName.contains("Aztec") && location.toString().contains("401000")
+				|| fileName.contains("Benny") && location.toString().contains("401000")
+				|| fileName.contains("Cabanas") && location.toString().contains("401000")
+				|| fileName.contains("Adson") && location.toString().contains("401000")
+				|| fileName.contains("api_testv2") && location.toString().contains("401131")
+				);
+	}
 
 	private void backupState(BPState curState) {
 		// TODO Auto-generated method stub

@@ -3,7 +3,9 @@ package v2.org.analysis.packer.techniques;
 import org.jakstab.Program;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
+import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
@@ -41,13 +43,11 @@ public class AntiDebugging implements PackerTechnique {
 			if (aVal instanceof LongValue)
 			{
 				String apiName = PackerHelper.GetAPIName(curState, aVal);
-				if (apiName != null)
-				{
-					for (String antiAPI: ANTI_APIs)
-					{
-						if (apiName.contains(antiAPI))
-						{
+				if (apiName != null) {
+					for (String antiAPI: ANTI_APIs) {
+						if (apiName.contains(antiAPI)) {
 							numOfAntiDebugging++;
+							PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.ANTI_DEBUGGING));
 						}
 					}
 				}

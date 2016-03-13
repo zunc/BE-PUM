@@ -3,7 +3,9 @@ package v2.org.analysis.packer.techniques;
 import org.jakstab.Program;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
+import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
@@ -56,6 +58,7 @@ public class TwoSpecialAPIs implements PackerTechnique {
 		if (useLoadLibrary && useGetProcAddress)
 		{
 			numOfTwoAPIs++;
+			PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.TWO_APIS));
 			useLoadLibrary = false;
 			useGetProcAddress = false;
 		}

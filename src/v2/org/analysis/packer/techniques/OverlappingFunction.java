@@ -7,7 +7,9 @@ import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.Instruction;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
+import v2.org.analysis.packer.PackerRecord;
 import v2.org.analysis.packer.PackerSavedBlock;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
@@ -73,6 +75,7 @@ public class OverlappingFunction implements PackerTechnique {
 							&& !PackerHelper.IsExisted(savedListFunc, new Long(savedFunc.getBeginBlock())))
 					{
 						numOfOverlappingFunction++;
+						PackerRecord.getInstance().updatePackerTechniqueRecord(String.valueOf(PackerConstants.OVERLAPPING_FUNC));
 						isOverlap = true;
 						savedListFunc.add(new Long(func.getBeginBlock()));
 						savedListFunc.add(new Long(savedFunc.getBeginBlock()));
