@@ -255,7 +255,7 @@ public class OTFModelGeneration implements Algorithm {
 		Instruction inst = null;
 		AbsoluteAddress location = null;
 		int numAddStop = 0;
-
+		
 		public OTFThread(BPPath bpPath) {
 			this.pathList.add(bpPath);
 			this.path = bpPath;
@@ -340,12 +340,12 @@ public class OTFModelGeneration implements Algorithm {
 					location = curState.getLocation();	
 					
 //					compareOlly(curState);
-					if (location != null && location.toString().contains("408ac6")) {
-							System.out.println("Debug instruction at " + location + ": " + inst.getName() + " " 
-									+ inst.getOperand(0).toString());
-							System.out.println(curState.getEnvironement().getRegister().toString());
-							System.out.println(path.getTrace().toString());
-					}
+//					if (location != null && location.toString().contains("408ac6")) {
+//							System.out.println("Debug instruction at " + location + ": " + inst.getName() + " " 
+//									+ inst.getOperand(0).toString());
+//							System.out.println(curState.getEnvironement().getRegister().toString());
+//							System.out.println(path.getTrace().toString());
+//					}
 									
 					// PHONG: 20150506 - Update TIB
 					// --------------------------------------
@@ -382,6 +382,10 @@ public class OTFModelGeneration implements Algorithm {
 					
 					///////// AFTER LOOP ///////////
 					this.afterLoop(OTFModelGeneration.this, pathList);
+					if (this.isStopCurrentPath(curState)) {
+						path.destroy();
+						break;
+					}
 				}
 			}
 		}

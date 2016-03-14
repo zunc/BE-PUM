@@ -10,6 +10,7 @@ public class Environment {
 	private Flag flag;
 	private Memory memory;
 	private Register register;
+//	private MD5 md5;
 	public final static SystemHandle system = new SystemHandle();
 
 	public Stack getStack() {
@@ -129,9 +130,8 @@ public class Environment {
 
 	public String hash() {
 		try {
-			MD5 md5 = new MD5();
-
 			// Hash memory
+			MD5 md5 = new MD5();
 //			String memoryStr = memory.getOrderedStringContent();
 //			md5.Update(memoryStr, null);
 //			String hash1 = md5.asHex();
@@ -153,10 +153,11 @@ public class Environment {
 //			// Return the final hashing string
 //			md5.Update(stringBuilder.toString(), null);
 //			return md5.asHex();
-			
+//			long beginTime = System.currentTimeMillis();
 			md5.Update(register.toString(), null);
+//			System.out.println("HASHING " + this + " takes " + (System.currentTimeMillis() - beginTime)); 
 			return md5.asHex();
-//			return "";
+//			return register.toString();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
