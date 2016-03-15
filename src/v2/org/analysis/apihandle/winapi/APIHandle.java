@@ -531,7 +531,7 @@ public class APIHandle {
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			} else {
 				System.out.println("No Handling of this API");
-				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax"));
+				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			}
 		}
 
