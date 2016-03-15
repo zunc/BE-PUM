@@ -27,6 +27,7 @@ public class OTFThreadManager {
 
 	private boolean isMultiThread = false;
 	private static final boolean IS_CHECKSUM = true;
+	private static final int DEFAULT_NUMBER_CORE = 2;
 //	private static final int NUMBER_OF_CORE = (IS_MULTI_THREAD) ? (Runtime.getRuntime().availableProcessors()) : 1;
 	private int numberCore = 1;
 	public int getNumberCore() {
@@ -43,7 +44,8 @@ public class OTFThreadManager {
 
 	public void setMultiThread(boolean isThread) {
 		this.isMultiThread = isThread;
-		numberCore = (isMultiThread) ? 5 : 1;
+		int t = (Runtime.getRuntime().availableProcessors() >= 2) ? Runtime.getRuntime().availableProcessors(): DEFAULT_NUMBER_CORE;			
+		numberCore = (isMultiThread) ? t : 1;
 	}
 
 	public static int DEFAULT_MAX_SIZE_THREAD_BUFFER = 150;

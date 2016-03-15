@@ -136,13 +136,14 @@ public class Environment {
 //			md5.Update(memoryStr, null);
 //			String hash1 = md5.asHex();
 
-			// Hash Flag + Register + Stack
-//			StringBuilder stringBuilder = new StringBuilder();
-//			stringBuilder.append(flag.toString());
-//			stringBuilder.append(register.toString());
 //			stringBuilder.append(String.format("%d%d", ((StackV2)stack).getBaseAddress(), ((StackV2)stack).getTopAddress()));
-//			md5.Update(stringBuilder.toString(), null);
-			
+			// Hash Flag + Register + Memory
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append(flag.toString());
+			stringBuilder.append(register.toString());
+			md5.Update(stringBuilder.toString(), null);
+			return md5.asHex() + memory.toHashString();
+//			return register.toHashString() + memory.toHashString() + flag.toHashString();
 //			String hash2 = md5.asHex();
 //
 //			// Append 2 string of hashing
@@ -154,9 +155,9 @@ public class Environment {
 //			md5.Update(stringBuilder.toString(), null);
 //			return md5.asHex();
 //			long beginTime = System.currentTimeMillis();
-			md5.Update(register.toString(), null);
+//			md5.Update(register.toString(), null);
 //			System.out.println("HASHING " + this + " takes " + (System.currentTimeMillis() - beginTime)); 
-			return md5.asHex();
+//			return md5.asHex();
 //			return register.toString();
 		} catch (Exception ex) {
 			ex.printStackTrace();

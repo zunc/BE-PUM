@@ -20,6 +20,8 @@ public class Register {
 
 	private Value dr0, dr1, dr2, dr3, dr4, dr5, dr6, dr7;
 	private Value mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7;
+//	private String hashValue = "";
+//	private boolean isChanged = false;
 		
 	@Override
 	public Register clone() {
@@ -332,6 +334,7 @@ public class Register {
 	}
 
 	public void setRegisterValue(String registerName, Value value) {
+//		isChanged = true;
 		String reg = checkRegisterName(registerName);
 		Value v = this.normalizeValue(value, registerName);
 		
@@ -1596,5 +1599,23 @@ public class Register {
 		ebp = new SymbolValue("ebp");
 		bp = new SymbolValue("bp");
 	}
+
+//	public String toHashString() {
+//		// TODO Auto-generated method stub
+//		if (isChanged) {
+//			MD5 md5 = new MD5();
+////			String memoryStr = getOrderedStringContent();
+//			try {
+//				md5.Update(toString(), null);
+//			} catch (UnsupportedEncodingException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			hashValue = md5.asHex();
+//			isChanged = false;
+//		}
+//		
+//		return this.hashValue;
+//	}
 
 }

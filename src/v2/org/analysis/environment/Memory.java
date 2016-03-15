@@ -3,6 +3,7 @@
  */
 package v2.org.analysis.environment;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -33,6 +34,8 @@ import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.SymbolValue;
 import v2.org.analysis.value.Value;
 
+import com.twmacinta.util.MD5;
+
 /**
  * @author NMHai
  *
@@ -44,6 +47,8 @@ public class Memory {
 	private Map<Long, Value> memory;
 	private Program program;
 	private Map<Long, Value> reset;
+	private String hashValue = ""; 
+	private boolean isChanged = false;
 
 	public Memory() {
 		memory = new NewHashMap<Long, Value>();
@@ -100,7 +105,7 @@ public class Memory {
 	 * 
 	 * @author Yen Nguyen
 	 */
-	public String getOrderedStringContent() {
+	private String getOrderedStringContent() {
 		SortedSet<Long> keys = new TreeSet<Long>(this.memory.keySet());
 
 		StringBuilder stringBuilder = new StringBuilder();
@@ -761,8 +766,26 @@ public class Memory {
 
 		this.rrMemoryValue(d, v, inst);
 	}
+	
+	public String toHashString() {
+		if (isChanged) {
+			MD5 md5 = new MD5();
+			String memoryStr = getOrderedStringContent();
+			try {
+				md5.Update(memoryStr, null);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			hashValue = md5.asHex();
+			isChanged = false;
+		}
+		
+		return this.hashValue;
+	}
 
 	public void setByteMemoryValue(long address, Value v) {
+		isChanged = true;
 		memory.put(address, v);
 	}
 
@@ -777,6 +800,7 @@ public class Memory {
 	}
 
 	public void setDoubleWordMemoryValue(long address, Value v) {
+		isChanged = true;
 		if (v instanceof LongValue) {
 			long x = ((LongValue) v).getValue();
 			int[] t = BitVector.longToBytes(x, 4);
@@ -887,6 +911,7 @@ public class Memory {
 	}
 
 	public void setWordMemoryValue(long address, Value v) {
+		isChanged = true;
 		if (v instanceof LongValue) {
 			long x = ((LongValue) v).getValue();
 			int[] t = BitVector.longToBytes(x, 2);

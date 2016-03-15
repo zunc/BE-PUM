@@ -15,6 +15,7 @@ import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.SymbolValue;
 import v2.org.analysis.value.Value;
 
+
 /**
  * @author NMHai
  */
@@ -2374,4 +2375,18 @@ public class Flag {
 			iFlag = new BooleanValue((eflag & (1L << IFLAG_BIT)) != 0);
 		}
 	}
+
+//	public String toHashString() {
+//		// TODO Auto-generated method stub
+//		MD5 md5 = new MD5();
+////		String memoryStr = getOrderedStringContent();
+//		try {
+//			md5.Update(toString(), null);
+//		} catch (UnsupportedEncodingException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return md5.asHex();
+//	}
 }

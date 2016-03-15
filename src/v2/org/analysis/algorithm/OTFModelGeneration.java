@@ -317,18 +317,19 @@ public class OTFModelGeneration implements Algorithm {
 //							program.getDetection().packedByTechniquesFrequency();
 //							program.getDetection().updateBackupDetectionState(program, OTFModelGeneration.this);
 //							program.getDetection().setToLog(program);
-//						}					
+//						}
 						
-						if (inst != null && inst.getName().contains("addb")
-								&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
-								&& inst.getOperand(1) != null && inst.getOperand(1).toString().contains("al")) {
-							numAddStop ++;
-						}
+//						if (inst != null && inst.getName().contains("addb")
+//								&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
+//								&& inst.getOperand(1) != null && inst.getOperand(1).toString().contains("al")) {
+//							program.getStopFile().appendFile(program.getFileName());
+//							break;
+//						}
 						
-						if (numAddStop > 1) {
-							program.getStopFile().appendFile(program.getFileName());
-							break;				
-						}
+//						if (numAddStop > 1) {
+//							program.getStopFile().appendFile(program.getFileName());
+//							break;				
+//						}
 						////////////////////////////////////////////////////
 					}
 	
@@ -337,8 +338,15 @@ public class OTFModelGeneration implements Algorithm {
 					}
 	
 					inst = curState.getInstruction();
-					location = curState.getLocation();	
+					location = curState.getLocation();					
 					
+					if (inst != null && inst.getName().contains("addb")
+							&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
+							&& inst.getOperand(1) != null && inst.getOperand(1).toString().contains("al")) {
+						program.getStopFile().appendFile(program.getFileName());
+						break;
+					}
+
 //					compareOlly(curState);
 //					if (location != null && location.toString().contains("408ac6")) {
 //							System.out.println("Debug instruction at " + location + ": " + inst.getName() + " " 
