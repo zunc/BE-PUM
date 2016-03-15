@@ -96,6 +96,9 @@ public class InternetConnect extends WininetAPI {
 		int dwService = (int) t6;
 		int dwFlags = (int) t7;
 		DWORD_PTR dwContext = new DWORD_PTR(t8);
+		System.out.println("lpszServerName=" + lpszServerName + ", nServerPort=" + (int)nServerPort
+				+ ", lpszUsername=" + lpszUsername + ", lpszPassword=" + lpszPassword
+				+ ", dwService=" + dwService + ", dwFlags=" + dwFlags);
 
 		HANDLE ret = WininetDLL.INSTANCE.InternetConnect(hInternet, lpszServerName, nServerPort, lpszUsername,
 				lpszPassword, dwService, dwFlags, dwContext);
