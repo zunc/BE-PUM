@@ -3,6 +3,7 @@
  */
 package v2.org.analysis.environment;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import v2.org.analysis.complement.BitVector;
@@ -14,6 +15,8 @@ import v2.org.analysis.value.HybridValue;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.SymbolValue;
 import v2.org.analysis.value.Value;
+
+import com.twmacinta.util.MD5;
 
 
 /**
@@ -2376,17 +2379,17 @@ public class Flag {
 		}
 	}
 
-//	public String toHashString() {
-//		// TODO Auto-generated method stub
-//		MD5 md5 = new MD5();
-////		String memoryStr = getOrderedStringContent();
-//		try {
-//			md5.Update(toString(), null);
-//		} catch (UnsupportedEncodingException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		return md5.asHex();
-//	}
+	public String toHashString() {
+		// TODO Auto-generated method stub
+		MD5 md5 = new MD5();
+//		String memoryStr = getOrderedStringContent();
+		try {
+			md5.Update(toString(), null);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return md5.asHex();
+	}
 }

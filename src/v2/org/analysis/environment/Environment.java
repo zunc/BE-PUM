@@ -3,8 +3,6 @@ package v2.org.analysis.environment;
 import v2.org.analysis.system.SystemHandle;
 import v2.org.analysis.value.LongValue;
 
-import com.twmacinta.util.MD5;
-
 public class Environment {
 	private Stack stack;
 	private Flag flag;
@@ -131,19 +129,20 @@ public class Environment {
 	public String hash() {
 		try {
 			// Hash memory
-			MD5 md5 = new MD5();
+//			MD5 md5 = new MD5();
 //			String memoryStr = memory.getOrderedStringContent();
 //			md5.Update(memoryStr, null);
 //			String hash1 = md5.asHex();
 
 //			stringBuilder.append(String.format("%d%d", ((StackV2)stack).getBaseAddress(), ((StackV2)stack).getTopAddress()));
 			// Hash Flag + Register + Memory
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append(flag.toString());
-			stringBuilder.append(register.toString());
-			md5.Update(stringBuilder.toString(), null);
-			return md5.asHex() + memory.toHashString();
-//			return register.toHashString() + memory.toHashString() + flag.toHashString();
+//			StringBuilder stringBuilder = new StringBuilder();
+//			stringBuilder.append(flag.toString());
+//			stringBuilder.append(register.toString());
+//			md5.Update(stringBuilder.toString(), null);
+//			return md5.asHex() + memory.toHashString();
+			return register.toHashString() + memory.toHashString();
+//			+ flag.toHashString();
 //			String hash2 = md5.asHex();
 //
 //			// Append 2 string of hashing
