@@ -6,31 +6,33 @@ import org.jakstab.Program;
 import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class Overwriting implements PackerTechnique {
+public class Overwriting extends TechniqueAbstract {
 
 	/** 
 	 * Using for record overwriting
 	 */
 	
-	private static int numOfSMC;
 	private static ArrayList<Long> savedSMCState;
 	
 	public Overwriting ()
 	{
-		numOfSMC				= 0;
+		num				= 0;
+		name = "Overwriting";
+		id = PackerConstants.OVERWRITING;
 		savedSMCState			= new ArrayList<Long>();
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		int opCount = curState.getInstruction().getOperandCount();
@@ -44,17 +46,12 @@ public class Overwriting implements PackerTechnique {
 				AbsoluteAddress aAddr = new AbsoluteAddress(((LongValue) aVal).getValue());
 				if (PackerHelper.IsInCodeSection(prog, aAddr))
 				{
-					numOfSMC++;
+					num++;
 					savedSMCState.add(new Long(curState.getLocation().getValue()));
+					return true;
 				}
 			}
 		}
+		return false;
 	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfSMC;
-	}
-	
 }

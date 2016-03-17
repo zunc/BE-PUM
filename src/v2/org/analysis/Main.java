@@ -46,6 +46,7 @@ import org.jakstab.util.Logger;
 import v2.org.analysis.algorithm.OTFModelGeneration;
 import v2.org.analysis.algorithm.OTFThreadManager;
 import v2.org.analysis.cfg.BPCFG;
+import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.statistics.FileProcess;
 import antlr.ANTLRException;
 
@@ -108,18 +109,18 @@ public class Main {
 		String in = "";
 		String pathVirus = "";
 		// Path Virus
-		pathVirus = "asm/packer/Done/";
+		pathVirus = "asm/packer/";
 		// pathVirus = "asm/packer/";
 		// in = "api_testv2.exe"; // 2064 2151 26s ?
 		in = "api_test.exe"; // 158 160 0.1s x
-		// in = "api_test_upx.exe"; // 323 353 6s x
-		in = "api_test_fsg.exe"; // 244 268 3s x
-		in = "api_test_pecompact.exe"; // 1127 1178 28s x
-		in = "api_test_npack.exe"; // 602 639 10s x
+		in = "api_test_upx.exe"; // 323 353 6s x
+//		in = "api_test_fsg.exe"; // 244 268 3s x
+//		in = "api_test_pecompact.exe"; // 1127 1178 28s x
+//		in = "api_test_npack.exe"; // 602 639 10s x
 		// in = "api_test_yoda.1.2.exe"; // 625 659 173s x
 		// in = "api_test_yoda.1.3.exe"; // 924 960 163s x
 		// in = "api_test_petite_2.3.exe"; // 1569 1637 86s x
-		// in = "api_test_aspack.exe"; // 1047 1112 73s x
+//		in = "api_test_aspack.exe"; // 1047 1112 73s x
 		// in = "api_test_mpress.exe"; // 459 489 103 x
 		// in = "api_test_wwpack32.exe"; // 329 360 4s x
 		// in = "api_test_exepack.exe"; // 323 353 6s x
@@ -178,18 +179,19 @@ public class Main {
 		// in =
 		// "003ba46362d1c2643a690cd7e912441b0ee04ee0f8026789f677b873389c0361";
 
-		pathVirus = "asm/packer/";
-		// pathVirus = "asm/vx.netlux.org/";
-		pathVirus = "asm/testcase/";
-		in = "peb.exe";
-		in = "hostname.exe";
-		// in = "Net-Worm.Win32.Sasser.a";
-		in = "multiThread1.exe";
-		in = "multiThread2.exe";
-		in = "multiThread3_FF.exe";
-		// in = "multiThread3_FFF.exe";
-		// in = "multiThread3_FFFF.exe";
-		in = "multiThread2_FFFF.exe";
+//		pathVirus = "asm/packer/";
+//		pathVirus = "asm/vx.netlux.org/";
+//		pathVirus = "asm/testcase/";
+//		in = "peb.exe";
+//		in = "hostname.exe";
+//		// in = "Net-Worm.Win32.Sasser.a";
+//		in = "multiThread1.exe";
+//		in = "multiThread2.exe";
+//		in = "multiThread3_FF.exe";
+//		// in = "multiThread3_FFF.exe";
+//		// in = "multiThread3_FFFF.exe";
+//		in = "multiThread2_FFFF.exe";
+				
 		String path = pathVirus + in;
 		isGui = false;
 		// YenNguyen: For jar file export
@@ -227,8 +229,9 @@ public class Main {
 								System.out.println(e.toString());
 							}
 						} else if (input.contains("-multithread")) {
-							OTFThreadManager.getInstance().setMultiThread(true);
-							;
+							OTFThreadManager.getInstance().setMultiThread(true);							
+						} else if (input.contains("-detectpacker")) {
+							PackerManager.getInstance().setDetectPacker(true);							
 						}
 					} else {
 						path = input;
@@ -480,7 +483,9 @@ public class Main {
 			// program.getDetection().updateBackupDetectionState(program,
 			// otfMG);
 			// program.getDetection().setToLog(program);
-			// ////////////////////////////////////////////////////////////////////
+			if (PackerManager.getInstance().isDetected()) {
+				PackerManager.getInstance().outputToFile(program.getFileName());
+			}
 
 			try {
 				Runtime.getRuntime().removeShutdownHook(shutdownThread);

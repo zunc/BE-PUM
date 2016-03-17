@@ -2,36 +2,30 @@ package v2.org.analysis.packer.techniques;
 
 import org.jakstab.Program;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.path.BPState;
 
-public class HardwareBPX implements PackerTechnique {
+public class HardwareBPX extends TechniqueAbstract {
 
 	/** 
 	 * Using for record hardware breakpoints-
 	 */
 	
-	private static int numOfBPXs;
-	
-	public HardwareBPX ()
-	{
-		numOfBPXs				= 0;
+	public HardwareBPX () {
+		num				= 0;
+		id = PackerConstants.HARDWARE_BPX;
+		name = "HardwareBPX";
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
+		//Insert later
+		num = 0;
+		return false;
 		
-		numOfBPXs = 0;
-		
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfBPXs;
-	}
-	
+	}	
 }

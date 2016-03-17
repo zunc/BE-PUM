@@ -7,19 +7,19 @@ import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.Instruction;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.packer.PackerSavedBlock;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class OverlappingFunction implements PackerTechnique {
+public class OverlappingFunction extends TechniqueAbstract {
 
 	/** 
 	 * Using for record overlapping function
 	 */
 	
-	private static int numOfOverlappingFunction;
 	private static ArrayList<PackerSavedBlock> funcs;
 	private static long tracingFuncLoc;
 	private static ArrayList<Long> savedListFunc;
@@ -28,8 +28,9 @@ public class OverlappingFunction implements PackerTechnique {
 	
 	public OverlappingFunction ()
 	{
-		numOfOverlappingFunction		= 0;
-		
+		num		= 0;
+		name = "OverlappingFunction";
+		id = PackerConstants.OVERLAPPING_FUNC;
 		tracingFuncLoc					= 0x0;
 		funcs							= new ArrayList<PackerSavedBlock>();
 		
@@ -39,12 +40,13 @@ public class OverlappingFunction implements PackerTechnique {
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
+		boolean ret = false;
 		if (curState.getInstruction().getName().contains("call"))
 		{
 			Operand op = curState.getInstruction().getOperand(0);
@@ -72,7 +74,8 @@ public class OverlappingFunction implements PackerTechnique {
 							&& !PackerHelper.IsExisted(savedListFunc, new Long(func.getBeginBlock()))
 							&& !PackerHelper.IsExisted(savedListFunc, new Long(savedFunc.getBeginBlock())))
 					{
-						numOfOverlappingFunction++;
+						num++;
+						ret = true;
 						isOverlap = true;
 						savedListFunc.add(new Long(func.getBeginBlock()));
 						savedListFunc.add(new Long(savedFunc.getBeginBlock()));
@@ -87,12 +90,6 @@ public class OverlappingFunction implements PackerTechnique {
 				isOverlap = false;
 			}
 		}
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfOverlappingFunction;
-	}
-	
+		return ret;
+	}	
 }

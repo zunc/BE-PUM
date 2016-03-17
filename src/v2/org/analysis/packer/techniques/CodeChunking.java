@@ -6,34 +6,35 @@ import org.jakstab.Program;
 import org.jakstab.asm.Instruction;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.packer.PackerSavedState;
 import v2.org.analysis.path.BPState;
 
-public class CodeChunking implements PackerTechnique {
+public class CodeChunking extends TechniqueAbstract {
 
 	/** 
 	 * Using for record code chunk-
 	 */
 	
-	private static int numOfCodeChunking;
 	private static ArrayList<PackerSavedState> chunkCodeStates;
-	private static ArrayList<Long> savedChunkCodeStates;
-	
+	private static ArrayList<Long> savedChunkCodeStates;	
 	private static final long CHUNKING_THRESHOLD = 10;
 	
 	public CodeChunking ()
 	{
-		numOfCodeChunking				= 0;
+		num				= 0;
+		id = PackerConstants.CODE_CHUNKING;
 		chunkCodeStates 				= new ArrayList<PackerSavedState>();
 		savedChunkCodeStates			= new ArrayList<Long>();
+		name = "CodeChunking";
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		Instruction ins = curState.getInstruction();
@@ -68,20 +69,16 @@ public class CodeChunking implements PackerTechnique {
 						|| !PackerHelper.IsExisted(savedChunkCodeStates, jmpStateB.getInsLoc())
 						|| !PackerHelper.IsExisted(savedChunkCodeStates, jmpStateC.getInsLoc()))
 				{
-					numOfCodeChunking++;
+					num++;
 					chunkCodeStates = PackerHelper.ClearStates(chunkCodeStates);
 					savedChunkCodeStates.add(jmpStateA.getInsLoc());
 					savedChunkCodeStates.add(jmpStateB.getInsLoc());
 					savedChunkCodeStates.add(jmpStateC.getInsLoc());
+					return true;
 				}
 			}
 		}
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfCodeChunking;
-	}
-	
+		
+		return false;
+	}	
 }

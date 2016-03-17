@@ -97,7 +97,6 @@ import v2.org.analysis.environment.Environment;
 import v2.org.analysis.environment.ExternalMemory;
 import v2.org.analysis.environment.ExternalMemory.ExternalMemoryReturnData;
 import v2.org.analysis.environment.Memory;
-import v2.org.analysis.packer.PackerDetection;
 import v2.org.analysis.statistics.FileProcess;
 import v2.org.analysis.statistics.Logging;
 import v2.org.analysis.value.LongValue;
@@ -170,8 +169,8 @@ public final class Program {
 	final static String resultFileTXT = "data/data/Result.txt";
 	final static String resultFileTempTXT = "data/data/Result_Temp.txt";
 	final static String fullResultFileTXT = "data/data/fullResult.txt";
-	final static String packerResultFileTXT = "data/data/packerResult.txt";
-	final static String packerResultCountFileTXT = "data/data/packerResultCount.txt";
+//	final static String packerResultFileTXT = "data/data/packerResult.txt";
+//	final static String packerResultCountFileTXT = "data/data/packerResultCount.txt";
 	final static String stopAddFile = "data/data/stopFile.txt";
 	static final int MAX_BYTE_PER_INSTRUCTION = 15;
 	public static final String pathLibrary = "data/lib/win32/";
@@ -210,13 +209,13 @@ public final class Program {
 	private Harness harness;
 	Disassembler disassembler;
 	private FileProcess resultFile, fullResultFile, resultFile_Temp, logFile, stopFile;
-	private FileProcess packerResultFile, packerResultCountFile;
+//	private FileProcess packerResultFile, packerResultCountFile;
 	private TargetOS targetOS;
 
 	private Instruction analyzedInstruction = null;;
 	
 	// PHONG - 20150724
-	private PackerDetection pDetection;
+//	private PackerDetection pDetection;
 	
 	private long analyzingTime;
 	
@@ -244,13 +243,11 @@ public final class Program {
 		setFullResultFile(new FileProcess(fullResultFileTXT));
 		setResultFileTemp(new FileProcess(resultFileTempTXT));
 		
-		setPackerResultFile(new FileProcess(packerResultFileTXT));
-		this.packerResultFile.appendFile("");
+//		setPackerResultFile(new FileProcess(packerResultFileTXT));
+//		this.packerResultFile.appendFile("");
 		
-		setPackerResultCountFile(new FileProcess(packerResultCountFileTXT));
-		this.packerResultCountFile.appendFile("");
-		
-		pDetection = new PackerDetection();
+//		setPackerResultCountFile(new FileProcess(packerResultCountFileTXT));
+//		this.packerResultCountFile.appendFile("");
 	}
 
 	public void addByteSMPos(AbsoluteAddress addr) {
@@ -2182,42 +2179,7 @@ public final class Program {
 	public Logging getLog() {
 		return logger;
 	}
-	
-	// PHONG - 20150724
-	public PackerDetection getDetection()
-	{
-		return pDetection;
-	}
-	
-	//////////////////////////////////////////////
-	public void setPackerResultFile(FileProcess packerResultFile) {
-		this.packerResultFile = packerResultFile;
-	}
-
-	public FileProcess getPackerResultFile() {
-		return packerResultFile;
-	}
-	
-	public static String getPackerResultFileName ()
-	{
-		return packerResultFileTXT;
-	}
-	
-	///////////////////////////////////////////////
-	public void setPackerResultCountFile(FileProcess packerResultCountFile) {
-		this.packerResultCountFile = packerResultCountFile;
-	}
-
-	public FileProcess getPackerResultCountFile() {
-		return packerResultCountFile;
-	}
-	
-	public static String getPackerResultCountFileName ()
-	{
-		return packerResultCountFileTXT;
-	}
-	
-	////////////////////////////////////////////////
+		
 	public void SetAnalyzingTime (long time)
 	{
 		this.analyzingTime = time;

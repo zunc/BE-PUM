@@ -3,33 +3,35 @@ package v2.org.analysis.packer.techniques;
 import org.jakstab.Program;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class TwoSpecialAPIs implements PackerTechnique {
+public class TwoSpecialAPIs extends TechniqueAbstract {
 
 	/** 
 	 * Using for record two APIs using
 	 */
 	
-	private static int numOfTwoAPIs;
 	private static boolean useLoadLibrary;
 	private static boolean useGetProcAddress;
 	
 	public TwoSpecialAPIs ()
 	{
-		numOfTwoAPIs				= 0;
+		num				= 0;
+		name = "TwoSpecialAPIs";
+		id = PackerConstants.TWO_APIS;
 		useLoadLibrary				= false;
 		useGetProcAddress			= false;
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		String insName = curState.getInstruction().getName();
@@ -55,16 +57,11 @@ public class TwoSpecialAPIs implements PackerTechnique {
 		}
 		if (useLoadLibrary && useGetProcAddress)
 		{
-			numOfTwoAPIs++;
+			num++;
 			useLoadLibrary = false;
 			useGetProcAddress = false;
+			return true;
 		}
+		return false;
 	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfTwoAPIs;
-	}
-	
 }

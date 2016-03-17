@@ -5,30 +5,30 @@ import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86MemoryOperand;
 
 import v2.org.analysis.environment.Environment;
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class SEH implements PackerTechnique {
+public class SEH extends TechniqueAbstract {
 
 	/** 
 	 * Using for record SEH
 	 */
 	
-	private static int numOfSEH;
 	private static boolean setupSEH;
 	
-	public SEH ()
-	{
-		numOfSEH				= 0;
+	public SEH () {
+		num				= 0;
+		id = PackerConstants.SEH;
+		name = "SEH";
 		setupSEH 			= false;
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
-	{
+	public boolean check (BPState curState, Program prog) {
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		Environment env = curState.getEnvironement();
@@ -56,17 +56,12 @@ public class SEH implements PackerTechnique {
 					if (memAddr.getSegmentRegister() != null 
 							&& memAddr.getSegmentRegister().toString() == "%fs" && base) 
 					{
-						numOfSEH++;
+						num++;
+						return true;
 					}
 				}
 			}
 		}
+		return false;
 	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfSEH;
-	}
-	
 }

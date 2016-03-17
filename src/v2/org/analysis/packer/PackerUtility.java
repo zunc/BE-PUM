@@ -15,29 +15,29 @@ public class PackerUtility {
 
 	public static void setToLogFirst (Program prog, String detectViaHeader)
 	{
-		FileProcess packerResultFile = prog.getPackerResultFile();
+//		FileProcess packerResultFile = prog.getPackerResultFile();
 	
 		String fileName = prog.getFileName();
 		String viaHeader = detectViaHeader;
 		
 		String resultFirst = fileName + "\t" + viaHeader + "\t";
 		
-		packerResultFile.appendFile(resultFirst);
+//		packerResultFile.appendFile(resultFirst);
 	}
 	
 	public static void setToLog (Program prog, String backupDetectionState, String backupDetectionCountState)
 	{
 		String curDetectionFile = prog.getFileName();
 		
-		FileProcess packerResultFile = prog.getPackerResultFile();
-		String packerResultFileName = Program.getPackerResultFileName();
-		String content = backupDetectionState;
-		writeFileUpdate(curDetectionFile, packerResultFile, packerResultFileName, content);
-		
-		FileProcess packerResultCountFile = prog.getPackerResultCountFile();
-		String packerResultCountFileName = Program.getPackerResultCountFileName();
-		String contentC = backupDetectionCountState;
-		writeFileUpdate(curDetectionFile, packerResultCountFile, packerResultCountFileName, contentC);
+//		FileProcess packerResultFile = prog.getPackerResultFile();
+//		String packerResultFileName = Program.getPackerResultFileName();
+//		String content = backupDetectionState;
+//		writeFileUpdate(curDetectionFile, packerResultFile, packerResultFileName, content);
+//		
+//		FileProcess packerResultCountFile = prog.getPackerResultCountFile();
+//		String packerResultCountFileName = Program.getPackerResultCountFileName();
+//		String contentC = backupDetectionCountState;
+//		writeFileUpdate(curDetectionFile, packerResultCountFile, packerResultCountFileName, contentC);
 	}
 	
 	

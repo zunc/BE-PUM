@@ -3,29 +3,30 @@ package v2.org.analysis.packer.techniques;
 import org.jakstab.Program;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class StolenBytes implements PackerTechnique {
+public class StolenBytes extends TechniqueAbstract {
 
 	/** 
 	 * Using for record stolen bytes-
 	 */
 	
-	private static int numOfStolenBytes;
-	
 	public StolenBytes ()
 	{
-		numOfStolenBytes				= 0;
+		num				= 0;
+		name = "StolenBytes";
+		id = PackerConstants.STOLEN_BYTES;
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		String insName = curState.getInstruction().getName();
@@ -40,17 +41,12 @@ public class StolenBytes implements PackerTechnique {
 				{
 					if (apiName.contains("VirtualAlloc"))
 					{
-						numOfStolenBytes++;
+						num++;
+						return true;
 					}
 				}
 			}
 		}
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfStolenBytes;
-	}
-	
+		return false;
+	}	
 }

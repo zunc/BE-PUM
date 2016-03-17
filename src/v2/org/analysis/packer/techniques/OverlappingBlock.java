@@ -7,19 +7,19 @@ import org.jakstab.asm.Instruction;
 import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.packer.PackerSavedBlock;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class OverlappingBlock implements PackerTechnique {
+public class OverlappingBlock extends TechniqueAbstract {
 
 	/** 
 	 * Using for record overlapping function
 	 */
 	
-	private static int numOfOverlappingBlock;
 	private static boolean firstCheck;
 	private static long tracingBlockLoc;
 	private static ArrayList<PackerSavedBlock> blocks;
@@ -30,8 +30,9 @@ public class OverlappingBlock implements PackerTechnique {
 	
 	public OverlappingBlock ()
 	{
-		numOfOverlappingBlock			= 0;
-		
+		num			= 0;
+		name = "OverlappingBlock";
+		id = PackerConstants.OVERLAPPING_BLOCK;
 		firstCheck						= true;
 		tracingBlockLoc					= 0x0;
 		blocks 							= new ArrayList<PackerSavedBlock>();
@@ -42,12 +43,12 @@ public class OverlappingBlock implements PackerTechnique {
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
-		
+		boolean ret = false;
 		if (firstCheck)
 		{
 			tracingBlockLoc = curState.getLocation().getValue();
@@ -72,10 +73,11 @@ public class OverlappingBlock implements PackerTechnique {
 								&& !PackerHelper.IsExisted(savedListBlock, new Long(block.getBeginBlock()))
 								&& !PackerHelper.IsExisted(savedListBlock, new Long(savedBlock.getBeginBlock())))
 						{
-							numOfOverlappingBlock++;
+							num++;
 							isOverlap = true;
 							savedListBlock.add(new Long(block.getBeginBlock()));
-							savedListBlock.add(new Long(savedBlock.getBeginBlock()));
+							savedListBlock.add(new Long(savedBlock.getBeginBlock()));	
+							ret = true;
 							break;
 						}
 					}
@@ -87,14 +89,9 @@ public class OverlappingBlock implements PackerTechnique {
 					blocks = PackerHelper.ClearStates(blocks);
 					isOverlap = false;
 				}
+				
 			}
 		}
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfOverlappingBlock;
-	}
-	
+		return ret;
+	}	
 }

@@ -19,7 +19,7 @@ public class PackerPatterns {
 	 */
 	public boolean PackAndUnpack()
 	{
-		return pCounter.getTechniques(PackerConstants.PACKING_UNPACKING).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.PACKING_UNPACKING).getFrequency() > 0;
 	}
 	
 	/*
@@ -27,7 +27,7 @@ public class PackerPatterns {
 	 */
 	public boolean Overwriting()
 	{
-		return pCounter.getTechniques(PackerConstants.OVERWRITING).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.OVERWRITING).getFrequency() > 0;
 	}
 	
 	/*
@@ -35,7 +35,7 @@ public class PackerPatterns {
 	 */
 	public boolean IndirectJump()
 	{
-		return pCounter.getTechniques(PackerConstants.INDIRECT_JUMP).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.INDIRECT_JUMP).getFrequency() > 0;
 	}
 	
 	/*
@@ -43,7 +43,7 @@ public class PackerPatterns {
 	 */
 	public boolean ObfuscatedConst()
 	{
-		return pCounter.getTechniques(PackerConstants.OBFUSCATED_CONST).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.OBFUSCATED_CONST).getFrequency() > 0;
 	}
 	
 	/*
@@ -51,12 +51,12 @@ public class PackerPatterns {
 	 */
 	public boolean OverlappingFunction()
 	{
-		return pCounter.getTechniques(PackerConstants.OVERLAPPING_FUNC).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.OVERLAPPING_FUNC).getFrequency() > 0;
 	}
 	
 	public boolean OverlappingBlock()
 	{
-		return pCounter.getTechniques(PackerConstants.OVERLAPPING_BLOCK).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.OVERLAPPING_BLOCK).getFrequency() > 0;
 	}
 	
 	/*
@@ -64,7 +64,7 @@ public class PackerPatterns {
 	 */
 	public boolean CodeChunking()
 	{
-		return pCounter.getTechniques(PackerConstants.CODE_CHUNKING).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.CODE_CHUNKING).getFrequency() > 0;
 	}
 	
 	/*
@@ -72,7 +72,7 @@ public class PackerPatterns {
 	 */
 	public boolean StolenBytes()
 	{
-		return pCounter.getTechniques(PackerConstants.STOLEN_BYTES).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.STOLEN_BYTES).getFrequency() > 0;
 	}
 	
 	/*
@@ -80,7 +80,7 @@ public class PackerPatterns {
 	 */
 	public boolean Checksumming()
 	{
-		return pCounter.getTechniques(PackerConstants.CHECKSUMMING).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.CHECKSUMMING).getFrequency() > 0;
 	}
 	
 	/*
@@ -88,7 +88,7 @@ public class PackerPatterns {
 	 */
 	public boolean SEHs()
 	{
-		return pCounter.getTechniques(PackerConstants.SEH).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.SEH).getFrequency() > 0;
 	}
 	
 	/*
@@ -96,7 +96,7 @@ public class PackerPatterns {
 	 */
 	public boolean TwoAPIs()
 	{
-		return pCounter.getTechniques(PackerConstants.TWO_APIS).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.TWO_APIS).getFrequency() > 0;
 	}
 	
 	/*
@@ -104,7 +104,7 @@ public class PackerPatterns {
 	 */
 	public boolean AntiDebugging()
 	{
-		return pCounter.getTechniques(PackerConstants.ANTI_DEBUGGING).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.ANTI_DEBUGGING).getFrequency() > 0;
 	}
 
 	/*
@@ -112,7 +112,7 @@ public class PackerPatterns {
 	 */
 	public boolean TimingCheck()
 	{
-		return pCounter.getTechniques(PackerConstants.TIMING_CHECK).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.TIMING_CHECK).getFrequency() > 0;
 	}
 	
 	/*
@@ -120,6 +120,6 @@ public class PackerPatterns {
 	 */
 	public boolean HardwareBPX()
 	{
-		return pCounter.getTechniques(PackerConstants.HARDWARE_BPX).GetInfo() > 0;
+		return pCounter.getTechniques(PackerConstants.HARDWARE_BPX).getFrequency() > 0;
 	}
 }

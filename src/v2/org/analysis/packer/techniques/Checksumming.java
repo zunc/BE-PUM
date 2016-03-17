@@ -10,36 +10,38 @@ import org.jakstab.asm.x86.X86ArithmeticInstruction;
 import org.jakstab.asm.x86.X86CondJmpInstruction;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.packer.PackerSavedState;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class Checksumming implements PackerTechnique {
+public class Checksumming extends TechniqueAbstract {
 
 	/** 
 	 * Using for record checksum-
 	 */
 	
-	private static int numOfChecksumming;
 	private static boolean useCheckingLoop;
 	private static PackerSavedState checksumState;
 	private static ArrayList<PackerSavedState> savedCheckSumState;
 	
 	public Checksumming ()
 	{
-		numOfChecksumming				= 0;
+		num				= 0;
+		id = PackerConstants.CHECKSUMMING;
 		useCheckingLoop					= false;
 		checksumState					= new PackerSavedState();
 		savedCheckSumState				= new ArrayList<PackerSavedState>();
+		name = "Checksumming";
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		Instruction ins = curState.getInstruction();
@@ -95,19 +97,14 @@ public class Checksumming implements PackerTechnique {
 					Instruction nextIns = prog.getInstruction(new AbsoluteAddress(nextInsLoc), curState.getEnvironement());
 					if (nextIns instanceof X86CondJmpInstruction)
 					{
-						numOfChecksumming++;
+						num++;
 						checksumState.reset();
 						useCheckingLoop = false;
+						return true;
 					}
 				}
 			}
 		}
+		return false;
 	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfChecksumming;
-	}
-	
 }

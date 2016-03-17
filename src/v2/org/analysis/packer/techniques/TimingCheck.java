@@ -3,29 +3,30 @@ package v2.org.analysis.packer.techniques;
 import org.jakstab.Program;
 import org.jakstab.asm.Operand;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class TimingCheck implements PackerTechnique {
+public class TimingCheck extends TechniqueAbstract {
 
 	/** 
 	 * Using for record timing check-
 	 */
 	
-	private static int numOfTimingCheck;
-	
 	public TimingCheck ()
 	{
-		numOfTimingCheck				= 0;
+		num				= 0;
+		id = PackerConstants.TIMING_CHECK;
+		name = "TimingCheck";
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		String insName = curState.getInstruction().getName();
@@ -40,21 +41,17 @@ public class TimingCheck implements PackerTechnique {
 				{
 					if (apiName.contains("GetTickCount"))
 					{
-						numOfTimingCheck++;
+						num++;
+						return true;
 					}
 				}
 			}	
 		}
 		else if (insName.contains("RDTSC"))
 		{
-			numOfTimingCheck++;
+			num++;
+			return true;
 		}
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfTimingCheck;
-	}
-	
+		return false;
+	}	
 }

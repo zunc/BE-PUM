@@ -9,35 +9,36 @@ import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86CondJmpInstruction;
 import org.jakstab.asm.x86.X86JmpInstruction;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.packer.PackerSavedState;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
-public class PackingUnpacking implements PackerTechnique {
+public class PackingUnpacking extends TechniqueAbstract {
 
 	/** 
 	 * Using for record packing/unpacking
 	 */
 	
-	private static int numOfPackingUnpacking;
 	private static PackerSavedState decryptionState;
 	private static ArrayList<PackerSavedState> savedDecryptionStates;
 	
 	public PackingUnpacking ()
 	{
-		numOfPackingUnpacking				= 0;
-		
+		num				= 0;
+		id = PackerConstants.PACKING_UNPACKING;
+		name = "PackingUnpacking";
 		decryptionState						= new PackerSavedState();
 		savedDecryptionStates				= new ArrayList<PackerSavedState>();
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		Instruction ins = curState.getInstruction();
@@ -70,19 +71,14 @@ public class PackingUnpacking implements PackerTechnique {
 				{
 					if (((LongValue) aValD).getValue() <= decryptionState.getInsLoc())
 					{
-						numOfPackingUnpacking++;
+						num++;
 						savedDecryptionStates.add(decryptionState);
 						decryptionState.reset();
+						return true;
 					}
 				}
 			}
 		}
+		return false;
 	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfPackingUnpacking;
-	}
-	
 }

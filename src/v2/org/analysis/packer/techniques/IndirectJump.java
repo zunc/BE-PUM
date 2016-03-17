@@ -10,10 +10,11 @@ import org.jakstab.asm.x86.X86JmpInstruction;
 import org.jakstab.asm.x86.X86MemoryOperand;
 import org.jakstab.asm.x86.X86Register;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
 
-public class IndirectJump implements PackerTechnique {
+public class IndirectJump extends TechniqueAbstract {
 
 	/** 
 	 * Using for record indirect jump
@@ -27,22 +28,24 @@ public class IndirectJump implements PackerTechnique {
 	{
 		numOfIndirectCall 		= 0;
 		numOfIndirectJump		= 0;
-		
+		num = 0;
+		id = PackerConstants.INDIRECT_JUMP;
+		name = "IndirectJump";
 		savedIndirectState		= new ArrayList<Long>();
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		Instruction ins = curState.getInstruction();
 		String insName = ins.getName();
 		if (PackerHelper.IsExisted(savedIndirectState, new Long(curState.getLocation().getValue())))
 		{
-			return;
+			return false;
 		}
 		if (insName.contains("call"))
 		{
@@ -50,6 +53,8 @@ public class IndirectJump implements PackerTechnique {
 			if (dest instanceof X86Register || dest instanceof X86MemoryOperand)
 			{
 				numOfIndirectCall++;
+				num ++;
+				return true;
 			}
 		}
 		else if (ins instanceof X86JmpInstruction || ins instanceof X86CondJmpInstruction)
@@ -58,15 +63,11 @@ public class IndirectJump implements PackerTechnique {
 			if (dest instanceof X86Register || dest instanceof X86MemoryOperand)
 			{
 				numOfIndirectJump++;
+				num ++;
+				return true;
 			}
 		}
 		savedIndirectState.add(new Long(curState.getLocation().getValue()));
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfIndirectCall + numOfIndirectJump;
-	}
-	
+		return false;
+	}	
 }

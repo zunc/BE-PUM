@@ -8,29 +8,31 @@ import org.jakstab.asm.Instruction;
 import org.jakstab.asm.Operand;
 import org.jakstab.asm.x86.X86ArithmeticInstruction;
 
+import v2.org.analysis.packer.PackerConstants;
 import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
 
-public class ObfuscatedConst implements PackerTechnique {
+public class ObfuscatedConst extends TechniqueAbstract {
 
 	/** 
 	 * Using for record obfuscated constants
 	 */
 	
-	private static int numOfObfuscatedConst;
 	private static ArrayList<Long> savedObfuscatedConstState;
 	
 	public ObfuscatedConst ()
 	{
-		numOfObfuscatedConst				= 0;
+		num				= 0;
+		id = PackerConstants.OBFUSCATED_CONST;
+		name = "ObfuscatedConst";		
 		savedObfuscatedConstState			= new ArrayList<Long>();
 	}
 	
 	@Override
-	public void Count (BPState curState, Program prog)
+	public boolean check (BPState curState, Program prog)
 	{
 		if (curState == null || curState.getInstruction() == null) {
-			return;
+			return false;
 		}
 		
 		Instruction ins = curState.getInstruction();
@@ -48,17 +50,12 @@ public class ObfuscatedConst implements PackerTechnique {
 				}
 				if (op1 instanceof Immediate || op2 instanceof Immediate)
 				{
-					numOfObfuscatedConst++;
+					num++;
 					savedObfuscatedConstState.add(new Long(curState.getLocation().getValue()));
+					return true;
 				}
 			}
 		}
-	}
-	
-	@Override
-	public int GetInfo ()
-	{
-		return numOfObfuscatedConst;
-	}
-	
+		return false;
+	}	
 }
