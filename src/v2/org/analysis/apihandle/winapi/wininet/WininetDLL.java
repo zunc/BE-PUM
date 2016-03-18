@@ -309,4 +309,140 @@ public interface WininetDLL extends StdCallLibrary {
 	/* _In_ */int dwFlagsAndAttributes,
 	/* _In_ */int dwFlags,
 	/* _In_ */DWORD_PTR dwContext);
+
+	/**
+	 * Creates an HTTP request handle.
+	 * 
+	 * @param hConnect
+	 *            A handle to an HTTP session returned by InternetConnect.
+	 * 
+	 * @param lpszVerb
+	 *            A pointer to a null-terminated string that contains the HTTP
+	 *            verb to use in the request. If this parameter is NULL, the
+	 *            function uses GET as the HTTP verb.
+	 * 
+	 * @param lpszObjectName
+	 *            A pointer to a null-terminated string that contains the name
+	 *            of the target object of the specified HTTP verb. This is
+	 *            generally a file name, an executable module, or a search
+	 *            specifier.
+	 * 
+	 * @param lpszVersion
+	 *            A pointer to a null-terminated string that contains the HTTP
+	 *            version to use in the request. Settings in Internet Explorer
+	 *            will override the value specified in this parameter. If this
+	 *            parameter is NULL, the function uses an HTTP version of 1.1 or
+	 *            1.0, depending on the value of the Internet Explorer settings.
+	 * 
+	 * @param lpszReferer
+	 *            A pointer to a null-terminated string that specifies the URL
+	 *            of the document from which the URL in the request
+	 *            (lpszObjectName) was obtained. If this parameter is NULL, no
+	 *            referrer is specified.
+	 * 
+	 * @param lplpszAcceptTypes
+	 *            A pointer to a null-terminated array of strings that indicates
+	 *            media types accepted by the client. Here is an example. PCTSTR
+	 *            rgpszAcceptTypes[] = {_T(“text/*”), NULL}; Failing to properly
+	 *            terminate the array with a NULL pointer will cause a crash. If
+	 *            this parameter is NULL, no types are accepted by the client.
+	 *            Servers generally interpret a lack of accept types to indicate
+	 *            that the client accepts only documents of type "text/*" (that
+	 *            is, only text documents—no pictures or other binary files).
+	 *            For more information and a list of valid media types, see
+	 *            ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/media-
+	 *            types.
+	 * 
+	 * @param dwFlags
+	 *            Internet options. This parameter can be any of the following
+	 *            values.
+	 * 
+	 * @param dwContext
+	 *            A pointer to a variable that contains the application-defined
+	 *            value that associates this operation with any application
+	 *            data.
+	 * 
+	 * @return Returns an HTTP request handle if successful, or NULL otherwise.
+	 *         To retrieve extended error information, call GetLastError.
+	 */
+	HANDLE HttpOpenRequest(
+	/* _In_ */HANDLE hConnect,
+	/* _In_ */String lpszVerb,
+	/* _In_ */String lpszObjectName,
+	/* _In_ */String lpszVersion,
+	/* _In_ */String lpszReferer,
+	/* _In_ */String[] lplpszAcceptTypes,
+	/* _In_ */DWORD dwFlags,
+	/* _In_ */DWORD_PTR dwContext);
+
+	/**
+	 * Adds one or more HTTP request headers to the HTTP request handle.
+	 * 
+	 * @param hRequest
+	 *            A handle returned by a call to the HttpOpenRequest function.
+	 * 
+	 * @param lpszHeaders
+	 *            A pointer to a string variable containing the headers to
+	 *            append to the request. Each header must be terminated by a
+	 *            CR/LF (carriage return/line feed) pair.
+	 * 
+	 * @param dwHeadersLength
+	 *            The size of lpszHeaders, in TCHARs. If this parameter is -1L,
+	 *            the function assumes that lpszHeaders is zero-terminated
+	 *            (ASCIIZ), and the length is computed.
+	 * 
+	 * @param dwModifiers
+	 *            A set of modifiers that control the semantics of this
+	 *            function. This parameter can be a combination of the following
+	 *            values.
+	 * 
+	 * @return Returns TRUE if successful, or FALSE otherwise. To get extended
+	 *         error information, call GetLastError.
+	 */
+	boolean HttpAddRequestHeaders(
+	/* _In_ */HANDLE hRequest,
+	/* _In_ */String lpszHeaders,
+	/* _In_ */int dwHeadersLength,
+	/* _In_ */int dwModifiers);
+
+	/**
+	 * Sends the specified request to the HTTP server, allowing callers to send
+	 * extra data beyond what is normally passed to HttpSendRequestEx.
+	 * 
+	 * @param hRequest
+	 *            A handle returned by a call to the HttpOpenRequest function.
+	 * 
+	 * @param lpszHeaders
+	 *            A pointer to a null-terminated string that contains the
+	 *            additional headers to be appended to the request. This
+	 *            parameter can be NULL if there are no additional headers to be
+	 *            appended.
+	 * 
+	 * @param dwHeadersLength
+	 *            The size of the additional headers, in TCHARs. If this
+	 *            parameter is -1L and lpszHeaders is not NULL, the function
+	 *            assumes that lpszHeaders is zero-terminated (ASCIIZ), and the
+	 *            length is calculated. See Remarks for specifics.
+	 * 
+	 * @param lpOptional
+	 *            A pointer to a buffer containing any optional data to be sent
+	 *            immediately after the request headers. This parameter is
+	 *            generally used for POST and PUT operations. The optional data
+	 *            can be the resource or information being posted to the server.
+	 *            This parameter can be NULL if there is no optional data to
+	 *            send.
+	 * 
+	 * @param dwOptionalLength
+	 *            The size of the optional data, in bytes. This parameter can be
+	 *            zero if there is no optional data to send.
+	 * 
+	 * @return Returns TRUE if successful, or FALSE otherwise. To get extended
+	 *         error information, call GetLastError.
+	 */
+	boolean HttpSendRequest(
+	/* _In_ */HANDLE hRequest,
+	/* _In_ */String lpszHeaders,
+	/* _In_ */int dwHeadersLength,
+	/* _In_ */LPVOID lpOptional,
+	/* _In_ */int dwOptionalLength);
 }

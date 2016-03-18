@@ -277,6 +277,7 @@
 		<API funcName="memcpy" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.memcpy" />
 		<API funcName="memmove" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.memmove" />
 		<API funcName="memset" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.memset" />
+		<API funcName="puts" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.puts" />
 		<API funcName="remove" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.remove" />
 		<API funcName="srand" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.srand" />
 		<API funcName="strncat" className="v2.org.analysis.apihandle.winapi.msvcrt.functions.strncat" />
@@ -334,6 +335,7 @@
 		<API funcName="charlower" className="v2.org.analysis.apihandle.winapi.user32.functions.CharLower" />
 		<API funcName="charnext" className="v2.org.analysis.apihandle.winapi.user32.functions.CharNext" />
 		<API funcName="charprev" className="v2.org.analysis.apihandle.winapi.user32.functions.CharPrev" />
+		<API funcName="chartooembuff" className="v2.org.analysis.apihandle.winapi.user32.functions.CharToOemBuff" />
 		<API funcName="charupperbuff" className="v2.org.analysis.apihandle.winapi.user32.functions.CharUpperBuff" />
 		<API funcName="clienttoscreen" className="v2.org.analysis.apihandle.winapi.user32.functions.ClientToScreen" />
 		<API funcName="closewindow" className="v2.org.analysis.apihandle.winapi.user32.functions.CloseWindow" />
@@ -419,6 +421,9 @@
 	</DLL>
 	<DLL name="wininet">
 		<API funcName="ftpgetfile" className="v2.org.analysis.apihandle.winapi.wininet.functions.FtpGetFile" />
+		<API funcName="httpaddrequestheaders" className="v2.org.analysis.apihandle.winapi.wininet.functions.HttpAddRequestHeaders" />
+		<API funcName="httpopenrequest" className="v2.org.analysis.apihandle.winapi.wininet.functions.HttpOpenRequest" />
+		<API funcName="httpsendrequest" className="v2.org.analysis.apihandle.winapi.wininet.functions.HttpSendRequest" />
 		<API funcName="internetclosehandle" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetCloseHandle" />
 		<API funcName="internetconnect" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetConnect" />
 		<API funcName="internetopen" className="v2.org.analysis.apihandle.winapi.wininet.functions.InternetOpen" />

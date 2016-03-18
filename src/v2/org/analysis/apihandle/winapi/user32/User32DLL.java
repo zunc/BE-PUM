@@ -1599,4 +1599,32 @@ public interface User32DLL extends StdCallLibrary {
 	/* _In_ */HRGN hrgnClip,
 	/* _In_ */int flags);
 
+	/**
+	 * Translates a specified number of characters in a string into the
+	 * OEM-defined character set.
+	 * 
+	 * @param lpszSrc
+	 *            The null-terminated string to be translated.
+	 * 
+	 * @param lpszDst
+	 *            The buffer for the translated string. If the CharToOemBuff
+	 *            function is being used as an ANSI function, the string can be
+	 *            translated in place by setting the lpszDst parameter to the
+	 *            same address as the lpszSrc parameter. This cannot be done if
+	 *            CharToOemBuff is being used as a wide-character function.
+	 * 
+	 * @param cchDstLength
+	 *            The number of characters to translate in the string identified
+	 *            by the lpszSrc parameter.
+	 * 
+	 * @return The return value is always nonzero except when you pass the same
+	 *         address to lpszSrc and lpszDst in the wide-character version of
+	 *         the function. In this case the function returns zero and
+	 *         GetLastError returns ERROR_INVALID_ADDRESS.
+	 */
+	boolean CharToOemBuff(
+	/* _In_ */String lpszSrc,
+	/* _Out_ */byte[] lpszDst,
+	/* _In_ */int cchDstLength);
+
 }

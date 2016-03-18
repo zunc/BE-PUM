@@ -464,7 +464,8 @@ public class APIHandle {
 				Value x4 = stack.pop();
 				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
-			} else if (funcName.startsWith("EnumWindows")) {
+			} 
+			else if (funcName.startsWith("EnumWindows")) {
 				Value x1 = stack.pop();
 				Value x2 = stack.pop();
 				
@@ -524,56 +525,13 @@ public class APIHandle {
 				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4 
 						 + ", " + x5 + ", " + x6 + ", " + x7 + ", " + x8);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
-			} else if (funcName.startsWith("HttpOpenRequestW")) {
-				Value x1 = stack.pop();
-				Value x2 = stack.pop();
-				Value x3 = stack.pop();
-				Value x4 = stack.pop();
-				Value x5 = stack.pop();
-				Value x6 = stack.pop();
-				Value x7 = stack.pop();
-				Value x8 = stack.pop();
-				String lpszVerb = "";
-				if (x2 != null && x2 instanceof LongValue) {
-					lpszVerb = env.getMemory().getText(2, ((LongValue)x2).getValue());
-				}
-				
-				String lpszObjectName = "";
-				if (x3 != null && x3 instanceof LongValue) {
-					lpszObjectName = "" + ((LongValue)x3).getValue();
-				}
-				
-				String lpszVersion = "";
-				if (x4 != null && x4 instanceof LongValue) {
-					lpszVersion = env.getMemory().getText(2, ((LongValue)x4).getValue());
-				}
-				
-				String lpszReferer = "";
-				if (x5 != null && x5 instanceof LongValue) {
-					lpszReferer = env.getMemory().getText(2, ((LongValue)x5).getValue());
-				}
-				
-				String lplpszAcceptTypes  = "";
-				if (x6 != null && x6 instanceof LongValue) {
-					lplpszAcceptTypes  = "" + ((LongValue)x6).getValue();
-				}
-				
-				System.out.println("lpszVerb:" + lpszVerb +", " + 
-						"lpszObjectName:" + lpszObjectName +", " + 
-						"lpszVersion:" + lpszVersion +", " + 
-						"lpszReferer:" + lpszReferer +", " + 
-						"lplpszAcceptTypes:" + lplpszAcceptTypes +", ");
-				
-				System.out.println("Argument: " + x1 + ", " + x2 + ", " + x3 + ", " + x4 
-						 + ", " + x5 + ", " + x6 + ", " + x7 + ", " + x8);
-				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			} else if (funcName.startsWith("InitializeSListHead")) {
 				Value x1 = stack.pop();
 				System.out.println("Argument: " + x1);
 				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
 			} else {
 				System.out.println("No Handling of this API");
-				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax_" + funcName));
+				env.getRegister().setRegisterValue("eax", new SymbolValue("api_eax"));
 			}
 		}
 
