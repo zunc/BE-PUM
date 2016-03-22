@@ -23,6 +23,7 @@ import v2.org.analysis.cfg.BPEdge;
 import v2.org.analysis.cfg.BPVertex;
 import v2.org.analysis.environment.Environment;
 import v2.org.analysis.environment.Stack;
+import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.system.VirtualMemory;
@@ -134,7 +135,7 @@ public class APIHandle {
 
 	public static void executeAPI(AbsoluteAddress address, String api, Instruction inst, BPPath path,
 			List<BPPath> pathList) {
-		System.out.println("\n\tCall api: " + api);
+		System.out.println("\n\tCall api: " + api);		
 		String t[] = api.split("@");
 
 		// if (api.contains("HeapAlloc"))
@@ -152,7 +153,7 @@ public class APIHandle {
 		BPCFG cfg = program.getBPCFG();
 
 		System.out.println("\tIns address of api: " + curState.getLocation());
-
+		PackerManager.getInstance().checkAPIName(api, curState.getLocation().getValue());
 		if (inst.getName().toString().equals("jmp")) {
 			System.out.println("JMP API:" + funcName);
 

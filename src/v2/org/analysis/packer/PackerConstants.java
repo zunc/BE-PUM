@@ -1,9 +1,11 @@
 package v2.org.analysis.packer;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 public final class PackerConstants {
-
-	public static final int ANTI_DEBUGGING 		= 0;
+	public static final int ANTI_DEBUGGING 		= 1;
 	public static final int CHECKSUMMING		= ANTI_DEBUGGING 	+ 1;
 	public static final int CODE_CHUNKING		= CHECKSUMMING 		+ 1;
 	public static final int INDIRECT_JUMP		= CODE_CHUNKING 	+ 1;
@@ -17,6 +19,33 @@ public final class PackerConstants {
 	public static final int TIMING_CHECK		= STOLEN_BYTES		+ 1;
 	public static final int TWO_APIS			= TIMING_CHECK		+ 1;
 	public static final int HARDWARE_BPX		= TWO_APIS			+ 1;
+	
+	public final static String[] ANTIDEBUGGING_APIs = {"IsDebuggerPresent"
+			, "CheckRemoteDebuggerPresent"
+			, "NtQueryInformationProcess"
+			, "NtQuerySystemInformation"
+			, "NtQueryObject"};
+	public static final String[] STOLENBYTE_APIs = {"VirtualAlloc"};
+	public static final String[] TIMINGCHECK_APIs = {"GetTickCount"};
+	public static final String[] TWOSPECIAL_APIs = {"GetProcAddress"};
+	public static Set<String> specialInstList = null;
+	public static final String[] instList = {"adc", "add", "mov", "and", "stos", 
+		"or", "xor", "xchg", "movs", "sub", "movd", "movsb", "movsx", "movzb", "movzw"}; 
+	
+	public static boolean isSpecialInstruction(String instName) {
+		if (specialInstList == null) {
+			specialInstList = new HashSet<String> ();
+			for (String name: instList) {
+				specialInstList.add(name);
+				specialInstList.add(name + "s");
+				specialInstList.add(name + "b");
+				specialInstList.add(name + "w");
+				specialInstList.add(name + "l");
+			}			
+		}
+		
+		return specialInstList.contains(instName);
+	}
 	
 //	private static final String ASPACK 			= "01111111101000";
 //	private static final String FSG 			= "01011111100010";

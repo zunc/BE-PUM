@@ -20,6 +20,7 @@ public class PackerManager {
 	final static String PACKER_SIGNATURE = "data/data/packerSignature.txt";
 	final static String PACKER_TECHNIQUE = "data/data/packerTechnique.txt";
 	final static String PACKER_DETECION_RESULT = "data/data/detectionResult.txt";
+	final static String PACKER_DETECION_DETAIL = "data/data/detectionDetail.txt";
 
 	/**
 	 * Singleton instance of {@link OTFThreadManager} class
@@ -200,5 +201,43 @@ public class PackerManager {
 		
 		FileProcess result = new FileProcess(PACKER_DETECION_RESULT);
 		result.appendFile(fileName + "\t" + tMonitor.getDetectionResult() + "\t" + System.currentTimeMillis());
+		
+		FileProcess detail = new FileProcess(PACKER_DETECION_DETAIL);
+		detail.appendFile(fileName + "\n" + tMonitor.getDetectionDetail());
+	}
+
+	public void checkAPIName(String api, long value) {
+		// TODO Auto-generated method stub
+		if (isDetect) {
+			tMonitor.checkAPIName(api, value);
+		}
+	}
+
+	public void setIndirectJumpTechnique(long value) {
+		// TODO Auto-generated method stub
+		if (isDetect) {
+			tMonitor.setIndirectJumpTechnique(value);;
+		}
+	}
+
+	public void setSEHTechnique(long value) {
+		// TODO Auto-generated method stub
+		if (isDetect) {
+			tMonitor.setSEHTechnique(value);
+		}
+	}
+
+	public void setOverlappingFuction(String instName, long curAddr, long nextAddr) {
+		// TODO Auto-generated method stub
+		if (isDetect) {
+			tMonitor.setOverlapping(instName, curAddr, nextAddr);
+		}
+	}
+
+	public void setCodeChunking(String instName, long curAddr, long nextAddr) {
+		// TODO Auto-generated method stub
+		if (isDetect) {
+			tMonitor.setCodeChunking(instName, curAddr, nextAddr);
+		}
 	}
 }

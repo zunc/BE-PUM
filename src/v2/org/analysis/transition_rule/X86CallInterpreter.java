@@ -14,6 +14,7 @@ import org.jakstab.asm.x86.X86PCRelativeAddress;
 
 import v2.org.analysis.apihandle.winapi.APIHandle;
 import v2.org.analysis.environment.Environment;
+import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.Formulas;
@@ -41,16 +42,22 @@ public class X86CallInterpreter {
 			r = new LongValue(((AbsoluteAddress) dest).getValue());
 		} else if (dest.getClass().getSimpleName().equals("X86PCRelativeAddress")) {
 			r = new LongValue(((X86PCRelativeAddress) dest).getEffectiveValue(targetTemp.getValue()));
-
 		} else if (dest.getClass().getSimpleName().equals("X86Register")) {
-			Program.getProgram().setTechnique("Indirect Jump");
-			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + " ");
+//			Program.getProgram().setTechnique("Indirect Jump");
+//			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + " ");
+			/*
+			 * Hai: Packer Detection
+			 * To detect the indirect jump techniques
+			*/
+			PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 			r = env.getRegister().getRegisterValue(dest.toString());
 		} else if (dest.getClass().getSimpleName().equals("X86MemoryOperand")) {
-
 			if (((X86MemoryOperand) dest).getBase() != null) {
-				Program.getProgram().setTechnique("Indirect Jump");
-				Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + " ");
+				/*
+				 * Hai: Packer Detection
+				 * To detect the indirect jump techniques
+				*/
+				PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 			}
 			r = env.getMemory().getMemoryValue((X86MemoryOperand) dest, inst);
 		}
@@ -60,11 +67,11 @@ public class X86CallInterpreter {
 			Program.getProgram().getBPCFG().getVertex(curState.getLocation(), curState.getInstruction())
 					.setProperty(r1.toString());
 			
-			String api = rule.checkAPICall(r, curState);
+			String api = rule.checkAPICall(r, curState);			
 			// String t[] = api.split("@");
 			if (api != null/* !api.equals("") */) {
 				APIHandle.executeAPI(new AbsoluteAddress(((LongValue) r).getValue()), api, inst, path,
-						pathList);
+						pathList);				
 				rule.setCFG(true);
 			} else {
 				// env.getRegister().sub("esp", new LongValue(4));
@@ -96,14 +103,23 @@ public class X86CallInterpreter {
 				 * 
 				 * return curState; }
 				 */
-
+				/*
+				 * Hai: Packer Detection
+				 * To detect the overlapping function techniques
+				*/
+				PackerManager.getInstance().setOverlappingFuction("call", curState.getLocation().getValue(), nextAddr.getValue());
 				curState.setInstruction(nextInst);
 				curState.setLocation(nextAddr);
 			}
 		} else {
 			// Apply Concolic Testing for solving the Indirect Jump
-			Program.getProgram().setTechnique("Indirect Jump");
-			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + " ");
+//			Program.getProgram().setTechnique("Indirect Jump");
+//			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + " ");
+			/*
+			 * Hai: Packer Detection
+			 * To detect Indirect Jump Technique
+			 * */
+			PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 			System.out.println("Apply Concolic Testing for solving the Indirect Jump at "
 					+ curState.getLocation().toString());
 			Map<String, Long> z3Value = new HashMap<String, Long>();
@@ -153,9 +169,15 @@ public class X86CallInterpreter {
 									+ a + " Instruction: null");
 						}
 						System.out.println("**********************************************");
-
+						
+						/*
+						 * Hai: Packer Detection
+						 * To detect the overlapping function techniques
+						*/
+						PackerManager.getInstance().setOverlappingFuction("call", curState.getLocation().getValue(), a.getValue());
+						
 						curState.setInstruction(i);
-						curState.setLocation(a);
+						curState.setLocation(a);						
 						
 						curState.setValue(z3Value);
 						path.clearPathCondition();

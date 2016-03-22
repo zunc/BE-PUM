@@ -181,10 +181,10 @@ public class OTFModelGeneration implements Algorithm {
 						rule.getNewState(path, pathList, true);
 					}
 					
-//					if (pManager.isDetected() && isOEP(curState.getLocation(), program.getFileName())) {
-//						pManager.outputToFile(program.getFileName());
-//						pManager.setDetectPacker(false);
-//					}
+					if (pManager.isDetected() && isOEP(curState.getLocation(), program.getFileName())) {
+						pManager.outputToFile(program.getFileName());
+						pManager.setDetectPacker(false);
+					}
 					
 					
 					///////// AFTER LOOP ///////////
@@ -198,19 +198,19 @@ public class OTFModelGeneration implements Algorithm {
 		}
 	}
 	
-//	private boolean isOEP(AbsoluteAddress location, String fileName) {
-//		// TODO Auto-generated method stub
-//		return (location != null) && (fileName.contains("api_test") && location.toString().contains("401000")
-//				|| fileName.contains("bof") && location.toString().contains("401000")
-//				|| fileName.contains("demo1") && location.toString().contains("401000")
-//				|| fileName.contains("demo2") && location.toString().contains("401000")
-//				|| fileName.contains("Aztec") && location.toString().contains("401000")
-//				|| fileName.contains("Benny") && location.toString().contains("401000")
-//				|| fileName.contains("Cabanas") && location.toString().contains("401000")
-//				|| fileName.contains("Adson") && location.toString().contains("401000")
-//				|| fileName.contains("api_testv2") && location.toString().contains("401131")
-//				);
-//	}
+	private boolean isOEP(AbsoluteAddress location, String fileName) {
+		// TODO Auto-generated method stub
+		return (location != null) && (fileName.contains("api_test") && location.toString().contains("401000")
+				|| fileName.contains("bof") && location.toString().contains("401000")
+				|| fileName.contains("demo1") && location.toString().contains("401000")
+				|| fileName.contains("demo2") && location.toString().contains("401000")
+				|| fileName.contains("Aztec") && location.toString().contains("401000")
+				|| fileName.contains("Benny") && location.toString().contains("401000")
+				|| fileName.contains("Cabanas") && location.toString().contains("401000")
+				|| fileName.contains("Adson") && location.toString().contains("401000")
+				|| fileName.contains("api_testv2") && location.toString().contains("401131")
+				);
+	}
 
 	private void backupState(BPState curState) {
 		// TODO Auto-generated method stub

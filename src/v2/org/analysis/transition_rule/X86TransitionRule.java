@@ -56,6 +56,7 @@ import v2.org.analysis.environment.Environment;
 import v2.org.analysis.environment.ExceptionRecord;
 import v2.org.analysis.environment.processthread.TIB;
 import v2.org.analysis.loop.LoopAlgorithm;
+import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.system.VirtualMemory;
@@ -833,9 +834,10 @@ public class X86TransitionRule extends TransitionRule {
 
 	// PHONG - 20150422
 	public BPState processSEH(BPState curState) {
-		Program.getProgram().setTechnique("SEH");
-		Program.getProgram().setDetailTechnique("SEH:" + curState.getLocation() + " ");
-		Program.getProgram().getLog().infoString("Process SEH at:" + curState.getLocation() + "\n");
+//		Program.getProgram().setTechnique("SEH");
+//		Program.getProgram().setDetailTechnique("SEH:" + curState.getLocation() + " ");
+//		Program.getProgram().getLog().infoString("Process SEH at:" + curState.getLocation() + "\n");
+		PackerManager.getInstance().setSEHTechnique(curState.getLocation().getValue());
 		AbsoluteAddress addr = new AbsoluteAddress(curState.getEnvironement().getSystem().getSEHHandler().getStart()
 				.getSehHandler());
 		Instruction inst = Program.getProgram().getInstruction(addr, curState.getEnvironement());

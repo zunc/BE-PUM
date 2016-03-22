@@ -155,4 +155,15 @@ public class BPCFG {
 		// TODO Auto-generated method stub
 		verteces.remove(i);
 	}
+
+	public boolean containVertex(long value) {
+		// TODO Auto-generated method stub
+		for (BPVertex v : verteces) {
+			if (v.getAddress().getValue() == value) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

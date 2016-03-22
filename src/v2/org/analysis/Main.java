@@ -114,11 +114,12 @@ public class Main {
 		// in = "api_testv2.exe"; // 2064 2151 26s ?
 		in = "api_test.exe"; // 158 160 0.1s x
 		in = "api_test_upx.exe"; // 323 353 6s x
-//		in = "api_test_fsg.exe"; // 244 268 3s x
+		in = "api_test_fsg.exe"; // 244 268 3s x
+		in = "api_testv2_fsg.exe"; // 244 268 3s x
 //		in = "api_test_pecompact.exe"; // 1127 1178 28s x
 //		in = "api_test_npack.exe"; // 602 639 10s x
 		// in = "api_test_yoda.1.2.exe"; // 625 659 173s x
-		// in = "api_test_yoda.1.3.exe"; // 924 960 163s x
+//		in = "api_test_yoda.1.3.exe"; // 924 960 163s x
 		// in = "api_test_petite_2.3.exe"; // 1569 1637 86s x
 //		in = "api_test_aspack.exe"; // 1047 1112 73s x
 		// in = "api_test_mpress.exe"; // 459 489 103 x
@@ -127,7 +128,7 @@ public class Main {
 		// in = "api_test_WinUpack.exe"; // 443 490 19s
 		// in = "api_test_telock.exe"; // x
 		// in = "api_test_RLPack.exe"; // 467 501 212s x
-		// in = "api_test_upack.exe"; // 443 490 21s x
+//		in = "api_test_upack.exe"; // 443 490 21s x
 		// in = "api_test_mew.exe"; // 265 291 5s
 		// in = "api_test_BJFNT.exe"; // x
 		// in = "api_test_ExeStealth.exe"; // 735 770 220s x

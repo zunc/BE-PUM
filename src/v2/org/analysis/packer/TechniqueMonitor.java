@@ -19,20 +19,20 @@ import v2.org.analysis.packer.techniques.Checksumming;
 import v2.org.analysis.packer.techniques.CodeChunking;
 import v2.org.analysis.packer.techniques.HardwareBPX;
 import v2.org.analysis.packer.techniques.IndirectJump;
-import v2.org.analysis.packer.techniques.ObfuscatedConst;
+import v2.org.analysis.packer.techniques.ObfuscatedConstant;
 import v2.org.analysis.packer.techniques.OverlappingBlock;
 import v2.org.analysis.packer.techniques.OverlappingFunction;
 import v2.org.analysis.packer.techniques.Overwriting;
+import v2.org.analysis.packer.techniques.PackerTechnique;
 import v2.org.analysis.packer.techniques.PackingUnpacking;
 import v2.org.analysis.packer.techniques.SEH;
 import v2.org.analysis.packer.techniques.StolenBytes;
-import v2.org.analysis.packer.techniques.TechniqueAbstract;
 import v2.org.analysis.packer.techniques.TimingCheck;
 import v2.org.analysis.packer.techniques.TwoSpecialAPIs;
 import v2.org.analysis.path.BPState;
 
 public class TechniqueMonitor {
-	private ArrayList<TechniqueAbstract> techList;
+	private ArrayList<PackerTechnique> techList;
 	// private PackerPatterns pPattern;
 	// private boolean USING_COUNT;
 	// private static PackerCounter pCounter;
@@ -126,8 +126,8 @@ public class TechniqueMonitor {
 		return sList.toArray(sArr);
 	}
 
-	private TechniqueAbstract getTechnique(int id) {
-		for (TechniqueAbstract pTech : techList) {
+	private PackerTechnique getTechnique(int id) {
+		for (PackerTechnique pTech : techList) {
 			if (pTech.getID() == id) {
 				return pTech;
 			}
@@ -141,7 +141,7 @@ public class TechniqueMonitor {
 		techList.add(new Checksumming());
 		techList.add(new CodeChunking());
 		techList.add(new IndirectJump());
-		techList.add(new ObfuscatedConst());
+		techList.add(new ObfuscatedConstant());
 		techList.add(new OverlappingBlock());
 		techList.add(new OverlappingFunction());
 		techList.add(new Overwriting());
@@ -164,9 +164,9 @@ public class TechniqueMonitor {
 			// pCounter.Execute(this.USING_COUNT);
 			// pPattern.setCheckingState(pCounter);
 			// this.checkingState();
-			for (TechniqueAbstract pTech : techList) {
+			for (PackerTechnique pTech : techList) {
 				if (pTech.check(curState, program)) {
-					techOrder += pTech.getID();
+					techOrder += pTech.getID()+"_";
 					return;
 				}
 			}
@@ -378,14 +378,113 @@ public class TechniqueMonitor {
 		ArrayList<TechniqueSignature> tSignature = getTechniqueSignature();
 
 		for (TechniqueSignature tP : tSignature) {
-			System.out.println(techOrder);
+//			System.out.println(techOrder);
 			String sig = tP.getTechiqueSignature();
 			if (techOrder.contains(sig)) {
 				return tP.getPackerName() + " v" + tP.getPackerVersion();
-			}
+		 	}
 		}
 
 		return "NONE";
 
+	}
+
+	public String getDetectionDetail() {
+		// TODO Auto-generated method stub
+		String ret = "";
+		
+		for (PackerTechnique techSignature : techList) {
+//			System.out.println(techOrder);
+			ret += techSignature.toString() + "\n"; 
+		}
+
+		return ret;
+	}
+
+	public void checkAPIName(String api, long value) {
+		// TODO Auto-generated method stub
+		for (PackerTechnique pTech : techList) {
+			if (pTech.checkAPIName(api, value)) {
+				techOrder += pTech.getID()+"_";
+				return;
+			}
+		}
+	}
+	
+	public void setOverlapping(String instName, long curAddr, long nextAddr) {
+		PackerTechnique p;
+		if (instName.equals("call")) {
+			p = getTechnique(PackerConstants.OVERLAPPING_FUNC);
+			if (p != null) {
+				if (!p.contain(nextAddr)) {
+					if (((OverlappingFunction)p).checkCallAddr(nextAddr)) {
+						techOrder += PackerConstants.OVERLAPPING_FUNC + "_";
+						((OverlappingFunction)p).insertLocation(nextAddr);
+					}
+					((OverlappingFunction)p).insertCallAddr(nextAddr);
+				}
+			}
+		} else if (instName.equals("ret")) {
+			p = getTechnique(PackerConstants.OVERLAPPING_FUNC);
+			if (p != null) {
+				if (!p.contain(curAddr)) {
+					if (((OverlappingFunction)p).checkRetAddr(curAddr)) {
+						techOrder += PackerConstants.OVERLAPPING_FUNC + "_";
+						((OverlappingFunction)p).insertLocation(curAddr);
+					}
+					((OverlappingFunction)p).insertRetAddr(curAddr);					
+				}
+			}
+		} else if (instName.equals("jmp")) {
+			p = getTechnique(PackerConstants.OVERLAPPING_BLOCK);
+			if (p != null) {
+				if (!p.contain(curAddr)) {
+					if (((OverlappingBlock)p).checkJmpAddr(curAddr)) {
+						techOrder += PackerConstants.OVERLAPPING_BLOCK + "_";
+						((OverlappingBlock)p).insertLocation(curAddr);
+					} 
+					((OverlappingBlock)p).insertJmpAddr(curAddr, nextAddr);					
+				}
+			}
+		}
+	}
+
+	public void setIndirectJumpTechnique(long value) {
+		// TODO Auto-generated method stub
+		PackerTechnique p = getTechnique(PackerConstants.INDIRECT_JUMP);
+		if (p != null) {
+			if (!p.contain(value)) {
+				((IndirectJump)p).insertLocation(value);
+				techOrder += PackerConstants.INDIRECT_JUMP + "_";
+			}
+		}
+	}
+
+	public void setSEHTechnique(long value) {
+		// TODO Auto-generated method stub
+		PackerTechnique p = getTechnique(PackerConstants.SEH);
+		if (p != null) {
+			if (!p.contain(value)) {
+				((SEH)p).insertLocation(value);
+				techOrder += PackerConstants.SEH + "_";
+			}
+		}
+	}
+
+	public void setCodeChunking(String instName, long curAddr, long nextAddr) {
+		// TODO Auto-generated method stub
+		PackerTechnique p;
+		if (instName.equals("jmp")) {
+			p = getTechnique(PackerConstants.CODE_CHUNKING);
+			if (p != null) {
+				if (!p.contain(curAddr)) {
+					if (((CodeChunking)p).checkJmpAddr(curAddr)) {
+						techOrder += PackerConstants.CODE_CHUNKING + "_";
+						((CodeChunking)p).insertLocation(curAddr);
+					} 
+					((CodeChunking)p).insertJmpAddr(curAddr, nextAddr);					
+				}
+			}
+		}
 	}
 }

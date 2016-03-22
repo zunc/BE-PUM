@@ -15,6 +15,7 @@ import org.jakstab.asm.x86.X86PCRelativeAddress;
 
 import v2.org.analysis.apihandle.winapi.APIHandle;
 import v2.org.analysis.environment.Environment;
+import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.Formulas;
@@ -23,8 +24,7 @@ import v2.org.analysis.value.SymbolValue;
 import v2.org.analysis.value.Value;
 
 public class X86JumpInterpreter {
-	private APIHandle apiHandle = null;
-
+//	private APIHandle apiHandle = null;
 	public BPState execute(X86JmpInstruction inst, BPPath path, List<BPPath> pathList, X86TransitionRule rule) {
 		// TODO Auto-generated method stub
 		Formulas l = path.getPathCondition();
@@ -42,13 +42,15 @@ public class X86JumpInterpreter {
 			r = new LongValue(((X86PCRelativeAddress) dest).getEffectiveValue(targetTemp.getValue()));
 
 		} else if (dest.getClass().getSimpleName().equals("X86Register")) {
-			Program.getProgram().setTechnique("Indirect Jump");
-			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + "\t");
+//			Program.getProgram().setTechnique("Indirect Jump");
+//			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + "\t");
+			PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 			r = env.getRegister().getRegisterValue(dest.toString());
 		} else if (dest.getClass().getSimpleName().equals("X86MemoryOperand")) {
 			if (((X86MemoryOperand) dest).getBase() != null) {
-				Program.getProgram().setTechnique("Indirect Jump");
-				Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + "\t");
+//				Program.getProgram().setTechnique("Indirect Jump");
+//				Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + "\t");
+				PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 			}
 			r = env.getMemory().getMemoryValue((X86MemoryOperand) dest, inst);
 		}
@@ -67,7 +69,7 @@ public class X86JumpInterpreter {
 			String api = rule.checkAPICall(r, curState);
 			//System.out.println();
 			if (api != null/* !api.equals("") */) {
-				apiHandle.executeAPI(new AbsoluteAddress(((LongValue) r).getValue()), api, inst, path, pathList);
+				APIHandle.executeAPI(new AbsoluteAddress(((LongValue) r).getValue()), api, inst, path, pathList);
 				rule.setCFG(true);
 			} else {
 				AbsoluteAddress nextAddr = new AbsoluteAddress(((LongValue) r).getValue());
@@ -80,13 +82,20 @@ public class X86JumpInterpreter {
 				} else {
 					nextInst = Program.getProgram().getInstruction(nextAddr, env);
 				}				
+				/*
+				 * Hai: Packer Detection
+				 * To detect the overlapping block techniques
+				*/
+				PackerManager.getInstance().setOverlappingFuction("jmp", curState.getLocation().getValue(), nextAddr.getValue());
+				PackerManager.getInstance().setCodeChunking("jmp", curState.getLocation().getValue(), nextAddr.getValue());
 				curState.setInstruction(nextInst);
 				curState.setLocation(nextAddr);
 			}
 		} else {
 			// Apply Concolic Testing for solving the Indirect Jump
-			Program.getProgram().setTechnique("Indirect Jump");
-			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + "\t");
+//			Program.getProgram().setTechnique("Indirect Jump");
+//			Program.getProgram().setDetailTechnique("Indirect Jump:" + curState.getLocation() + "\t");
+			PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 			System.out.println("Apply Concolic Testing for solving the Indirect Jump at "
 					+ curState.getLocation().toString());
 			Map<String, Long> z3Value = new HashMap<String, Long>();
@@ -116,7 +125,13 @@ public class X86JumpInterpreter {
 								+ " Instruction: null");
 					}
 					System.out.println("**********************************************");
-
+					
+					/*
+					 * Hai: Packer Detection
+					 * To detect the overlapping block techniques
+					*/
+					PackerManager.getInstance().setOverlappingFuction("jmp", curState.getLocation().getValue(), a.getValue());
+					PackerManager.getInstance().setCodeChunking("jmp", curState.getLocation().getValue(), a.getValue());
 					curState.setInstruction(i);
 					curState.setLocation(a);
 					

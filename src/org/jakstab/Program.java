@@ -1862,7 +1862,7 @@ public final class Program {
 		}
 
 		return result;
-	}
+	}	
 
 	/**
 	 * Loads the module containing the main function. This function should be

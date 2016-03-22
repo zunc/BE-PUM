@@ -58,6 +58,8 @@ public class HttpAddRequestHeaders extends WininetAPI {
 		String lpszHeaders = (t1 == 0L) ? null : memory.getText(this, t2);
 		int dwHeadersLength = (int) t3;
 		int dwModifiers = (int) t4;
+		
+		System.out.println("lpszHeaders:" + lpszHeaders);
 		boolean ret = WininetDLL.INSTANCE.HttpAddRequestHeaders(hRequest, lpszHeaders, dwHeadersLength, dwModifiers);
 		
 		register.mov("eax", new LongValue(ret ? 1 : 0));

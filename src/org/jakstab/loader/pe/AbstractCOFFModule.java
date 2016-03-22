@@ -141,6 +141,7 @@ public abstract class AbstractCOFFModule implements ExecutableImage {
 		if (section < 0) {
 			return false;
 		} else {
+//			return section_headers[section].getName().toLowerCase().contains("code");
 			return isCodeSection(section);
 		}
 	}

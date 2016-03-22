@@ -15,6 +15,7 @@ import v2.org.analysis.cfg.BPEdge;
 import v2.org.analysis.cfg.BPVertex;
 import v2.org.analysis.complement.Convert;
 import v2.org.analysis.environment.Environment;
+import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.value.LongValue;
@@ -63,8 +64,9 @@ public class X86ReturnInterpreter {
 				AbsoluteAddress nextAddr = new AbsoluteAddress(((LongValue) ret).getValue());
 				Instruction nextIns = Program.getProgram().getInstruction(nextAddr, env);
 
-				Program.getProgram().setTechnique("Ret-Indirect Jump");
-				Program.getProgram().setDetailTechnique("Ret-Indirect Jump:" + curState.getLocation() + " ");
+//				Program.getProgram().setTechnique("Ret-Indirect Jump");
+//				Program.getProgram().setDetailTechnique("Ret-Indirect Jump:" + curState.getLocation() + " ");
+//				PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 
 				if (nextIns == null) {
 					BPCFG cfg = Program.getProgram().getBPCFG();
@@ -84,6 +86,13 @@ public class X86ReturnInterpreter {
 					nextAddr = null;
 					rule.setCFG(true);
 				}
+				
+				/*
+				 * Hai: Packer Detection
+				 * To detect the overlapping function techniques
+				*/
+				PackerManager.getInstance().setOverlappingFuction("ret", curState.getLocation().getValue(), 
+						nextAddr.getValue());
 
 				curState.setInstruction(nextIns);
 				curState.setLocation(nextAddr);
@@ -129,8 +138,9 @@ public class X86ReturnInterpreter {
 				AbsoluteAddress nextAddr = new AbsoluteAddress(((LongValue) ret).getValue());
 				Instruction nextIns = Program.getProgram().getInstruction(nextAddr, env);
 
-				Program.getProgram().setTechnique("Ret-Indirect Jump");
-				Program.getProgram().setDetailTechnique("Ret-Indirect Jump:" + curState.getLocation() + " ");
+//				Program.getProgram().setTechnique("Ret-Indirect Jump");
+//				Program.getProgram().setDetailTechnique("Ret-Indirect Jump:" + curState.getLocation() + " ");
+//				PackerManager.getInstance().setIndirectJumpTechnique(curState.getLocation().getValue());
 
 				if (nextIns == null) {
 					BPCFG cfg = Program.getProgram().getBPCFG();
@@ -150,9 +160,14 @@ public class X86ReturnInterpreter {
 					nextAddr = null;
 					rule.setCFG(true);
 				}
-
+				/*
+				 * Hai: Packer Detection
+				 * To detect the overlapping function techniques
+				*/
+				PackerManager.getInstance().setOverlappingFuction("ret", 
+						curState.getLocation().getValue(), nextAddr.getValue());
 				curState.setInstruction(nextIns);
-				curState.setLocation(nextAddr);
+				curState.setLocation(nextAddr);			
 
 				if (inst.getOperandCount() == 1) {
 					Operand op = inst.getOperand(0);

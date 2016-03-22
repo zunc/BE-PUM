@@ -1,15 +1,11 @@
 package v2.org.analysis.packer.techniques;
 
 import org.jakstab.Program;
-import org.jakstab.asm.Operand;
 
 import v2.org.analysis.packer.PackerConstants;
-import v2.org.analysis.packer.PackerHelper;
 import v2.org.analysis.path.BPState;
-import v2.org.analysis.value.LongValue;
-import v2.org.analysis.value.Value;
 
-public class TimingCheck extends TechniqueAbstract {
+public class TimingCheck extends PackerTechnique {
 
 	/** 
 	 * Using for record timing check-
@@ -17,40 +13,43 @@ public class TimingCheck extends TechniqueAbstract {
 	
 	public TimingCheck ()
 	{
-		num				= 0;
+//		num				= 0;
 		id = PackerConstants.TIMING_CHECK;
-		name = "TimingCheck";
+		name = "TimingCheck-Done";
 	}
 	
 	@Override
-	public boolean check (BPState curState, Program prog)
-	{
+	public boolean check (BPState curState, Program prog) {
 		if (curState == null || curState.getInstruction() == null) {
 			return false;
 		}
 		
 		String insName = curState.getInstruction().getName();
-		if (insName.contains("call"))
+		if (insName.contains("RDTSC"))
 		{
-			Operand dest = curState.getInstruction().getOperand(0);
-			Value aVal = PackerHelper.GetOperandValue(curState, dest);
-			if (aVal instanceof LongValue)
-			{
-				String apiName = PackerHelper.GetAPIName(curState, aVal);
-				if (apiName != null)
-				{
-					if (apiName.contains("GetTickCount"))
-					{
-						num++;
-						return true;
-					}
-				}
-			}	
-		}
-		else if (insName.contains("RDTSC"))
-		{
-			num++;
+			long location = curState.getLocation().getValue();
+			if (!contain(location)) {
+//				num++;
+				locList.add(location);
+			}
+
 			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean checkAPIName(String apiName, long location) {
+		// TODO Auto-generated method stub
+		String name = apiName.toLowerCase();
+		for (String antiAPI: PackerConstants.TIMINGCHECK_APIs) {
+			if (name.contains(antiAPI.toLowerCase())) {
+				if (!contain(location)) {
+					insertLocation(location);
+//					num++;
+					return true;
+				}							
+			}
 		}
 		return false;
 	}	

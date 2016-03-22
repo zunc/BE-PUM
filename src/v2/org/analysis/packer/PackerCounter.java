@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.jakstab.Program;
 
-import v2.org.analysis.packer.techniques.TechniqueAbstract;
+import v2.org.analysis.packer.techniques.PackerTechnique;
 import v2.org.analysis.path.BPState;
 
 public class PackerCounter {
@@ -12,7 +12,7 @@ public class PackerCounter {
 	private BPState m_state;
 	private Program m_prog;
 	
-	private ArrayList<TechniqueAbstract> pTechs = new ArrayList<>();
+	private ArrayList<PackerTechnique> pTechs = new ArrayList<>();
 	
 //	private TechniqueAbstract antiDebuggingC;
 //	private TechniqueAbstract checksummingC;
@@ -66,7 +66,7 @@ public class PackerCounter {
 	{
 		if (run)
 		{
-			for (TechniqueAbstract pTech : this.pTechs)
+			for (PackerTechnique pTech : this.pTechs)
 			{
 				pTech.check(this.m_state, this.m_prog);
 			}
@@ -81,7 +81,7 @@ public class PackerCounter {
 	public String getInfo () {
 		String result = "";
 		
-		for (TechniqueAbstract pTech: pTechs) {
+		for (PackerTechnique pTech: pTechs) {
 			result += String.valueOf(pTech.getFrequency());
 			result += "\t";
 		}
@@ -89,7 +89,7 @@ public class PackerCounter {
 		return result;
 	}
 	
-	public TechniqueAbstract getTechniques(int index)
+	public PackerTechnique getTechniques(int index)
 	{
 		return pTechs.get(index);
 	}

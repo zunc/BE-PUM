@@ -115,6 +115,12 @@ public class HttpOpenRequest extends WininetAPI {
 		}
 		DWORD dwFlags = new DWORD(t7);
 		DWORD_PTR dwContext = new DWORD_PTR(t8);
+		
+		System.out.println("lpszVerb:" + lpszVerb +", " + 
+				"lpszObjectName:" + lpszObjectName +", " + 
+				"lpszVersion:" + lpszVersion +", " + 
+				"lpszReferer:" + lpszReferer +", " + 
+				"lplpszAcceptTypes:" + lplpszAcceptTypes.toString() +", ");
 
 		HANDLE ret = WininetDLL.INSTANCE.HttpOpenRequest(hConnect, lpszVerb, lpszObjectName, lpszVersion, lpszReferer,
 				lplpszAcceptTypes, dwFlags, dwContext);
