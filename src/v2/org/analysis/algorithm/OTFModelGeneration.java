@@ -23,10 +23,12 @@ import v2.org.analysis.cfg.BPCFG;
 import v2.org.analysis.cfg.BPVertex;
 import v2.org.analysis.environment.Environment;
 import v2.org.analysis.environment.processthread.TIB;
+import v2.org.analysis.olly.OllyComparisonV2;
 import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.path.PathList;
+import v2.org.analysis.statistics.FileProcess;
 import v2.org.analysis.transition_rule.X86TransitionRule;
 import v2.org.analysis.value.Formulas;
 
@@ -34,6 +36,16 @@ public class OTFModelGeneration implements Algorithm {
 	public static long DEFAULT_OUT_TIME = 180000;
 	private final Program program;
 	private long overallStartTime;
+	
+	//For compare with OllyDbg
+	private long count = 1;
+	private boolean isCompareOlly = true, isChecked = false;
+	private OllyComparisonV2 ollyCompare = null;
+	private AbsoluteAddress checkedAddr = new AbsoluteAddress(0);
+	private AbsoluteAddress endAddr = new AbsoluteAddress(0);
+	private String fileName = "";
+	private FileProcess compareOllyResult = null;
+	private int num = 1, loopCount = 1;
 
 	public OTFModelGeneration(Program program) {
 		super();
@@ -46,6 +58,7 @@ public class OTFModelGeneration implements Algorithm {
 		// BE-PUM algorithm
 		System.out.println("Starting On-the-fly Model Generation algorithm.");
 		program.getResultFileTemp().appendInLine('\n' + program.getFileName() + '\t');
+		fileName = "out_" + Program.getProgram().getFileName() + "_";
 		
 		// Set up initial context
 //		X86TransitionRule rule = new X86TransitionRule();
@@ -159,7 +172,8 @@ public class OTFModelGeneration implements Algorithm {
 						
 						numADDB ++;
 					}
-
+					
+//					compareOlly(curState);
 					// PHONG: 20150506 - Update TIB
 					// --------------------------------------
 					TIB.updateTIB(curState);
@@ -239,4 +253,74 @@ public class OTFModelGeneration implements Algorithm {
 		// TODO Auto-generated method stub
 		return true;
 	}	
+	
+	private void compareOlly(BPState state) {
+		// TODO Auto-generated method stub
+		// -------------------------------------------------------------------
+		// OLLY DEBUG HERE
+		// checkedAddr = new AbsoluteAddress(0x40818C);
+		// endAddr = new AbsoluteAddress(0x4085B2);
+		if (isCompareOlly) {
+			AbsoluteAddress location = state.getLocation();
+			Environment env = state.getEnvironement();
+			if (ollyCompare == null) {
+				long memoryStartAddr = 0x407000;
+				long memoryEndAddr = 0x407004;
+				long stackIndex = 0x4;
+				System.out.println("Read file Olly " + "data/data/" + fileName + "" + num + ".txt");
+				ollyCompare = new OllyComparisonV2("data/data/" + fileName + "" + num + ".txt", memoryStartAddr,
+						memoryEndAddr, stackIndex);
+				// ollyCompare = new OllyCompare("asm/olly/" + fileName +
+				// ".txt", memoryStartAddr,
+				// memoryEndAddr, stackIndex);
+				ollyCompare.importOllyData(checkedAddr, endAddr);
+				count = ollyCompare.getFirstCount();
+				System.out.println("Finish reading!");
+			}
+
+			if (compareOllyResult == null) {
+				compareOllyResult = new FileProcess("data/data/compareWithOlly_" + fileName + "" + num + ".txt");
+				compareOllyResult.clearContentFile();
+			}
+
+			if (location != null && location.getValue() == checkedAddr.getValue()) {
+				isChecked = true;
+			}
+
+			if (isChecked & location != null && !ollyCompare.isFinished()) {
+					//&& (location.getValue() != endAddr.getValue() || loopCount != ollyCompare.getLoopCount())) {
+				// System.out.println("Loop = " + count + " , Address = " +
+				// location.toString() + ":");
+				compareOllyResult.appendFile("Loop = " + Long.toHexString(count) + " , Address = " + location.toString() + ":");
+				// COMPARE HERE
+				String result = ollyCompare.compareBEPUM(env, count, location);
+				count = ollyCompare.getNextCheck();
+				// if (result.contains("Unequal")) {
+				// System.out.println("Bug");
+				// }
+				compareOllyResult.appendFile(result);
+				// System.out.println("*************************************************************");
+				compareOllyResult.appendFile("*************************************************************");
+				loopCount++;
+			}
+
+			if (isChecked && location != null 
+					&& ollyCompare.isFinished()) {
+					//&& location.getValue() == endAddr.getValue()
+					//&& loopCount == ollyCompare.getLoopCount()) {
+				System.out.println("Stop Check: " + fileName + "" + num + ".txt");
+				ollyCompare = null;
+				loopCount = 1;
+				compareOllyResult = null;
+				num++;
+				isChecked = false;
+				count = 1;
+
+				if (num >= 2) {
+					isCompareOlly = false;
+					System.out.println("Finish Checking");
+				}
+			}
+		}
+	}
 }
