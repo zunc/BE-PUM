@@ -21,6 +21,7 @@ public class PackerManager {
 	final static String PACKER_TECHNIQUE = "data/data/packerTechnique.txt";
 	final static String PACKER_DETECION_RESULT = "data/data/detectionResult.txt";
 	final static String PACKER_DETECION_DETAIL = "data/data/detectionDetail.txt";
+	final static String TECHNIQUE_POSITION = "data/data/positionDetail.txt";
 
 	/**
 	 * Singleton instance of {@link OTFThreadManager} class
@@ -190,14 +191,17 @@ public class PackerManager {
 
 	public void outputToFile(String fileName) {
 		// TODO Auto-generated method stub
-		FileProcess frequency = new FileProcess(TECHNIQUE_FREQUENCY);
-		frequency.appendFile(fileName + "\t" + tMonitor.getFrequencyTechniques() + "\t" + System.currentTimeMillis());
+//		FileProcess frequency = new FileProcess(TECHNIQUE_FREQUENCY);
+//		frequency.appendFile(fileName + "\t" + tMonitor.getFrequencyTechniques() + "\t" + System.currentTimeMillis());
 		
 		FileProcess signature = new FileProcess(PACKER_SIGNATURE);
 		signature.appendFile(fileName + "\t" + tMonitor.getTechniqueOrder() + "\t" + System.currentTimeMillis());
 		
-		FileProcess technique = new FileProcess(PACKER_TECHNIQUE);
-		technique.appendFile(fileName + "\t" + tMonitor.getPackerTechniques() + "\t" + System.currentTimeMillis());		
+		FileProcess pos = new FileProcess(TECHNIQUE_POSITION);
+		pos.appendFile(fileName + "\t" + tMonitor.getPosOrder() + "\t" + System.currentTimeMillis());
+		
+//		FileProcess technique = new FileProcess(PACKER_TECHNIQUE);
+//		technique.appendFile(fileName + "\t" + tMonitor.getPackerTechniques() + "\t" + System.currentTimeMillis());		
 		
 		FileProcess result = new FileProcess(PACKER_DETECION_RESULT);
 		result.appendFile(fileName + "\t" + tMonitor.getDetectionResult() + "\t" + System.currentTimeMillis());

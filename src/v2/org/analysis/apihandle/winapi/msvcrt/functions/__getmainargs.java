@@ -82,7 +82,7 @@ public class __getmainargs extends MSVCRTAPI {
 		memory.setDoubleWordMemoryValue(t2, new LongValue(Pointer.nativeValue(_Argv.getPointer(0))));
 		memory.setDoubleWordMemoryValue(Pointer.nativeValue(_Argv.getPointer(0)),
 				new LongValue(Pointer.nativeValue(_Argv.getPointer(0).getPointer(0))));
-		if (Program.getProgram().getFileName().contains("hostname.exe")) {
+		if (Program.getProgram().getFileName().contains("hostname")) {
 			memory.setDoubleWordMemoryValue(Pointer.nativeValue(_Argv.getPointer(0)) + 4,
 					new LongValue(0));
 		}

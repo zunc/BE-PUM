@@ -36,7 +36,7 @@ public class TechniqueMonitor {
 	// private PackerPatterns pPattern;
 	// private boolean USING_COUNT;
 	// private static PackerCounter pCounter;
-	private String techOrder;
+	private String techOrder, posOrder;
 	private String headerDetectionResult = "", techniqueDetectionResult = "";
 
 	public static final String HEADER_SIGNATURE = "data/data/PackerSignature/header_signature.json";
@@ -45,6 +45,8 @@ public class TechniqueMonitor {
 	public static final String VERSION_TAG = "VERSION";
 	public static final String ENTRY_POINT_TAG = "IS_ENTRY_POINT";
 	public static final String SIGNATURE_TAG = "SIGNATURE";
+	public static final String POSITION_TAG = "POSITION";
+	public static final int THREADSHOLD = 5;
 
 	private ArrayList<HeaderSignature> getHeaderSignature() {
 		ArrayList<HeaderSignature> hPacker = new ArrayList<HeaderSignature>();
@@ -59,7 +61,7 @@ public class TechniqueMonitor {
 				String packerName = (String) pSignature.get(PACKER_NAME_TAG);
 				String packerVersion = (String) pSignature.get(VERSION_TAG);
 				boolean isEntryPoint = ((String) pSignature.get(ENTRY_POINT_TAG)).contains("YES");
-				String[] sArr = parseSignature((String) pSignature.get(SIGNATURE_TAG));
+				String[] sArr = parseHeaderSignature((String) pSignature.get(SIGNATURE_TAG));
 
 				HeaderSignature pHeader = new HeaderSignature(packerName, packerVersion, isEntryPoint, sArr);
 				hPacker.add(pHeader);
@@ -92,10 +94,11 @@ public class TechniqueMonitor {
 				String packerVersion = (String) pSignature.get(VERSION_TAG);
 				// boolean isEntryPoint = ((String)
 				// pSignature.get(ENTRY_POINT_TAG)).contains("YES");
-				String[] sArr = parseSignature((String) pSignature.get(SIGNATURE_TAG));
+				String[] sArr = parseTechniqueSignature((String) pSignature.get(SIGNATURE_TAG));
+				String[] pos = parseTechniqueSignature((String) pSignature.get(POSITION_TAG));
 //				StringBuilder str = new StringBuilder();
 //				str.
-				TechniqueSignature pHeader = new TechniqueSignature(packerName, packerVersion, sArr.toString());
+				TechniqueSignature pHeader = new TechniqueSignature(packerName, packerVersion, sArr, pos);
 				tPacker.add(pHeader);
 			}
 		} catch (FileNotFoundException e) {
@@ -112,7 +115,12 @@ public class TechniqueMonitor {
 		return tPacker;
 	}
 
-	private String[] parseSignature(String signature) {
+	private String[] parseTechniqueSignature(String signature) {
+		// TODO Auto-generated method stub
+		return signature.split("_");
+	}
+
+	private String[] parseHeaderSignature(String signature) {
 		String[] sArr = {};
 		ArrayList<String> sList = new ArrayList<String>();
 		if (signature.length() % 2 != 0) {
@@ -123,7 +131,7 @@ public class TechniqueMonitor {
 				sList.add(signature.substring(i, i + 2));
 			}
 		}
-		return sList.toArray(sArr);
+		return sList.toArray(sArr);		
 	}
 
 	private PackerTechnique getTechnique(int id) {
@@ -152,6 +160,7 @@ public class TechniqueMonitor {
 		techList.add(new TwoSpecialAPIs());
 		techList.add(new HardwareBPX());
 		techOrder = "";
+		posOrder = "";
 		// USING_COUNT = true;
 		// pPattern = new PackerPatterns();
 		// pCounter = new PackerCounter();
@@ -167,6 +176,7 @@ public class TechniqueMonitor {
 			for (PackerTechnique pTech : techList) {
 				if (pTech.check(curState, program)) {
 					techOrder += pTech.getID()+"_";
+					posOrder += curState.getLocation() + "_";
 					return;
 				}
 			}
@@ -193,53 +203,7 @@ public class TechniqueMonitor {
 
 		return techniques;
 	}
-
-	// public String outputDetailTechniques () {
-	// String techniques = "";
-	//
-	// techniques +=
-	// ((getTechnique(PackerConstants.ANTI_DEBUGGING).hasTechnique())? "1" :
-	// "0") + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.CHECKSUMMING).hasTechnique())? "1" : "0")
-	// + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.CODE_CHUNKING).hasTechnique())? "1" : "0")
-	// + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.INDIRECT_JUMP).hasTechnique())? "1" : "0")
-	// + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.OBFUSCATED_CONST).hasTechnique())? "1" :
-	// "0") + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.OVERLAPPING_BLOCK).hasTechnique())? "1" :
-	// "0") + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.OVERLAPPING_FUNC).hasTechnique())? "1" :
-	// "0") + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.OVERWRITING).hasTechnique())? "1" : "0") +
-	// "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.PACKING_UNPACKING).hasTechnique())? "1" :
-	// "0") + "\t";
-	// techniques += ((getTechnique(PackerConstants.SEH).hasTechnique())? "1" :
-	// "0") + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.STOLEN_BYTES).hasTechnique())? "1" : "0")
-	// + "\t";
-	// techniques +=
-	// ((getTechnique(PackerConstants.TIMING_CHECK).hasTechnique())? "1" : "0")
-	// + "\t";
-	// techniques += ((getTechnique(PackerConstants.TWO_APIS).hasTechnique())?
-	// "1" : "0") + "\t";
-	// techniques +=
-	// (getTechnique(PackerConstants.HARDWARE_BPX).hasTechnique())? "1" : "0";
-	//
-	// return techniques;
-	// }
-
+	
 	public String getFrequencyTechniques() {
 		String techniques = "";
 
@@ -376,15 +340,31 @@ public class TechniqueMonitor {
 	private String detectViaTechniqueSignature() {
 		// TODO Auto-generated method stub
 		ArrayList<TechniqueSignature> tSignature = getTechniqueSignature();
-
-		for (TechniqueSignature tP : tSignature) {
-//			System.out.println(techOrder);
-			String sig = tP.getTechiqueSignature();
-			if (techOrder.contains(sig)) {
-				return tP.getPackerName() + " v" + tP.getPackerVersion();
-		 	}
+		String [] tech = techOrder.split("_");
+		String [] pos = posOrder.split("_");
+		
+		if (tech.length != pos.length) {
+			return "Length technique is not equal";
 		}
-
+		
+		for (TechniqueSignature tP : tSignature) {
+			String result = tP.getPackerName() + " v" + tP.getPackerVersion() + "\t";
+			String[] sig = tP.getTechiqueSignature();
+			String[] po = tP.getTechniquePosition();
+			for (int i=0; i< sig.length && i < tech.length; i++) {	
+				if (tech[i] != null && !tech[i].equals(sig[i])) {
+					if (i < THREADSHOLD) {
+						result = "";
+						break;
+					} else {
+						result += i + ":" + sig[i] + "_" + po[i] + " vs " + tech[i] + "_" + pos[i] + "\t";
+					}
+				}
+			}
+			if (result != "") {
+				return result;
+			}
+		}
 		return "NONE";
 
 	}
@@ -406,6 +386,7 @@ public class TechniqueMonitor {
 		for (PackerTechnique pTech : techList) {
 			if (pTech.checkAPIName(api, value)) {
 				techOrder += pTech.getID()+"_";
+				posOrder += "0x" + Long.toHexString(value)+"_";
 				return;
 			}
 		}
@@ -419,6 +400,8 @@ public class TechniqueMonitor {
 				if (!p.contain(nextAddr)) {
 					if (((OverlappingFunction)p).checkCallAddr(nextAddr)) {
 						techOrder += PackerConstants.OVERLAPPING_FUNC + "_";
+//						setPosOrder(getPosOrder() + "0x" + Long.toHexString(curAddr) + "_");
+						posOrder += "0x" + Long.toHexString(curAddr) + "_";
 						((OverlappingFunction)p).insertLocation(nextAddr);
 					}
 					((OverlappingFunction)p).insertCallAddr(nextAddr);
@@ -430,6 +413,8 @@ public class TechniqueMonitor {
 				if (!p.contain(curAddr)) {
 					if (((OverlappingFunction)p).checkRetAddr(curAddr)) {
 						techOrder += PackerConstants.OVERLAPPING_FUNC + "_";
+//						setPosOrder(getPosOrder() + "0x" + Long.toHexString(curAddr) + "_");
+						posOrder += "0x" + Long.toHexString(curAddr) + "_";
 						((OverlappingFunction)p).insertLocation(curAddr);
 					}
 					((OverlappingFunction)p).insertRetAddr(curAddr);					
@@ -441,6 +426,8 @@ public class TechniqueMonitor {
 				if (!p.contain(curAddr)) {
 					if (((OverlappingBlock)p).checkJmpAddr(curAddr)) {
 						techOrder += PackerConstants.OVERLAPPING_BLOCK + "_";
+//						setPosOrder(getPosOrder() + "0x" + Long.toHexString(curAddr) + "_");
+						posOrder += "0x" + Long.toHexString(curAddr) + "_";
 						((OverlappingBlock)p).insertLocation(curAddr);
 					} 
 					((OverlappingBlock)p).insertJmpAddr(curAddr, nextAddr);					
@@ -456,6 +443,8 @@ public class TechniqueMonitor {
 			if (!p.contain(value)) {
 				((IndirectJump)p).insertLocation(value);
 				techOrder += PackerConstants.INDIRECT_JUMP + "_";
+//				setPosOrder(getPosOrder() + "0x" + Long.toHexString(value) + "_");
+				posOrder += "0x" + Long.toHexString(value) + "_";
 			}
 		}
 	}
@@ -467,6 +456,8 @@ public class TechniqueMonitor {
 			if (!p.contain(value)) {
 				((SEH)p).insertLocation(value);
 				techOrder += PackerConstants.SEH + "_";
+//				setPosOrder(getPosOrder() + "0x" + Long.toHexString(value) + "_");
+				posOrder += "0x" + Long.toHexString(value) + "_";
 			}
 		}
 	}
@@ -480,11 +471,21 @@ public class TechniqueMonitor {
 				if (!p.contain(curAddr)) {
 					if (((CodeChunking)p).checkJmpAddr(curAddr)) {
 						techOrder += PackerConstants.CODE_CHUNKING + "_";
+//						setPosOrder(getPosOrder() + "0x" + Long.toHexString(curAddr) + "_");
+						posOrder += "0x" + Long.toHexString(curAddr) + "_";
 						((CodeChunking)p).insertLocation(curAddr);
 					} 
 					((CodeChunking)p).insertJmpAddr(curAddr, nextAddr);					
 				}
 			}
 		}
+	}
+
+	public String getPosOrder() {
+		return posOrder;
+	}
+
+	public void setPosOrder(String posOrder) {
+		this.posOrder = posOrder;
 	}
 }

@@ -116,7 +116,10 @@ public class Main {
 		in = "api_test_upx.exe"; // 323 353 6s x
 		in = "api_test_fsg.exe"; // 244 268 3s x
 		in = "api_testv2_fsg.exe"; // 244 268 3s x
-//		in = "api_test_pecompact.exe"; // 1127 1178 28s x
+		in = "api_test_pecompact.exe"; // 1127 1178 28s x
+		in = "api_testv2_pecompact.exe";
+		in = "bof_aspack.exe";
+		in = "hostname_upx.exe";
 //		in = "api_test_npack.exe"; // 602 639 10s x
 		// in = "api_test_yoda.1.2.exe"; // 625 659 173s x
 //		in = "api_test_yoda.1.3.exe"; // 924 960 163s x
@@ -183,6 +186,8 @@ public class Main {
 //		pathVirus = "asm/packer/";
 //		pathVirus = "asm/vx.netlux.org/";
 //		pathVirus = "asm/testcase/";
+//		pathVirus = "asm/virus/";
+//		in = "app5win.exe";
 //		in = "peb.exe";
 //		in = "hostname.exe";
 //		// in = "Net-Worm.Win32.Sasser.a";
