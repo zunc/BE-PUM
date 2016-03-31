@@ -115,11 +115,12 @@ public class Main {
 		in = "api_test.exe"; // 158 160 0.1s x
 		in = "api_test_upx.exe"; // 323 353 6s x
 		in = "api_test_fsg.exe"; // 244 268 3s x
-		in = "api_testv2_fsg.exe"; // 244 268 3s x
-		in = "api_test_pecompact.exe"; // 1127 1178 28s x
-		in = "api_testv2_pecompact.exe";
-		in = "bof_aspack.exe";
-		in = "hostname_upx.exe";
+//		in = "demo1_fsg.exe"; // 244 268 3s x
+//		in = "api_testv2_fsg.exe"; // 244 268 3s x
+//		in = "api_test_pecompact.exe"; // 1127 1178 28s x
+//		in = "api_testv2_pecompact.exe";
+//		in = "bof_aspack.exe";
+//		in = "hostname_upx.exe";
 //		in = "api_test_npack.exe"; // 602 639 10s x
 		// in = "api_test_yoda.1.2.exe"; // 625 659 173s x
 //		in = "api_test_yoda.1.3.exe"; // 924 960 163s x
@@ -196,7 +197,7 @@ public class Main {
 //		in = "multiThread3_FF.exe";
 //		// in = "multiThread3_FFF.exe";
 //		// in = "multiThread3_FFFF.exe";
-//		in = "multiThread2_FFFF.exe";
+//		in = "Rdws.exe_dc3c90084e8c.bin-unpacked.bin";
 				
 		String path = pathVirus + in;
 		isGui = false;

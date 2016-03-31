@@ -7,6 +7,8 @@
  */
 package v2.org.analysis.apihandle.winapi.ws2_32.functions;
 
+import java.nio.charset.StandardCharsets;
+
 import v2.org.analysis.apihandle.winapi.ws2_32.Ws2_32API;
 import v2.org.analysis.apihandle.winapi.ws2_32.Ws2_32DLL;
 import v2.org.analysis.value.LongValue;
@@ -45,6 +47,9 @@ public class gethostname extends Ws2_32API {
 		int ret = Ws2_32DLL.INSTANCE.gethostname(name, namelen);
 
 		register.mov("eax", new LongValue(ret));
+		String str = new String(name, StandardCharsets.UTF_8);
+		
+		System.out.println("Hostname:" + str);
 
 		for (int i = 0; i < namelen; i++) {
 			memory.setByteMemoryValue(t1 + i, new LongValue(name[i]));

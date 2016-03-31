@@ -1,7 +1,11 @@
 package v2.org.analysis.olly;
 
 import org.jakstab.asm.AbsoluteAddress;
-import v2.org.analysis.environment.*;
+
+import v2.org.analysis.environment.Environment;
+import v2.org.analysis.environment.Flag;
+import v2.org.analysis.environment.Memory;
+import v2.org.analysis.environment.Register;
 
 public class OllyLoop {
 	public long getLoopID() {
@@ -68,48 +72,67 @@ public class OllyLoop {
 		Register r = env.getRegister();
 		Flag f = env.getFlag();
 		Memory m = env.getMemory();
-		Stack s = env.getStack();
+//		Stack s = env.getStack();
 		String compare = compareBEPUMRegister(l, r);
-		if (compare == "")
+		if (compare == "") {
 			ret += "Register: Equal\n";
-		else
+		} else {
 			ret += "Register: Bug " + compare + "\n";
+		}
 
 		compare = compareBEPUMFlag(l, f);
-		if (compare == "")
+		if (compare == "") {
 			ret += "Flag: Equal\n";
-		else
+		} else {
 			ret += "Flag: Bug " + compare + "\n";
+		}
 
 		compare = compareBEPUMMemory(l, m, memoryStartAddr, memoryEndAddr);
 
-		if (compare == "")
+		if (compare == "") {
 			ret += "Memory: Equal\n";
-		else
+		} else {
 			ret += "Memory: Unequal " + compare + "\n";
+		}
 
 		long esp = regs.getRegisterValue("esp");
 		compare = compareBEPUMStack(l, m, esp, stackIndex);
-		if (compare == "")
+		if (compare == "") {
 			ret += "Stack: Equal\n";
-		else
+		} else {
 			ret += "Stack: Unequal " + compare + "\n";
+		}
 		return ret;
 	}
 
 	private String compareBEPUMStack(OllyLoop l, Memory s, long esp, long stackIndex) {
+		if (stack == null) {
+			return "";
+		}
+		
 		return stack.compareStack(l, s, esp, stackIndex);
 	}
 
 	private String compareBEPUMMemory(OllyLoop l, Memory m, long memoryStartAddr, long memoryEndAddr) {
+		if (mems == null) {
+			return "";
+		}
+		
 		return mems.compareMemory(l, m, memoryStartAddr, memoryEndAddr);
 	}
 
 	private String compareBEPUMFlag(OllyLoop l, Flag f) {
+		if (flags == null) {
+			return "";
+		}
+		
 		return flags.compare(f);
 	}
 
 	private String compareBEPUMRegister(OllyLoop l, Register r) {
+		if (regs == null) {
+			return "";
+		}
 		return regs.compare(r);
 	}
 }

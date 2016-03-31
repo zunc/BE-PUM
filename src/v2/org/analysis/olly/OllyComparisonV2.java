@@ -38,8 +38,7 @@ public class OllyComparisonV2 {
 	private long memoryStartAddr, memoryEndAddr;
 	private long stackIndex;
 
-	public OllyComparisonV2(String olly_output, long start_buffer,
-			long end_buffer, long top_stack) {
+	public OllyComparisonV2(String olly_output, long start_buffer, long end_buffer, long top_stack) {
 		this.ollyFileName = olly_output;
 		this.memoryStartAddr = start_buffer;
 		this.memoryEndAddr = end_buffer;
@@ -62,16 +61,12 @@ public class OllyComparisonV2 {
 					// Get value
 					long id = getLoopIdentifer(loop);
 					long addr = getAddress(loop);
-					OllyRegister olly_register = new OllyRegister(
-							getRegister(register_line));
+					OllyRegister olly_register = new OllyRegister(getRegister(register_line));
 					long esp = olly_register.getRegisterValue("esp");
 					OllyFlag olly_flag = new OllyFlag(getFlag(flag_line));
-					OllyMemory olly_memory = new OllyMemory(
-							this.getMemory(memory_line));
-					OllyMemory olly_stack = new OllyMemory(this.getStack(
-							stack_line, esp));
-					OllyLoop olly_loop = new OllyLoop(id, addr, olly_register,
-							olly_flag, olly_memory, olly_stack);
+					OllyMemory olly_memory = new OllyMemory(this.getMemory(memory_line));
+					OllyMemory olly_stack = new OllyMemory(this.getStack(stack_line, esp));
+					OllyLoop olly_loop = new OllyLoop(id, addr, olly_register, olly_flag, olly_memory, olly_stack);
 					this.ollyLoop.add(olly_loop);
 					i++;
 				}
@@ -86,20 +81,17 @@ public class OllyComparisonV2 {
 
 	private long getAddress(String loop) {
 		int identifer_index = loop.indexOf("eip") + 6;
-		return Long.parseLong(
-				loop.substring(identifer_index, loop.indexOf(',')), 16);
+		return Long.parseLong(loop.substring(identifer_index, loop.indexOf(',')), 16);
 	}
 
 	private static long getLoopIdentifer(String loop) {
 		int identifer_index = loop.indexOf("loop") + 7;
-		return Long.parseLong(
-				loop.substring(identifer_index, loop.indexOf('>')), 16);
+		return Long.parseLong(loop.substring(identifer_index, loop.indexOf('>')), 16);
 	}
 
 	private static long[] getRegister(String register_line) {
 		int register_index = register_line.indexOf("register") + 11;
-		String[] all_register = register_line.substring(register_index).split(
-				", ");
+		String[] all_register = register_line.substring(register_index).split(", ");
 		long[] regs = new long[9];
 		for (int i = 0; i < 9; i++) {
 			regs[i] = Long.parseLong(all_register[i].substring(6), 16);
@@ -165,8 +157,7 @@ public class OllyComparisonV2 {
 		}
 
 		if (l.getAddress().getValue() != addr.getValue()) {
-			ret += "Address is not right: Expect " + addr + " but Olly contains " + l.getAddress()
-					+ " Bug \n";
+			ret += "Address is not right: Expect " + addr + " but Olly contains " + l.getAddress() + " Bug \n";
 			l = getAddr(addr.getValue(), count);
 
 			if (l != null) {
@@ -177,8 +168,7 @@ public class OllyComparisonV2 {
 		}
 
 		if (count == 1 || count == firstCount) {
-			ret += l.compareBEPUM(env, l, memoryStartAddr, memoryEndAddr,
-					stackIndex);
+			ret += l.compareBEPUM(env, l, memoryStartAddr, memoryEndAddr, stackIndex);
 		} else {
 			OllyLoop l1 = get(count - 1);
 
@@ -186,8 +176,7 @@ public class OllyComparisonV2 {
 				System.out.println("debug");
 			}
 
-			ret += l.compareBEPUM(env, l1, memoryStartAddr, memoryEndAddr,
-					stackIndex);
+			ret += l.compareBEPUM(env, l1, memoryStartAddr, memoryEndAddr, stackIndex);
 		}
 		return ret;
 	}
@@ -198,9 +187,9 @@ public class OllyComparisonV2 {
 			if (l.getAddress().getValue() == value && l.getLoopID() >= count) {
 				return l;
 			}
-		}		
-		//List<OllyLoop> old = ollyLoop;
-		//OllyLoop temp = get(count);
+		}
+		// List<OllyLoop> old = ollyLoop;
+		// OllyLoop temp = get(count);
 		File olly = new File(this.ollyFileName);
 		try {
 			Scanner sc = new Scanner(olly);
@@ -209,41 +198,61 @@ public class OllyComparisonV2 {
 			this.ollyLoop.clear();
 			while (sc.hasNextLine() && i < MAXINDEX) {
 				String loop = sc.nextLine();
-				if (loop.contains("loop")) {
-					String register_line = sc.nextLine();
-					String flag_line = sc.nextLine();
-					String memory_line = sc.nextLine();
-					String stack_line = sc.nextLine();
+				if (loop.contains("loop")) {					
 					// Get value
 					long id = getLoopIdentifer(loop);
-					
+
 					long addr = getAddress(loop);
 					if (id >= count && addr == value) {
-						isRead = true;						
+						isRead = true;
 					}
 
 					if (isRead) {
-						OllyRegister olly_register = new OllyRegister(
-								getRegister(register_line));
-						long esp = olly_register.getRegisterValue("esp");
-						OllyFlag olly_flag = new OllyFlag(getFlag(flag_line));
-						OllyMemory olly_memory = new OllyMemory(
-								this.getMemory(memory_line));
-						OllyMemory olly_stack = new OllyMemory(this.getStack(
-								stack_line, esp));
-						OllyLoop olly_loop = new OllyLoop(id, addr,
-								olly_register, olly_flag, olly_memory,
-								olly_stack);
+//						String register_line = sc.nextLine();
+//						String flag_line = sc.nextLine();
+//						String memory_line = sc.nextLine();
+//						String stack_line = sc.nextLine();
+//						OllyRegister olly_register = new OllyRegister(getRegister(register_line));
+//						long esp = olly_register.getRegisterValue("esp");
+//						OllyFlag olly_flag = new OllyFlag(getFlag(flag_line));
+//						OllyMemory olly_memory = new OllyMemory(this.getMemory(memory_line));
+//						OllyMemory olly_stack = new OllyMemory(this.getStack(stack_line, esp));
+//						OllyLoop olly_loop = new OllyLoop(id, addr, olly_register, olly_flag, olly_memory, olly_stack);
+//						this.ollyLoop.add(olly_loop);
+//						i++;
+						OllyRegister olly_register = null;
+						OllyFlag olly_flag = null;
+						OllyMemory olly_memory = null;
+						OllyMemory olly_stack = null;
+
+						String line = sc.nextLine();
+						if (line.contains("register")) {
+							olly_register = new OllyRegister(getRegister(line));
+							long esp = olly_register.getRegisterValue("esp");
+							line = sc.nextLine();
+							if (line.contains("flag")) {
+								olly_flag = new OllyFlag(getFlag(line));
+								line = sc.nextLine();
+								if (line.contains("memory")) {
+									olly_memory = new OllyMemory(this.getMemory(line));
+									line = sc.nextLine();
+									if (line.contains("stack")) {
+										olly_stack = new OllyMemory(this.getStack(line, esp));
+									}
+								}
+							}
+						}
+						OllyLoop olly_loop = new OllyLoop(id, addr, olly_register, olly_flag, olly_memory, olly_stack);
 						this.ollyLoop.add(olly_loop);
 						i++;
 					}
 				}
 			}
-			
+
 			if (isRead) {
 				firstCount = this.ollyLoop.get(0).getLoopID();
 				lastCount = this.ollyLoop.get(ollyLoop.size() - 1).getLoopID();
-				
+
 				return ollyLoop.get(0);
 			} else {
 				firstCount = 0;
@@ -252,18 +261,18 @@ public class OllyComparisonV2 {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	private OllyLoop get(long count) {
 		if (count < firstCount || count > lastCount) {
 			refreshOllyData(count);
-			
+
 			if (isFinished()) {
 				return null;
-			} 
-			
+			}
+
 			return ollyLoop.get(0);
 		}
 
@@ -272,7 +281,7 @@ public class OllyComparisonV2 {
 				return l;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -286,11 +295,7 @@ public class OllyComparisonV2 {
 			this.ollyLoop.clear();
 			while (sc.hasNextLine() && i < MAXINDEX) {
 				String loop = sc.nextLine();
-				if (loop.contains("loop")) {
-					String register_line = sc.nextLine();
-					String flag_line = sc.nextLine();
-					String memory_line = sc.nextLine();
-					String stack_line = sc.nextLine();
+				if (loop.contains("loop")) {					
 					// Get value
 					long id = getLoopIdentifer(loop);
 					if (id == count) {
@@ -299,23 +304,35 @@ public class OllyComparisonV2 {
 
 					if (isRead) {
 						long addr = getAddress(loop);
-						OllyRegister olly_register = new OllyRegister(
-								getRegister(register_line));
-						long esp = olly_register.getRegisterValue("esp");
-						OllyFlag olly_flag = new OllyFlag(getFlag(flag_line));
-						OllyMemory olly_memory = new OllyMemory(
-								this.getMemory(memory_line));
-						OllyMemory olly_stack = new OllyMemory(this.getStack(
-								stack_line, esp));
-						OllyLoop olly_loop = new OllyLoop(id, addr,
-								olly_register, olly_flag, olly_memory,
-								olly_stack);
+						OllyRegister olly_register = null;
+						OllyFlag olly_flag = null;
+						OllyMemory olly_memory = null;
+						OllyMemory olly_stack = null;
+
+						String line = sc.nextLine();
+						if (line.contains("register")) {
+							olly_register = new OllyRegister(getRegister(line));
+							long esp = olly_register.getRegisterValue("esp");
+							line = sc.nextLine();
+							if (line.contains("flag")) {
+								olly_flag = new OllyFlag(getFlag(line));
+								line = sc.nextLine();
+								if (line.contains("memory")) {
+									olly_memory = new OllyMemory(this.getMemory(line));
+									line = sc.nextLine();
+									if (line.contains("stack")) {
+										olly_stack = new OllyMemory(this.getStack(line, esp));
+									}
+								}
+							}
+						}
+						OllyLoop olly_loop = new OllyLoop(id, addr, olly_register, olly_flag, olly_memory, olly_stack);
 						this.ollyLoop.add(olly_loop);
 						i++;
 					}
 				}
 			}
-			
+
 			if (isRead) {
 				firstCount = this.ollyLoop.get(0).getLoopID();
 				lastCount = this.ollyLoop.get(ollyLoop.size() - 1).getLoopID();
@@ -333,8 +350,7 @@ public class OllyComparisonV2 {
 		return nextCheck;
 	}
 
-	public void importOllyData(AbsoluteAddress checkedAddr,
-			AbsoluteAddress endAddr) {
+	public void importOllyData(AbsoluteAddress checkedAddr, AbsoluteAddress endAddr) {
 		// TODO Auto-generated method stub
 		File olly = new File(this.ollyFileName);
 		try {
@@ -343,23 +359,33 @@ public class OllyComparisonV2 {
 			while (sc.hasNextLine() && i < MAXINDEX) {
 				String loop = sc.nextLine();
 				if (loop.contains("loop")) {
-					String register_line = sc.nextLine();
-					String flag_line = sc.nextLine();
-					String memory_line = sc.nextLine();
-					String stack_line = sc.nextLine();
 					// Get value
+					OllyRegister olly_register = null;
+					OllyFlag olly_flag = null;
+					OllyMemory olly_memory = null;
+					OllyMemory olly_stack = null;
+
 					long id = getLoopIdentifer(loop);
 					long addr = getAddress(loop);
-					OllyRegister olly_register = new OllyRegister(
-							getRegister(register_line));
-					long esp = olly_register.getRegisterValue("esp");
-					OllyFlag olly_flag = new OllyFlag(getFlag(flag_line));
-					OllyMemory olly_memory = new OllyMemory(
-							this.getMemory(memory_line));
-					OllyMemory olly_stack = new OllyMemory(this.getStack(
-							stack_line, esp));
-					OllyLoop olly_loop = new OllyLoop(id, addr, olly_register,
-							olly_flag, olly_memory, olly_stack);
+
+					String line = sc.nextLine();
+					if (line.contains("register")) {
+						olly_register = new OllyRegister(getRegister(line));
+						long esp = olly_register.getRegisterValue("esp");
+						line = sc.nextLine();
+						if (line.contains("flag")) {
+							olly_flag = new OllyFlag(getFlag(line));
+							line = sc.nextLine();
+							if (line.contains("memory")) {
+								olly_memory = new OllyMemory(this.getMemory(line));
+								line = sc.nextLine();
+								if (line.contains("stack")) {
+									olly_stack = new OllyMemory(this.getStack(line, esp));
+								}
+							}
+						}
+					}
+					OllyLoop olly_loop = new OllyLoop(id, addr, olly_register, olly_flag, olly_memory, olly_stack);
 					this.ollyLoop.add(olly_loop);
 					i++;
 				}

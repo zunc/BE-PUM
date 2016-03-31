@@ -80,6 +80,7 @@ public class RegQueryValueEx extends Kernel32API {
 
 		HKEY hKey = new HKEY(new Pointer(t1));
 		String lpValueName = (t2 == 0L) ? null : memory.getText(this, t2);
+		System.out.println("lpValueName:" + lpValueName);
 		DWORDByReference lpReserved = null;// reversed!!
 		// (t3 == 0L) ? null : new DWORDByReference();
 		DWORDByReference lpType = (t4 == 0L) ? null : new DWORDByReference();

@@ -354,7 +354,7 @@ public class TechniqueMonitor {
 			for (int i=0; i< sig.length && i < tech.length; i++) {	
 				if (tech[i] != null && !tech[i].equals(sig[i])) {
 					if (i < THREADSHOLD) {
-						result = "";
+						result = "NONE \t" + i + ":" + sig[i] + "_" + po[i] + " vs " + tech[i] + "_" + pos[i] + "\t";
 						break;
 					} else {
 						result += i + ":" + sig[i] + "_" + po[i] + " vs " + tech[i] + "_" + pos[i] + "\t";
@@ -439,6 +439,10 @@ public class TechniqueMonitor {
 	public void setIndirectJumpTechnique(long value) {
 		// TODO Auto-generated method stub
 		PackerTechnique p = getTechnique(PackerConstants.INDIRECT_JUMP);
+		if (value == 4194688) {
+			System.out.println("Debug");
+		}
+		
 		if (p != null) {
 			if (!p.contain(value)) {
 				((IndirectJump)p).insertLocation(value);

@@ -72,6 +72,7 @@ public class HttpSendRequest extends WininetAPI {
 		int dwOptionalLength = (int) t5;
 		boolean ret = WininetDLL.INSTANCE.HttpSendRequest(hRequest, lpszHeaders, dwHeadersLength, lpOptional,
 				dwOptionalLength);
+		System.out.println("lpszHeaders:" + lpszHeaders);
 
 		register.mov("eax", new LongValue(ret ? 1 : 0));
 	}
