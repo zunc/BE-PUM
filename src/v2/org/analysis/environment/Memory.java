@@ -1214,6 +1214,35 @@ public class Memory {
 		}
 	}
 
+	public String getRawText(API api, long addr, int i) {
+		// TODO Auto-generated method stub
+		int numOfBytes = (api.is64bit()) ? 2 : 1;
+		return getRawText(addr, numOfBytes, i);
+	}
+
+	private String getRawText(long addr, int charSize, int num) {
+		// TODO Auto-generated method stub
+		StringBuilder ret = new StringBuilder();
+		
+		for (int i=0; i < num; i++) {
+			Value t = (charSize == 1) ? getByteMemoryValue(addr, false) : getWordMemoryValue(addr);
+
+			if (t != null && t instanceof LongValue) {
+				char t1 = (charSize == 1) //
+				? (char) (byte) (((LongValue) t).getValue() & 0xFF) //
+						: (char) (((LongValue) t).getValue() & 0xFFFF);
+
+				ret.append(t1);
+				addr += charSize;
+			} else if (t instanceof SymbolValue) {
+				return ret.toString();
+			}
+		}
+
+		return ret.toString();
+
+	}
+
 	/*
 	 * private long normalizeValue(long v, Instruction inst) { // TODO
 	 * Auto-generated method stub return Convert.convetUnsignedValue(v,
