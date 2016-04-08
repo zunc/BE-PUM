@@ -191,8 +191,8 @@ public class PackerManager {
 
 	public void outputToFile(String fileName) {
 		// TODO Auto-generated method stub
-//		FileProcess frequency = new FileProcess(TECHNIQUE_FREQUENCY);
-//		frequency.appendFile(fileName + "\t" + tMonitor.getFrequencyTechniques() + "\t" + System.currentTimeMillis());
+		FileProcess frequency = new FileProcess(TECHNIQUE_FREQUENCY);
+		frequency.appendFile(fileName + "\t" + tMonitor.getFrequencyTechniques() + "\t" + System.currentTimeMillis());
 		
 		FileProcess signature = new FileProcess(PACKER_SIGNATURE);
 		signature.appendFile(fileName + "\t" + tMonitor.getTechniqueOrder() + "\t" + System.currentTimeMillis());
