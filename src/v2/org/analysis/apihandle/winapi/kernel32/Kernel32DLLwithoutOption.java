@@ -3,6 +3,7 @@ package v2.org.analysis.apihandle.winapi.kernel32;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.WinDef.HMODULE;
+import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.win32.StdCallLibrary;
 
 /**
@@ -23,4 +24,6 @@ public interface Kernel32DLLwithoutOption extends StdCallLibrary {
 
 	int GetProcAddress(HMODULE hM, String lpProcName);
 	int GetProcAddress(HMODULE hM, Pointer lpProcName);
+	
+	HANDLE GetStdHandle(int nStdHandle);
 }

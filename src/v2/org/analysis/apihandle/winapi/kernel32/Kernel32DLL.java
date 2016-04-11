@@ -394,6 +394,7 @@ public interface Kernel32DLL extends StdCallLibrary {
 	 *         </p>
 	 */
 	HANDLE GetStdHandle(DWORD nStdHandle);
+	HANDLE GetStdHandle(int nStdHandle);
 
 	/**
 	 * Allocates a block of memory from a heap. The allocated memory is not
