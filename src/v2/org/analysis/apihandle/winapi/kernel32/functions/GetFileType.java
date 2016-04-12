@@ -7,10 +7,8 @@
  */
 package v2.org.analysis.apihandle.winapi.kernel32.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import v2.org.analysis.apihandle.winapi.kernel32.Kernel32API;
+import v2.org.analysis.apihandle.winapi.kernel32.Kernel32DLL;
 import v2.org.analysis.value.LongValue;
 
 import com.sun.jna.Pointer;
@@ -34,8 +32,10 @@ import com.sun.jna.platform.win32.WinNT.HANDLE;
  *
  */
 public class GetFileType extends Kernel32API {
-	public static List<Integer> stdHandleList = new ArrayList<Integer>();
-	
+	public static final long STD_INPUT_HANDLE 	= Pointer.nativeValue(Kernel32DLL.INSTANCE.GetStdHandle(-10).getPointer());
+	public static final long STD_OUTPUT_HANDLE 	= Pointer.nativeValue(Kernel32DLL.INSTANCE.GetStdHandle(-11).getPointer());
+	public static final long STD_ERROR_HANDLE 	= Pointer.nativeValue(Kernel32DLL.INSTANCE.GetStdHandle(-12).getPointer());
+
 	public GetFileType() {
 		super();
 		NUM_OF_PARMS = 1;
@@ -44,10 +44,12 @@ public class GetFileType extends Kernel32API {
 	@Override
 	public void execute() {
 		long t = this.params.get(0);
-		
-		// Std Input/Output handle will cause the return value is 3
-		int ret = (stdHandleList.contains((int) t)) ? 3 : Kernel32.INSTANCE.GetFileType(new HANDLE(new Pointer(t)));
-		
+
+		// Std Input/Output handle will cause the return value is 2
+		int ret = (t == STD_INPUT_HANDLE || t == STD_OUTPUT_HANDLE || t == STD_ERROR_HANDLE) 
+				? 2 
+				: Kernel32.INSTANCE.GetFileType(new HANDLE(new Pointer(t)));
+
 		System.out.println("Return value:" + ret);
 		register.mov("eax", new LongValue(ret));
 	}

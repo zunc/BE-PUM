@@ -60,7 +60,7 @@ public class GetStdHandle extends Kernel32API {
 		long value = (ret == null) ? 0 : Pointer.nativeValue(ret.getPointer());
 		register.mov("eax", new LongValue(value));
 
-		GetFileType.stdHandleList.add((int) value);
+//		GetFileType.stdHandleList.add((int) value);
 	}
 
 }
