@@ -76,15 +76,19 @@ public class VirtualAlloc extends Kernel32API {
 		DWORD flProtect = new DWORD(t4);
 		LPVOID ret = Kernel32DLL.INSTANCE.VirtualAlloc(lpAddress, dwSize, flAllocationType, flProtect);
 
-		register.mov("eax", new LongValue(Pointer.nativeValue(ret.toPointer())));
-		
-		for (long i = t1; i < (t1 + t2); i++) {
-			memory.setByteMemoryValue(i, new LongValue(0));
-			
-//			ExternalMemoryReturnData em = ExternalMemory.getByte(i);
-//			if (ret != null && em.isValidAddress) {
-//				memory.setByteMemoryValue(i, em.value);
-//			}	
+		long baseAddress = Pointer.nativeValue(ret.toPointer());
+
+		register.mov("eax", new LongValue(baseAddress));
+
+		if (baseAddress > 0L) {
+			for (long i = baseAddress; i < (baseAddress + t2); i++) {
+				memory.setByteMemoryValue(i, new LongValue(0));
+
+				// ExternalMemoryReturnData em = ExternalMemory.getByte(i);
+				// if (ret != null && em.isValidAddress) {
+				// memory.setByteMemoryValue(i, em.value);
+				// }
+			}
 		}
 	}
 
