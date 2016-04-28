@@ -86,6 +86,11 @@ public class OTFModelGeneration implements Algorithm {
 		TIB.setBeUpdated(true);
 		TIB.updateTIB(curState);
 		
+		if (PackerManager.getInstance().isDetectHeaderOnly()) {
+			PackerManager.getInstance().getHeaderDetection(fileName);
+			return;
+		}
+		
 		// ---------------------------------------------
 
 		// PHONG - 20150801 /////////////////////////////

@@ -239,6 +239,8 @@ public class Main {
 							OTFThreadManager.getInstance().setMultiThread(true);							
 						} else if (input.contains("-detectpacker")) {
 							PackerManager.getInstance().setDetectPacker(true);							
+						} else if (input.contains("-detectheader")) {
+							PackerManager.getInstance().setDetectHeader(true);							
 						}
 					} else {
 						path = input;

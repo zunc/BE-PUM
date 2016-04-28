@@ -10,6 +10,7 @@ public class PackerManager {
 
 	private boolean isPacked;
 	private boolean isDetect = false;
+	private boolean detectHeaderOnly = false;
 	private TechniqueMonitor tMonitor;
 //	private String detectViaHeader;
 //	private String detectViaTechniques;
@@ -209,6 +210,12 @@ public class PackerManager {
 		FileProcess detail = new FileProcess(PACKER_DETECION_DETAIL);
 		detail.appendFile(fileName + "\n" + tMonitor.getDetectionDetail());
 	}
+	
+	public void getHeaderDetection(String fileName) {
+		// TODO Auto-generated method stub		
+		FileProcess result = new FileProcess(PACKER_DETECION_RESULT);
+		result.appendFile(fileName + "\t" + tMonitor.getDetectionResult() + "\t" + System.currentTimeMillis());
+	}
 
 	public void checkAPIName(String api, long value) {
 		// TODO Auto-generated method stub
@@ -243,5 +250,14 @@ public class PackerManager {
 		if (isDetect) {
 			tMonitor.setCodeChunking(instName, curAddr, nextAddr);
 		}
+	}
+
+	public void setDetectHeader(boolean b) {
+		// TODO Auto-generated method stub
+		detectHeaderOnly = b;
+	}
+
+	public boolean isDetectHeaderOnly() {
+		return detectHeaderOnly;
 	}
 }
