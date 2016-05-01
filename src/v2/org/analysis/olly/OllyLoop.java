@@ -107,7 +107,7 @@ public class OllyLoop {
 
 	private String compareBEPUMStack(OllyLoop l, Memory s, long esp, long stackIndex) {
 		if (stack == null) {
-			return "";
+			return "No Stack";
 		}
 		
 		return stack.compareStack(l, s, esp, stackIndex);
@@ -115,7 +115,7 @@ public class OllyLoop {
 
 	private String compareBEPUMMemory(OllyLoop l, Memory m, long memoryStartAddr, long memoryEndAddr) {
 		if (mems == null) {
-			return "";
+			return "No Mem";
 		}
 		
 		return mems.compareMemory(l, m, memoryStartAddr, memoryEndAddr);
@@ -123,7 +123,7 @@ public class OllyLoop {
 
 	private String compareBEPUMFlag(OllyLoop l, Flag f) {
 		if (flags == null) {
-			return "";
+			return "No Flag";
 		}
 		
 		return flags.compare(f);
@@ -131,7 +131,7 @@ public class OllyLoop {
 
 	private String compareBEPUMRegister(OllyLoop l, Register r) {
 		if (regs == null) {
-			return "";
+			return "No Register";
 		}
 		return regs.compare(r);
 	}

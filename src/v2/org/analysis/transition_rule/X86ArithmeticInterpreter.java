@@ -1096,7 +1096,7 @@ public class X86ArithmeticInterpreter {
 				opSize = rule.getBitCount(ins);
 				Value result = null;
 				switch (ins.getOperandCount()) {
-				case 2:
+				case 1:
 					if (ins.getOperand1().toString().startsWith("%ax") || ins.getOperand1().toString().startsWith("ax")
 							|| ins.getOperand1().toString().startsWith("%al")
 							|| ins.getOperand1().toString().startsWith("al")
@@ -1203,6 +1203,33 @@ public class X86ArithmeticInterpreter {
 						}
 						break;
 					}
+				case 2: 
+					Value destination = rule.getValueOperand(ins.getOperand1(), env, ins);
+					Value source = rule.getValueOperand(ins.getOperand2(), env, ins);					
+
+					if (destination != null && destination instanceof LongValue && source != null && source instanceof LongValue) {
+						long dVal = ((LongValue) destination).getValue();
+						long sVal = ((LongValue) source).getValue();						
+
+						long temp = BitVector.signedMul(dVal, sVal, 2 * opSize);
+						long destVal = BitVector.signedMul(dVal, sVal, opSize);
+
+						if (temp == destVal) {
+							env.getFlag().setCFlag(new BooleanValue(false));
+							env.getFlag().setOFlag(new BooleanValue(false));
+						} else {
+							env.getFlag().setCFlag(new BooleanValue(true));
+							env.getFlag().setOFlag(new BooleanValue(true));
+						}
+						result = new LongValue(destVal);
+						rule.setValueOperand(ins.getOperand1(), result, env, ins);
+					} else {
+						result = destination.signedMulFunction(source);
+						rule.setValueOperand(ins.getOperand1(), result, env, ins);
+						env.getFlag().setCFlag(new SymbolValue("cFlag"));
+						env.getFlag().setOFlag(new SymbolValue("oFlag"));
+					}
+					break;
 				case 3:
 					Value dest = rule.getValueOperand(ins.getOperand1(), env, ins);
 					Value source1 = rule.getValueOperand(ins.getOperand2(), env, ins);
