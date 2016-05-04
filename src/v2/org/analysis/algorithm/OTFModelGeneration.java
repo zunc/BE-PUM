@@ -106,6 +106,7 @@ public class OTFModelGeneration implements Algorithm {
 //		PackerManager.getInstance().setDetectPacker(true);
 		synchronized (OTFThreadManager.getInstance()) {
 			try {
+				OTFThreadManager.getInstance().setOtfModelGeneration(this);
 				OTFThreadManager.getInstance().check(this, pathList);
 				OTFThreadManager.getInstance().wait();
 			} catch (Exception e) {
