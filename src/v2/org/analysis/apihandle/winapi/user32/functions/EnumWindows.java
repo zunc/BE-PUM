@@ -62,13 +62,19 @@ public class EnumWindows extends User32API {
 
 			@Override
 			public boolean callback(HWND hWnd, Pointer data) {
-				//// Push parameters to stack
+				// // Log
+				System.out.println("WNDENUMPROC Callback of EnumWindows API");
+				System.out.println(String.format("hWnd: %s, data: %s", Pointer.nativeValue(hWnd.getPointer()),
+						Pointer.nativeValue(data)));
+
+				// // Push parameters to stack
 				Environment environment = new Environment();
 				environment.setMemory(tmpEnv.getMemory());
 				environment.getStack().push(new LongValue(Pointer.nativeValue(data)));
 				environment.getStack().push(new LongValue(Pointer.nativeValue(hWnd.getPointer())));
-				
-				//// Initialize and start new OTF thread
+				environment.getStack().push(new LongValue(0x74FD6092)); // RETURN to user32.74FD6092
+
+				// // Initialize and start new OTF thread
 				BPState curState = null;
 				BPPath path = null;
 				Instruction inst = Program.getProgram().getInstruction(location, environment);
@@ -78,7 +84,7 @@ public class EnumWindows extends User32API {
 
 				OTFThread thread = OTFThreadManager.getInstance().getOtfModelGeneration().new OTFThread(path);
 				thread.start();
-				
+
 				return true;
 			}
 		};
