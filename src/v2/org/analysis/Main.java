@@ -113,8 +113,8 @@ public class Main {
 		// pathVirus = "asm/packer/";
 		// in = "api_testv2.exe"; // 2064 2151 26s ?
 		in = "api_test.exe"; // 158 160 0.1s x
-		in = "api_test_upx.exe"; // 323 353 6s x
-		in = "api_test_fsg.exe"; // 244 268 3s x
+		in = "api_test_upx_N.exe"; // 323 353 6s x
+//		in = "api_test_fsg.exe"; // 244 268 3s x
 //		in = "demo1_fsg.exe"; // 244 268 3s x
 //		in = "api_testv2_fsg.exe"; // 244 268 3s x
 //		in = "api_test_pecompact.exe"; // 1127 1178 28s x

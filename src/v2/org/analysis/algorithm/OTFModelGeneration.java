@@ -31,6 +31,8 @@ import v2.org.analysis.path.PathList;
 import v2.org.analysis.statistics.FileProcess;
 import v2.org.analysis.transition_rule.X86TransitionRule;
 import v2.org.analysis.value.Formulas;
+import v2.org.analysis.value.LongValue;
+import v2.org.analysis.value.Value;
 
 public class OTFModelGeneration implements Algorithm {
 	public static long DEFAULT_OUT_TIME = 180000;
@@ -104,6 +106,7 @@ public class OTFModelGeneration implements Algorithm {
 //		System.out.println("==================================================================");
 		/////////////////////////////////////////////////
 //		PackerManager.getInstance().setDetectPacker(true);
+//		OTFThreadManager.getInstance().setMultiThread(true);
 		synchronized (OTFThreadManager.getInstance()) {
 			try {
 				OTFThreadManager.getInstance().setOtfModelGeneration(this);
@@ -166,7 +169,9 @@ public class OTFModelGeneration implements Algorithm {
 					}
 	
 					inst = curState.getInstruction();
-					location = curState.getLocation();					
+					location = curState.getLocation();		
+					
+//					debugProg(location, curState);
 					
 					if (inst != null && inst.getName().contains("addb")
 							&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
@@ -213,6 +218,30 @@ public class OTFModelGeneration implements Algorithm {
 						path.destroy();
 						break;
 					}
+				}
+			}
+		}
+		
+		private boolean b = false;
+
+		private void debugProg(AbsoluteAddress loc, BPState curState2) {
+			// TODO Auto-generated method stub			
+			if (b) {
+				System.out.print(loc.toString() + " ");
+			}
+			
+			if (loc != null && loc.toString().contains("a31c64")) {
+				Value v = curState.getEnvironement().getMemory().getDoubleWordMemoryValue(1229032);
+				if (!b && v != null && v instanceof LongValue && 
+						 ((LongValue)v).getValue() > 4000000) {
+					b = true;
+				}				
+				
+				if (b) {
+					System.out.println();
+					System.out.println(curState.getEnvironement().getMemory().getDoubleWordMemoryValue(1229032) + " " +
+							curState.getEnvironement().getRegister().toString() + " " + 
+							curState.getEnvironement().getFlag().toString() + " ");
 				}
 			}
 		}

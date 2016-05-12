@@ -22,7 +22,7 @@ public class BPPath {
 	private LoopHandle l;
 	private Instruction previousInst;
 //	private List<ProcessedAPI> processedAPI;
-	private boolean isStop = false;
+	private boolean isStop = false;	
 
 //	private class ProcessedAPI {
 //		private String apiName;
@@ -163,6 +163,11 @@ public class BPPath {
 
 	public boolean isStop() {
 		// TODO Auto-generated method stub
+		AbsoluteAddress loc = curState.getLocation();
+		if (loc != null && loc.getValue() >= 0x3FFFFFF) {
+			return false;
+		}
+		
 		return isStop;
 	}
 

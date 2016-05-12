@@ -46,6 +46,7 @@ public class OTFThreadManager {
 		this.isMultiThread = isThread;
 		int t = (Runtime.getRuntime().availableProcessors() >= 2) ? Runtime.getRuntime().availableProcessors(): DEFAULT_NUMBER_CORE;			
 		numberCore = (isMultiThread) ? t : 1;
+//		numberCore = 2;
 	}
 
 	public static int DEFAULT_MAX_SIZE_THREAD_BUFFER = 150;
@@ -71,6 +72,7 @@ public class OTFThreadManager {
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		maxBufferSize = DEFAULT_MAX_SIZE_THREAD_BUFFER;
 		numberCore = (isMultiThread) ? 5 : 1;
+//		numberCore = 2;
 		boolean isRightAccess = false;
 		if (stackTraceElements.length >= 3) {
 			String className = OTFThreadManager.class.getName();
