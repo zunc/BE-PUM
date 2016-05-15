@@ -52,7 +52,9 @@ public class mov extends X86MoveStub {
 
 				if (!rule.checkAddressValid(env, (X86MemoryOperand) dest)) {
 					// SEH Exploit
-					return rule.processSEH(curState);
+					// zunc: comment to run hostname
+					// current SEH setup have problem
+					//return rule.processSEH(curState);
 				}
 
 				rule.setValueOperand(dest, source, env, inst);

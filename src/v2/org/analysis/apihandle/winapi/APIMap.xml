@@ -350,7 +350,6 @@
 		<API funcName="dialogboxparam" className="v2.org.analysis.apihandle.winapi.user32.functions.DialogBoxParam" />
 		<API funcName="dispatchmessage" className="v2.org.analysis.apihandle.winapi.user32.functions.DispatchMessage" />
 		<API funcName="equalrect" className="v2.org.analysis.apihandle.winapi.user32.functions.EqualRect" />
-		<API funcName="enumwindows" className="v2.org.analysis.apihandle.winapi.user32.functions.EnumWindows" />
 		<API funcName="findwindow" className="v2.org.analysis.apihandle.winapi.user32.functions.FindWindow" />
 		<API funcName="getactivewindow" className="v2.org.analysis.apihandle.winapi.user32.functions.GetActiveWindow" />
 		<API funcName="getasynckeystate" className="v2.org.analysis.apihandle.winapi.user32.functions.GetAsyncKeyState" />

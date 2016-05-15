@@ -50,12 +50,12 @@ import com.sun.jna.platform.win32.WinNT.HANDLE;
  * @param lplpszAcceptTypes
  *            A pointer to a null-terminated array of strings that indicates
  *            media types accepted by the client. Here is an example. PCTSTR
- *            rgpszAcceptTypes[] = {_T(“text/*”), NULL}; Failing to properly
+ *            rgpszAcceptTypes[] = {_T( text/* ), NULL}; Failing to properly
  *            terminate the array with a NULL pointer will cause a crash. If
  *            this parameter is NULL, no types are accepted by the client.
  *            Servers generally interpret a lack of accept types to indicate
  *            that the client accepts only documents of type "text/*" (that is,
- *            only text documents—no pictures or other binary files). For more
+ *            only text documents no pictures or other binary files). For more
  *            information and a list of valid media types, see
  *            ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/media-
  *            types.
@@ -96,7 +96,7 @@ public class HttpOpenRequest extends WininetAPI {
 		String lpszObjectName = (t3 == 0L) ? null : memory.getText(this, t3);
 		String lpszVersion = (t4 == 0L) ? null : memory.getText(this, t4);
 		String lpszReferer = (t5 == 0L) ? null : memory.getText(this, t5);
-		String[] lplpszAcceptTypes = null;
+		String[] lplpszAcceptTypes = {};
 		List<String> stringList = new ArrayList<>();
 		while (true) {
 			String text = memory.getText(this, t6);

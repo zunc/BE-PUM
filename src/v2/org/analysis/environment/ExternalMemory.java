@@ -55,14 +55,19 @@ public class ExternalMemory {
 			return ret;
 		}
 
-		// logger.info("ACCESS - Address:" + address, new Exception("Trace"));
-		Thread pointer = new Thread(new AccessPointerThread(ret));
-		pointer.start();
-		try {
-			pointer.join();
-		} catch (InterruptedException e) {
-			BPLogger.reportLogger.error(String.format("JNA Pointer InterruptedException:%d", address), e);
-		}
+//		// logger.info("ACCESS - Address:" + address, new Exception("Trace"));
+//		Thread pointer = new Thread(new AccessPointerThread(ret));
+//		pointer.start();
+//		try {
+//			pointer.join();
+//		} catch (InterruptedException e) {
+//			BPLogger.reportLogger.error(String.format("JNA Pointer InterruptedException:%d", address), e);
+//		}
+		
+		// zunc: for debug external memory access external pointer on current thread
+		System.out.println(" > " + Long.toHexString(ret.address));
+		AccessPointer acp = new AccessPointer(ret);
+		acp.access();
 		
 		BPState curState = X86TransitionRule.currentState;
 		if (!ret.isValidAddress) {
@@ -149,6 +154,35 @@ class AccessPointerThread implements Runnable {
 			this.data.isValidAddress = true;
 		} catch (Exception e) {
 			BPLogger.reportLogger.error(e.getMessage(), e);
+		}
+	}
+}
+
+class AccessPointer {
+
+	// private static boolean isFirstTime = true;
+	private ExternalMemoryReturnData data;
+
+	public AccessPointer(ExternalMemoryReturnData buffer) {
+		this.data = buffer;
+	}
+
+	public void access() {
+		// System.out.println(String.format("addr: 0x%s", Long.toHexString(this.data.address)));
+		Pointer ptr = new Pointer(this.data.address);
+		try {
+			// if (isFirstTime) {
+			// Thread.sleep(1000);
+			// }
+			byte ret = ptr.getByte(0);
+			this.data.value = new LongValue(ret);
+			System.out.println(" -> " + this.data.value);
+			this.data.isValidAddress = true;
+		} catch (Throwable e) {
+			// controlable access memory
+			System.out.println(" - access failed: " + Long.toHexString(this.data.address));
+			BPLogger.reportLogger.error(e.getMessage(), e);
+			//System.exit(1);
 		}
 	}
 }

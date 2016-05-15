@@ -23,7 +23,7 @@ import v2.org.analysis.value.LongValue;
  * @return If successful, returns the previous translation mode. If invalid
  *         parameters are passed to this function, the invalid-parameter handler
  *         is invoked, as described in Parameter Validation. If execution is
- *         allowed to continue, this function returns –1 and sets errno to
+ *         allowed to continue, this function returns 1 and sets errno to
  *         either EBADF, which indicates an invalid file descriptor, or EINVAL,
  *         which indicates an invalid mode argument.
  * 

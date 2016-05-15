@@ -82,10 +82,10 @@ public class InternetOpen extends Ole32API {
 		long t5 = this.params.get(4);
 
 		String lpszAgent = t1 == 0 ? null : memory.getText(this, t1);
-		DWORD dwAccessType = new DWORD(((LongValue) memory.getDoubleWordMemoryValue(t2)).getValue());
+		DWORD dwAccessType = new DWORD(t2);//new DWORD(((LongValue) memory.getDoubleWordMemoryValue(t2)).getValue());
 		String lpszProxyName = t3 == 0 ? null : memory.getText(this, t3);
 		String lpszProxyBypass = t4 == 0 ? null : memory.getText(this, t4);
-		DWORD dwFlags = new DWORD(((LongValue) memory.getDoubleWordMemoryValue(t5)).getValue());
+		DWORD dwFlags = new DWORD(t5);//new DWORD(((LongValue) memory.getDoubleWordMemoryValue(t5)).getValue());
 
 		System.out.println("lpszAgent: " + lpszAgent + ", lpszProxyName: " + lpszProxyName + ", lpszProxyBypass: "
 				+ lpszProxyBypass);

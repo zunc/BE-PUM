@@ -56,7 +56,7 @@ import com.sun.jna.platform.win32.WinDef.WPARAM;
  *         hWndParent parameter is invalid, the return value is zero. The
  *         function returns zero in this case for compatibility with previous
  *         versions of Windows. If the function fails for any other reason, the
- *         return value is –1. To get extended error information, call
+ *         return value is 1. To get extended error information, call
  *         GetLastError.
  * 
  * @author Yen Nguyen

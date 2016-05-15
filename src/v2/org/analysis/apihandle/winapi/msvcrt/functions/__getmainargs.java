@@ -31,7 +31,7 @@ import com.sun.jna.ptr.IntByReference;
  *            argv[0] is the command with which the program is invoked, argv[1]
  *            is the first command-line argument, and so on, until argv[argc],
  *            which is always NULL. The first command-line argument is always
- *            argv[1] and the last one is argv[argc – 1].
+ *            argv[1] and the last one is argv[argc  1].
  * 
  * @param _Env
  *            An array of strings that represent the variables set in the user's

@@ -18,7 +18,7 @@ import com.twmacinta.util.MD5;
  * 
  */
 public class Register {
-	private Value eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, ax, ah, al, bx, bh, bl, cx, ch, cl, dx, dh, dl, si, di,
+	public Value eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, ax, ah, al, bx, bh, bl, cx, ch, cl, dx, dh, dl, si, di,
 			sp, bp, ds, es, fs, cs, ss, gs;
 
 	private Value dr0, dr1, dr2, dr3, dr4, dr5, dr6, dr7;

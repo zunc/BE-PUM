@@ -9,15 +9,14 @@ package v2.org.analysis.apihandle.winapi.user32.functions;
 
 import v2.org.analysis.apihandle.winapi.user32.User32API;
 import v2.org.analysis.apihandle.winapi.user32.User32DLL;
-import v2.org.analysis.value.LongValue;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.WinDef.BOOL;
 import com.sun.jna.platform.win32.WinDef.HWND;
-import com.sun.jna.platform.win32.WinDef.LPARAM;
 import com.sun.jna.platform.win32.WinDef.UINT;
-import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinUser.MSG;
+
+import v2.org.analysis.value.LongValue;
 
 /**
  * Retrieves a message from the calling thread's message queue. The function
@@ -51,8 +50,6 @@ import com.sun.jna.platform.win32.WinUser.MSG;
  */
 public class GetMessage extends User32API {
 
-	private boolean isPassed = false;
-
 	public GetMessage() {
 		super();
 		NUM_OF_PARMS = 4;
@@ -69,13 +66,7 @@ public class GetMessage extends User32API {
 		HWND hWnd = (t2 == 0) ? null : new HWND(new Pointer(t2));
 		UINT wMsgFilterMin = new UINT(t3);
 		UINT wMsgFilterMax = new UINT(t4);
-
-		DelayPostMessage postMessage = new DelayPostMessage(lpMsg);
-		postMessage.start();
-		
 		BOOL ret = User32DLL.INSTANCE.GetMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax);
-		// Passed
-		setPassed();
 
 		register.mov("eax", new LongValue(ret.longValue()));
 
@@ -98,44 +89,4 @@ public class GetMessage extends User32API {
 		memory.setDoubleWordMemoryValue(t1 += 4, new LongValue(lpMsg.pt.y));
 	}
 
-	private synchronized void setPassed() {
-		synchronized (this) {
-			isPassed = true;
-		}
-	}
-
-	private synchronized boolean isPassed() {
-		synchronized (this) {
-			return isPassed;
-		}
-	}
-
-	class DelayPostMessage extends Thread {
-		private MSG lpMsg = null;
-
-		// Default value reference
-		// https://msdn.microsoft.com/en-us/library/windows/desktop/ms646274(v=vs.85).aspx
-		int msg = 0x0006;
-		// WA_CLICKACTIVE | 2 | Activated by a  mouse click.
-		WPARAM wParam = new WPARAM(2); 
-		LPARAM lParam = null;
-
-		public DelayPostMessage(MSG pMsg) {
-			lpMsg = pMsg;
-		}
-
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(500);
-
-				if (!isPassed()) {
-					User32DLL.INSTANCE.PostMessage(lpMsg.hWnd, msg, wParam, lParam);
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		}
-
-	}
 }

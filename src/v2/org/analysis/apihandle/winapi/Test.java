@@ -6,15 +6,24 @@
  */
 package v2.org.analysis.apihandle.winapi;
 
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
 import org.apache.log4j.Logger;
 
 import v2.org.analysis.apihandle.winapi.structures.WinNTn.RTL_CRITICAL_SECTION;
 import v2.org.analysis.apihandle.winapi.wininet.WininetDLL;
 
 import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.DWORD;
+import com.sun.jna.platform.win32.WinDef.DWORDByReference;
 import com.sun.jna.platform.win32.WinDef.LONG;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
+import com.sun.jna.ptr.IntByReference;
+import com.sun.jna.ptr.PointerByReference;
+import v2.org.analysis.apihandle.winapi.advapi32.Advapi32DLL;
+import v2.org.analysis.apihandle.winapi.msvcrt.MSVCRTDLL;
+import v2.org.analysis.apihandle.winapi.structures.Internal._startupinfo;
 
 //import com.sun.jna.platform.win32.WinBase.STARTUPINFO;
 
@@ -31,7 +40,22 @@ public class Test {
 	 */
 	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
-
+//		String Filter = null;
+//		DWORD Flags = new DWORD(0);
+//		DWORDByReference ReturnLength = new DWORDByReference();
+//		PointerByReference Credentials = new PointerByReference();
+//		
+//		WinDef.BOOL cred = Advapi32DLL.INSTANCE.CredEnumerate(Filter, Flags,
+//				ReturnLength, Credentials);
+//		System.out.println("cred: " + cred);
+//		DWORD len = ReturnLength.getValue();
+//		System.out.println("len: " + len);
+//		Pointer value = Credentials.getPointer();
+//		Pointer value1 = Credentials.getValue();
+//		long aLong = value.getInt(0);
+//		String dump = value.dump(0, 100);
+//		System.out.println("ret: " + cred);
+		
 		// int x = Kernel32DLL.INSTANCE.WinExec("Cpp.exe", 1);
 		// BPState curState = null;
 
@@ -284,30 +308,31 @@ public class Test {
 		// phkResult);
 		// x = retz.longValue();
 
-		// IntByReference _Argc = new IntByReference();
-		// com.sun.jna.Memory _Argv = new com.sun.jna.Memory(4);
-		// com.sun.jna.Memory _Env = new com.sun.jna.Memory(4);
-		// int _DoWildCard = 0;
-		// _startupinfo _StartInfo = new _startupinfo();
-		// MSVCRTDLL.INSTANCE.__getmainargs(_Argc, _Argv, _Env, _DoWildCard,
-		// _StartInfo);
-		// // PointerByReference
-		// for (int i = 0; i < _Argc.getValue(); i++) {
-		// System.out.println(i + ": " + _Argv.getPointer(0).getPointer(i *
-		// 4).getString(0));
-		// }
-		//
-		// int c = 0;
-		// while (true) {
-		// try {
-		// System.out.println(c + ": " + _Env.getPointer(0).getPointer(c *
-		// 4).getString(0));
-		// c += 1;
-		// } catch (Exception ex) {
-		// System.out.println("BREAK;");
-		// break;
-		// }
-		// }
+		 IntByReference _Argc = new IntByReference();
+		 com.sun.jna.Memory _Argv = new com.sun.jna.Memory(4);
+		 com.sun.jna.Memory _Env = new com.sun.jna.Memory(4);
+		 int _DoWildCard = 0;
+		 _startupinfo _StartInfo = new _startupinfo();
+		 MSVCRTDLL.INSTANCE.__getmainargs(_Argc, _Argv, _Env, _DoWildCard,
+		 _StartInfo);
+		 // PointerByReference
+		 int narg = _Argc.getValue();
+		 for (int i = 0; i < narg; i++) {
+		 System.out.println(i + ": " + _Argv.getPointer(0).getPointer(i *
+		 4).getString(0));
+		 }
+		
+		 int c = 0;
+		 while (true) {
+		 try {
+		 System.out.println(c + ": " + _Env.getPointer(0).getPointer(c *
+		 4).getString(0));
+		 c += 1;
+		 } catch (Exception ex) {
+		 System.out.println("BREAK;");
+		 break;
+		 }
+		 }
 
 		// x = MsCorEEDLL.INSTANCE._CorExeMain();
 		// if (x > 0)

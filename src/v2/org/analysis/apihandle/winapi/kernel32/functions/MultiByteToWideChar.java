@@ -73,18 +73,19 @@ public class MultiByteToWideChar extends Kernel32API {
 
 		UINT CodePage = new UINT(t1);
 		DWORD dwFlags = new DWORD(t2);
-		String lpMultiByteStr = memory.getText(this, t3);
+		String lpMultiByteStr = memory.getTextLimit(t3, 1, (int) t4);
 		int cbMultiByte = (int) t4;
 		char[] lpWideCharStr = (t5 != 0L && t6 > 0) ? new char[(int) t6] : null;
 		int cchWideChar = (int) t6;
 
 		int ret = Kernel32DLL.INSTANCE.MultiByteToWideChar(CodePage, dwFlags, lpMultiByteStr, cbMultiByte,
 				lpWideCharStr, cchWideChar);
-
+		
 		register.mov("eax", new LongValue(ret));
 
 		if (lpWideCharStr != null) {
-			memory.setText(this, t5, new String(lpWideCharStr));
+			System.out.println(" - [Str][W] " + lpMultiByteStr);
+			memory.setText(2, t5, lpMultiByteStr);
 		}
 	}
 

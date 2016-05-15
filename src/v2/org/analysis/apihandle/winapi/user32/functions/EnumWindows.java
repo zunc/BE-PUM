@@ -82,8 +82,8 @@ public class EnumWindows extends User32API {
 				path = new BPPath(curState, new PathList(), new Formulas());
 				path.setCurrentState(curState);
 
-				OTFThread thread = OTFThreadManager.getInstance().getOtfModelGeneration().new OTFThread(path);
-				thread.start();
+//				OTFThread thread = OTFThreadManager.getInstance().getOtfModelGeneration().new OTFThread(path);
+//				thread.start();
 
 				return true;
 			}

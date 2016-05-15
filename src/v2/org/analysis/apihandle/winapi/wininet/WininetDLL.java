@@ -343,12 +343,12 @@ public interface WininetDLL extends StdCallLibrary {
 	 * @param lplpszAcceptTypes
 	 *            A pointer to a null-terminated array of strings that indicates
 	 *            media types accepted by the client. Here is an example. PCTSTR
-	 *            rgpszAcceptTypes[] = {_T(“text/*”), NULL}; Failing to properly
+	 *            rgpszAcceptTypes[] = {_T( text/* ), NULL}; Failing to properly
 	 *            terminate the array with a NULL pointer will cause a crash. If
 	 *            this parameter is NULL, no types are accepted by the client.
 	 *            Servers generally interpret a lack of accept types to indicate
 	 *            that the client accepts only documents of type "text/*" (that
-	 *            is, only text documents—no pictures or other binary files).
+	 *            is, only text documents no pictures or other binary files).
 	 *            For more information and a list of valid media types, see
 	 *            ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/media-
 	 *            types.

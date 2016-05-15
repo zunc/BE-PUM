@@ -97,6 +97,7 @@ import v2.org.analysis.environment.Environment;
 import v2.org.analysis.environment.ExternalMemory;
 import v2.org.analysis.environment.ExternalMemory.ExternalMemoryReturnData;
 import v2.org.analysis.environment.Memory;
+import v2.org.analysis.environment.StackV2;
 import v2.org.analysis.statistics.FileProcess;
 import v2.org.analysis.statistics.Logging;
 import v2.org.analysis.value.LongValue;
@@ -242,6 +243,10 @@ public final class Program {
 		setStopFile(new FileProcess(stopAddFile));
 		setFullResultFile(new FileProcess(fullResultFileTXT));
 		setResultFileTemp(new FileProcess(resultFileTempTXT));
+		
+		// zunc: set native library on code
+		//System.setProperty("java.library.path", this.pathLibrary);
+		//System.setProperty("jna.library.path", this.pathLibrary);
 		
 //		setPackerResultFile(new FileProcess(packerResultFileTXT));
 //		this.packerResultFile.appendFile("");
@@ -1034,16 +1039,16 @@ public final class Program {
 				setDetailTechnique(getDetailTechnique() + "SEH:" + address.toString() + " ");
 			}
 
-			if (checkSelfModify(address, instr)) {
-				System.out.println("Self Modified Code:" + address.toString());
-				if (!technique.contains("SMC")) {
-					technique += "SMC ";
-				}
-
-				setDetailTechnique(getDetailTechnique() + "SMC:" + address.toString() + " ");
-				// System.out.println(instr.compareInstruction(instr));
-				// }
-			}
+//			if (checkSelfModify(address, instr)) {
+//				System.out.println("Self Modified Code:" + address.toString());
+//				if (!technique.contains("SMC")) {
+//					technique += "SMC ";
+//				}
+//
+//				setDetailTechnique(getDetailTechnique() + "SMC:" + address.toString() + " ");
+//				// System.out.println(instr.compareInstruction(instr));
+//				// }
+//			}
 		}
 
 		return instr;
@@ -1819,6 +1824,10 @@ public final class Program {
 //		}
 		
 		boolean result = false;
+		if (StackV2.isInsideStackSession(address)) {
+			return true;
+		}
+		
 		try {
 			if (harness.contains(address) || address.getValue() >= StubProvider.STUB_BASE) {
 				return false;

@@ -43,12 +43,12 @@ import org.jakstab.ssl.Architecture;
 import org.jakstab.util.Characters;
 import org.jakstab.util.Logger;
 
+import antlr.ANTLRException;
 import v2.org.analysis.algorithm.OTFModelGeneration;
 import v2.org.analysis.algorithm.OTFThreadManager;
 import v2.org.analysis.cfg.BPCFG;
 import v2.org.analysis.packer.PackerManager;
 import v2.org.analysis.statistics.FileProcess;
-import antlr.ANTLRException;
 
 public class Main {
 	static {
@@ -112,15 +112,17 @@ public class Main {
 		pathVirus = "asm/packer/";
 		// pathVirus = "asm/packer/";
 		// in = "api_testv2.exe"; // 2064 2151 26s ?
-		in = "api_test.exe"; // 158 160 0.1s x
-		in = "api_test_upx_N.exe"; // 323 353 6s x
+//		in = "api_test_1.exe"; // 158 160 0.1s x
+//		in = "api_test_upx.exe"; // 323 353 6s x
 //		in = "api_test_fsg.exe"; // 244 268 3s x
-//		in = "demo1_fsg.exe"; // 244 268 3s x
 //		in = "api_testv2_fsg.exe"; // 244 268 3s x
 //		in = "api_test_pecompact.exe"; // 1127 1178 28s x
 //		in = "api_testv2_pecompact.exe";
 //		in = "bof_aspack.exe";
 //		in = "hostname_upx.exe";
+		in = "hostname.exe";
+//		in = "Done/api_test_upx.exe";
+//		in = "hi.exe";
 //		in = "api_test_npack.exe"; // 602 639 10s x
 		// in = "api_test_yoda.1.2.exe"; // 625 659 173s x
 //		in = "api_test_yoda.1.3.exe"; // 924 960 163s x
@@ -197,10 +199,20 @@ public class Main {
 //		in = "multiThread3_FF.exe";
 //		// in = "multiThread3_FFF.exe";
 //		// in = "multiThread3_FFFF.exe";
-//		in = "Rdws.exe_dc3c90084e8c.bin-unpacked.bin";
+//		in = "multiThread2_FFFF.exe";
 				
 		String path = pathVirus + in;
+//		path = "C:/Users/Delta/Desktop/sample/mal/var01.dec";
+		//path = "E:/dev/BE-PUM/asm/testcase/SampleVirus-1.exe";
+//		path = "C:/Users/Delta/Desktop/sample/Win32_MultiThread.exe";
+		path = "C:/Users/Delta/Desktop/sample/mal/emdivi.exe.bin";
+//		path = "C:/Users/Delta/Desktop/sample/hi.exe";
 		isGui = false;
+		
+//		// zunc: for log
+		String log = "log_hi.log";
+		setLogToFile(log);
+		
 		// YenNguyen: For jar file export
 		if (!Main.class.getResource("Main.class").toString().startsWith("file")) {
 			if (args.length > 0) {
@@ -239,8 +251,6 @@ public class Main {
 							OTFThreadManager.getInstance().setMultiThread(true);							
 						} else if (input.contains("-detectpacker")) {
 							PackerManager.getInstance().setDetectPacker(true);							
-						} else if (input.contains("-detectheader")) {
-							PackerManager.getInstance().setDetectHeader(true);							
 						}
 					} else {
 						path = input;

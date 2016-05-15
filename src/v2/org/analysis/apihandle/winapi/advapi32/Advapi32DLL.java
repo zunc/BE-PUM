@@ -3,9 +3,12 @@ package v2.org.analysis.apihandle.winapi.advapi32;
 import java.nio.Buffer;
 
 import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 import com.sun.jna.WString;
 import com.sun.jna.platform.win32.BaseTSD.ULONG_PTR;
 import com.sun.jna.platform.win32.BaseTSD.ULONG_PTRByReference;
+import com.sun.jna.platform.win32.WinBase.FILETIME;
 import com.sun.jna.platform.win32.WinBase.SECURITY_ATTRIBUTES;
 import com.sun.jna.platform.win32.WinDef.BOOL;
 import com.sun.jna.platform.win32.WinDef.DWORD;
@@ -21,8 +24,11 @@ import com.sun.jna.platform.win32.WinNT.TOKEN_PRIVILEGES;
 import com.sun.jna.platform.win32.WinReg.HKEY;
 import com.sun.jna.platform.win32.WinReg.HKEYByReference;
 import com.sun.jna.ptr.ByteByReference;
+import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Yen Nguyen
@@ -602,4 +608,12 @@ public interface Advapi32DLL extends StdCallLibrary {
 	 */
 	BOOL AbortSystemShutdown(
 	/* _In_opt_ */String lpMachineName);
+	
+	BOOL CredEnumerate(
+		/*_In_  LPCTSTR */ String Filter,
+		/*_In_ */ DWORD Flags,
+		/*_Out_*/ DWORDByReference Count,
+		/*_Out_*/ PointerByReference Credentials
+	);
+	
 }

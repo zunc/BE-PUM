@@ -64,7 +64,13 @@ public class HeapFree extends Kernel32API {
 		long t1 = this.params.get(0);
 		long t2 = this.params.get(1);
 		long t3 = this.params.get(2);
-
+		
+		if (t3 != 0) {
+			String str = this.memory.getPrintable(t3);
+			if (!str.isEmpty()) {
+				System.out.println(" Free: " + str);
+			}
+		}
 		boolean ret = Kernel32DLL.INSTANCE.HeapFree(new HANDLE(new Pointer(t1)), new DWORD(t2), new LPVOID(t3));
 
 		register.mov("eax", new LongValue((ret) ? 1 : 0));

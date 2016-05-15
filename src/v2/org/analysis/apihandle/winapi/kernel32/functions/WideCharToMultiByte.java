@@ -98,7 +98,7 @@ public class WideCharToMultiByte extends Kernel32API {
 
 		UINT CodePage = new UINT(t1);
 		DWORD dwFlags = new DWORD(t2);
-		WString lpWideCharStr = new WString(memory.getText(this, t3));
+		WString lpWideCharStr = new WString(memory.getTextLimit(t3, 2, (int) t4));
 		int cchWideChar = (int) t4;
 		char[] lpMultiByteStr = (t6 > 0) ? new char[(int) t6] : null;
 		int cbMultiByte = (int) t6;
@@ -110,7 +110,9 @@ public class WideCharToMultiByte extends Kernel32API {
 		register.mov("eax", new LongValue(ret));
 
 		if (lpMultiByteStr != null) {
-			memory.setText(this, t5, new String(lpMultiByteStr));
+			String szText = lpWideCharStr.toString(); // new String(lpMultiByteStr);
+			System.out.println(" - [Str][A] " + szText);
+			memory.setText(this, t5, szText);
 		}
 		if (lpUsedDefaultChar != null) {
 			memory.setDoubleWordMemoryValue(t8, new LongValue(lpUsedDefaultChar.getValue().longValue()));

@@ -3,6 +3,8 @@
  */
 package v2.org.analysis.environment;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.DataType;
 import org.jakstab.asm.Instruction;
@@ -21,6 +23,8 @@ public class StackV2 extends Stack {
 	private long baseAddr, topAddr;
 	private long scale = 0x23;
 	private Environment env;
+	private static long base = 0x18D000;
+	private static long size = 0x3000;
 
 	@Override
 	public Stack clone() {
@@ -233,9 +237,9 @@ public class StackV2 extends Stack {
 
 	public void init(LongValue longValue) {
 		// TODO Auto-generated method stub
-		baseAddr = Convert.hexToLong("12FFF0");
+		baseAddr = Convert.hexToLong("18FF94"); // 12FFF0
 		// baseAddr = Convert.hexToLong("18FF90");
-		topAddr = Convert.hexToLong("12FFD0");
+		topAddr = Convert.hexToLong("18FF8C"); // 12FFD0
 		// topAddr = Convert.hexToLong("18FF94");
 		// oldBaseAddr = Convert.hexToLong("12FFD0");
 
@@ -250,10 +254,18 @@ public class StackV2 extends Stack {
 
 		// push(new LongValue((long) (Math.random() * Math.pow(10, 5))));
 		//push(new LongValue(0x2));
+		
+		//// zunc: comment
 //		push(new LongValue((long) (Math.random() * Math.pow(10, 7))));
-		push(new SymbolValue("esp_8"));
-		push(new LongValue(0x7C910208));
-		push(longValue);
+//		push(new LongValue(0x7C910208));
+//		push(longValue);
+
+		//// zumc: init JNA range for Stack
+		Value val = new LongValue(0);
+		for (int pos = 0; pos < size; pos+= 4) {
+			long address = base + pos;
+			env.getMemory().setWordMemoryValue(address, val);
+		}
 	}
 
 	/**
@@ -392,6 +404,11 @@ public class StackV2 extends Stack {
 		return false;
 	}
 
+	public static boolean isInsideStackSession(AbsoluteAddress addr) {
+		long val = addr.getValue();
+		return val >= base && val <= (base + size);
+	}
+	
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub

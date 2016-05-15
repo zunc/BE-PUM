@@ -8,6 +8,7 @@ package v2.org.analysis.apihandle.winapi;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jakstab.Program;
 
 import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.Instruction;
@@ -94,8 +95,26 @@ public abstract class API {
 				} else {
 					throw new APIException(this);
 				}
-
+				
 				System.out.print(String.format("\tx%d: %s\t", i + 1, value.toString()));
+				
+				// zunc: get printable value
+				long lngAddress = ((LongValue) value).getValue();
+				Program prog = Program.getProgram();
+				if (Program.getProgram().isInside(new AbsoluteAddress(lngAddress))) {
+					int ASCII = 1;
+					int UNICODE = 2;
+					String strAsc = this.memory.getText(ASCII, lngAddress);
+					String strUni = this.memory.getText(UNICODE, lngAddress);
+					if (!strAsc.isEmpty()) {
+						System.out.print(String.format("\tx%d: %s\t", i + 1, strAsc));
+					}
+					
+					if (!strUni.isEmpty()) {
+						System.out.print(String.format("\tx%d: %s\t", i + 1, strUni));
+					}
+				}
+				
 			}
 			System.out.println();
 

@@ -24,7 +24,7 @@ import com.sun.jna.WString;
  *            String result.
  * 
  * @param radix
- *            Base of value; which must be in the range 2–36.
+ *            Base of value; which must be in the range 236.
  * 
  * @return Each of these functions returns a pointer to str. There is no error
  *         return.

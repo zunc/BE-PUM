@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package v2.org.analysis.algorithm;
 
@@ -12,9 +12,9 @@ import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.Instruction;
 /**
  * @author NMHai
- * 
+ *
  * The main algorithm of On-the-fly Model Generation
- * 
+ *
  */
 import org.jakstab.asm.x86.X86CondJmpInstruction;
 
@@ -22,6 +22,7 @@ import v2.org.analysis.algorithm.OTFThreadManager.OTFThreadBase;
 import v2.org.analysis.cfg.BPCFG;
 import v2.org.analysis.cfg.BPVertex;
 import v2.org.analysis.environment.Environment;
+import v2.org.analysis.environment.Register;
 import v2.org.analysis.environment.processthread.TIB;
 import v2.org.analysis.olly.OllyComparisonV2;
 import v2.org.analysis.packer.PackerManager;
@@ -35,10 +36,11 @@ import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
 public class OTFModelGeneration implements Algorithm {
+
 	public static long DEFAULT_OUT_TIME = 180000;
 	private final Program program;
 	private long overallStartTime;
-	
+
 	//For compare with OllyDbg
 	private long count = 1;
 	private boolean isCompareOlly = true, isChecked = false;
@@ -61,16 +63,19 @@ public class OTFModelGeneration implements Algorithm {
 		System.out.println("Starting On-the-fly Model Generation algorithm.");
 		program.getResultFileTemp().appendInLine('\n' + program.getFileName() + '\t');
 		fileName = "out_" + Program.getProgram().getFileName() + "_";
-		
+
 		// Set up initial context
 //		X86TransitionRule rule = new X86TransitionRule();
 		BPCFG cfg = Program.getProgram().getBPCFG();
 		Environment env = new Environment();
 		env.getMemory().resetImportTable(program);
+		// zunc: dll malware debug 
+		// new AbsoluteAddress(0x10002610)
+		// Program.getProgram().getEntryPoint();
 		AbsoluteAddress location = Program.getProgram().getEntryPoint();
 		Instruction inst = Program.getProgram().getInstruction(location, env);
 		List<BPPath> pathList = new ArrayList<BPPath>();
-		
+
 		// Insert start node
 		BPVertex startNode = null;
 		startNode = new BPVertex(location, inst);
@@ -87,14 +92,8 @@ public class OTFModelGeneration implements Algorithm {
 		// Update at first -----------------------------
 		TIB.setBeUpdated(true);
 		TIB.updateTIB(curState);
-		
-		if (PackerManager.getInstance().isDetectHeaderOnly()) {
-			PackerManager.getInstance().getHeaderDetection(fileName);
-			return;
-		}
-		
-		// ---------------------------------------------
 
+		// ---------------------------------------------
 		// PHONG - 20150801 /////////////////////////////
 		// Packer Detection via Header
 //		System.out.println("================PACKER DETECTION VIA HEADER ======================");
@@ -106,10 +105,8 @@ public class OTFModelGeneration implements Algorithm {
 //		System.out.println("==================================================================");
 		/////////////////////////////////////////////////
 //		PackerManager.getInstance().setDetectPacker(true);
-//		OTFThreadManager.getInstance().setMultiThread(true);
 		synchronized (OTFThreadManager.getInstance()) {
 			try {
-				OTFThreadManager.getInstance().setOtfModelGeneration(this);
 				OTFThreadManager.getInstance().check(this, pathList);
 				OTFThreadManager.getInstance().wait();
 			} catch (Exception e) {
@@ -118,7 +115,23 @@ public class OTFModelGeneration implements Algorithm {
 		}
 	}
 
+	public static String RPad(String str, Integer length, char car) {
+		if (str.length() >= length) {
+			return str;
+		}
+	  return String.format("%" + (length - str.length()) + "s", "")
+				   .replace(" ", String.valueOf(car)) 
+			 +
+			 str;
+	}
+
+	private String val(Value reg) {
+		// zunc: util function for debug register like olly
+		return "0x" + RPad(Long.toHexString(((LongValue) reg).getValue()), 8, '0');
+	}
+
 	public class OTFThread extends OTFThreadBase {
+
 		private static final int MAX_NUMBER_ADDB = 100;
 		X86TransitionRule rule = new X86TransitionRule();
 		List<BPPath> pathList = new ArrayList<BPPath>();
@@ -127,7 +140,7 @@ public class OTFModelGeneration implements Algorithm {
 		Instruction inst = null;
 		AbsoluteAddress location = null;
 		int numAddStop = 0;
-		
+
 		public OTFThread(BPPath bpPath) {
 			this.pathList.add(bpPath);
 			this.path = bpPath;
@@ -140,7 +153,7 @@ public class OTFModelGeneration implements Algorithm {
 		public void execute() {
 			long overallStartTemp = overallStartTime;
 			PackerManager pManager = PackerManager.getInstance();
-			
+
 			while (!pathList.isEmpty()) {
 				path = pathList.remove(pathList.size() - 1);
 				curState = path.getCurrentState();
@@ -151,51 +164,62 @@ public class OTFModelGeneration implements Algorithm {
 						path.destroy();
 						break;
 					}
-					
+
 //					////////////////////////////////// OTF Packer Detection////////////////////////////////////////
 					pManager.updateChecking(curState, program);
 //					///////////////////////////////////////////////////////////////////////////////////
-					 
+
 					long overallEndTimeTemp = System.currentTimeMillis();
 					// Output file each 60s
 					if (overallEndTimeTemp - overallStartTemp > DEFAULT_OUT_TIME) {
-	
+
 						backupState(curState);
 						overallStartTemp = overallEndTimeTemp;
 					}
-	
+
 					if (path.isStop()) {
 						break;
 					}
-	
+
 					inst = curState.getInstruction();
-					location = curState.getLocation();		
-					
-//					debugProg(location, curState);
-					
+					location = curState.getLocation();
+
+					Register reg = curState.getEnvironement().getRegister();
+
+					// zunc: log to debug
+					if (location != null) {
+						AbsoluteAddress addr = new AbsoluteAddress(location.getValue());
+						String strInst = String.format("0x%s\t%s",
+								Long.toHexString(location.getValue()), program.getInstructionString(addr));
+						System.out.println(strInst);
+						if (location.getValue() == 0x402e47) {
+							System.out.println("debug");
+						}
+					}
+
 					if (inst != null && inst.getName().contains("addb")
 							&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
 							&& inst.getOperand(1) != null && inst.getOperand(1).toString().contains("al")) {
 						if (numADDB > MAX_NUMBER_ADDB) {
-							program.getStopFile().appendFile(program.getFileName());						
+							program.getStopFile().appendFile(program.getFileName());
 							break;
 						}
-						
-						numADDB ++;
+
+						numADDB++;
 					}
-					
+
 //					compareOlly(curState);
 					// PHONG: 20150506 - Update TIB
 					// --------------------------------------
 					TIB.updateTIB(curState);
 //					TIB.updateChecking(curState);
 					// --------------------------------------
-					
+
 					if (inst == null || location == null) {
 						break;
 					}
 					path.addTrace(curState.getLocation());
-	
+
 					if (inst instanceof X86CondJmpInstruction) {
 						rule.getNewState((X86CondJmpInstruction) inst, path, pathList);
 						if (!curState.checkFeasiblePath()) {
@@ -205,13 +229,12 @@ public class OTFModelGeneration implements Algorithm {
 					} else {
 						rule.getNewState(path, pathList, true);
 					}
-					
+
 					if (pManager.isDetected() && isOEP(curState.getLocation(), program.getFileName())) {
 						pManager.outputToFile(program.getFileName());
 						pManager.setDetectPacker(false);
 					}
-					
-					
+
 					///////// AFTER LOOP ///////////
 					this.afterLoop(OTFModelGeneration.this, pathList);
 					if (this.isStopCurrentPath(curState)) {
@@ -221,32 +244,8 @@ public class OTFModelGeneration implements Algorithm {
 				}
 			}
 		}
-		
-		private boolean b = false;
-
-		private void debugProg(AbsoluteAddress loc, BPState curState2) {
-			// TODO Auto-generated method stub			
-			if (b) {
-				System.out.print(loc.toString() + " ");
-			}
-			
-			if (loc != null && loc.toString().contains("a31c64")) {
-				Value v = curState.getEnvironement().getMemory().getDoubleWordMemoryValue(1229032);
-				if (!b && v != null && v instanceof LongValue && 
-						 ((LongValue)v).getValue() > 4000000) {
-					b = true;
-				}				
-				
-				if (b) {
-					System.out.println();
-					System.out.println(curState.getEnvironement().getMemory().getDoubleWordMemoryValue(1229032) + " " +
-							curState.getEnvironement().getRegister().toString() + " " + 
-							curState.getEnvironement().getFlag().toString() + " ");
-				}
-			}
-		}
 	}
-	
+
 	private boolean isOEP(AbsoluteAddress location, String fileName) {
 		// TODO Auto-generated method stub
 		return (location != null) && (fileName.contains("api_test") && location.toString().contains("401000")
@@ -257,16 +256,15 @@ public class OTFModelGeneration implements Algorithm {
 				|| fileName.contains("Benny") && location.toString().contains("401000")
 				|| fileName.contains("Cabanas") && location.toString().contains("401000")
 				|| fileName.contains("Adson") && location.toString().contains("401000")
-				|| fileName.contains("api_testv2") && location.toString().contains("401131")
-				);
+				|| fileName.contains("api_testv2") && location.toString().contains("401131"));
 	}
 
 	private void backupState(BPState curState) {
 		// TODO Auto-generated method stub
 		program.generageCFG("/asm/cfg/" + program.getFileName() + "_test");
 		program.getResultFileTemp().appendInLine("\t"
-						+ String.format("%8dms", (System.currentTimeMillis() - overallStartTime)) + "\t"
-						+ String.format("%8d", program.getBPCFG().getVertexCount()) + "\t" + String.format("%8d", program.getBPCFG().getEdgeCount()));
+				+ String.format("%8dms", (System.currentTimeMillis() - overallStartTime)) + "\t"
+				+ String.format("%8d", program.getBPCFG().getVertexCount()) + "\t" + String.format("%8d", program.getBPCFG().getEdgeCount()));
 		////////////////////////////////////////////////////
 		// Write to packer result file after each 60s
 		if (PackerManager.getInstance().isDetected()) {
@@ -287,8 +285,8 @@ public class OTFModelGeneration implements Algorithm {
 	public boolean isSound() {
 		// TODO Auto-generated method stub
 		return true;
-	}	
-	
+	}
+
 	private void compareOlly(BPState state) {
 		// TODO Auto-generated method stub
 		// -------------------------------------------------------------------
@@ -323,7 +321,7 @@ public class OTFModelGeneration implements Algorithm {
 			}
 
 			if (isChecked & location != null && !ollyCompare.isFinished()) {
-					//&& (location.getValue() != endAddr.getValue() || loopCount != ollyCompare.getLoopCount())) {
+				//&& (location.getValue() != endAddr.getValue() || loopCount != ollyCompare.getLoopCount())) {
 				// System.out.println("Loop = " + count + " , Address = " +
 				// location.toString() + ":");
 				compareOllyResult.appendFile("Loop = " + Long.toHexString(count) + " , Address = " + location.toString() + ":");
@@ -339,10 +337,10 @@ public class OTFModelGeneration implements Algorithm {
 				loopCount++;
 			}
 
-			if (isChecked && location != null 
+			if (isChecked && location != null
 					&& ollyCompare.isFinished()) {
-					//&& location.getValue() == endAddr.getValue()
-					//&& loopCount == ollyCompare.getLoopCount()) {
+				//&& location.getValue() == endAddr.getValue()
+				//&& loopCount == ollyCompare.getLoopCount()) {
 				System.out.println("Stop Check: " + fileName + "" + num + ".txt");
 				ollyCompare = null;
 				loopCount = 1;

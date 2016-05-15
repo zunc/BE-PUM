@@ -89,7 +89,8 @@ public class InternetConnect extends WininetAPI {
 		long t8 = this.params.get(7);
 
 		HANDLE hInternet = new HANDLE(new Pointer(t1));
-		String lpszServerName = (t2 == 0L) ? null : memory.getText(this, t2);		
+		String lpszServerName = (t2 == 0L) ? null : memory.getText(this, t2);
+		String strPrintable = (t2 == 0L) ? null : memory.getPrintable(t2);
 		short nServerPort = (short) t3;
 		String lpszUsername = (t4 == 0L) ? null : memory.getText(this, t4);
 		String lpszPassword = (t5 == 0L) ? null : memory.getText(this, t5);
@@ -97,7 +98,7 @@ public class InternetConnect extends WininetAPI {
 		int dwFlags = (int) t7;
 		DWORD_PTR dwContext = new DWORD_PTR(t8);
 		
-		System.out.println("lpszServerName:" + lpszServerName + " or " + memory.getRawText(this, t2, 40) +", " + 
+		System.out.println("lpszServerName:" + strPrintable +", " + 
 				"nServerPort:" + nServerPort +", " + 
 				"lpszUsername:" + lpszUsername +", " + 
 				"lpszPassword:" + lpszPassword +", " + 

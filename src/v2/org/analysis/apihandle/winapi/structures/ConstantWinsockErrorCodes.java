@@ -144,7 +144,7 @@ public enum ConstantWinsockErrorCodes {
 	 * 
 	 * Some invalid argument was supplied (for example, specifying an invalid
 	 * level to the setsockopt function). In some instances, it also refers to
-	 * the current state of the socket—for instance, calling accept on a socket
+	 * the current state of the socket for instance, calling accept on a socket
 	 * that is not listening.
 	 */
 	WSAEINVAL(10022),
@@ -170,7 +170,7 @@ public enum ConstantWinsockErrorCodes {
 	 * Operation now in progress.
 	 * 
 	 * A blocking operation is currently executing. Windows Sockets only allows
-	 * a single blocking operation—per- task or thread—to be outstanding, and if
+	 * a single blocking operation per- task or thread to be outstanding, and if
 	 * any other function call is made (whether or not it references that or any
 	 * other socket) the function fails with the WSAEINPROGRESS error.
 	 */
@@ -180,7 +180,7 @@ public enum ConstantWinsockErrorCodes {
 	 * Operation already in progress.
 	 * 
 	 * An operation was attempted on a nonblocking socket with an operation
-	 * already in progress—that is, calling connect a second time on a
+	 * already in progress that is, calling connect a second time on a
 	 * nonblocking socket that is already connecting, or canceling an
 	 * asynchronous request (WSAAsyncGetXbyY) that has already been canceled or
 	 * completed.
@@ -295,7 +295,7 @@ public enum ConstantWinsockErrorCodes {
 	 * still in the process of closing. For server applications that need to
 	 * bind multiple sockets to the same port number, consider using setsockopt
 	 * (SO_REUSEADDR). Client applications usually need not call bind at
-	 * all—connect chooses an unused port automatically. When bind is called
+	 * all connect chooses an unused port automatically. When bind is called
 	 * with a wildcard address (involving ADDR_ANY), a WSAEADDRINUSE error could
 	 * be delayed until the specific address is committed. This could happen
 	 * with a call to another function later, including connect, listen,
@@ -391,7 +391,7 @@ public enum ConstantWinsockErrorCodes {
 	 * A request to send or receive data was disallowed because the socket is
 	 * not connected and (when sending on a datagram socket using sendto) no
 	 * address was supplied. Any other type of operation might also return this
-	 * error—for example, setsockopt setting SO_KEEPALIVE if the connection has
+	 * error for example, setsockopt setting SO_KEEPALIVE if the connection has
 	 * been reset.
 	 */
 	WSAENOTCONN(10057),
@@ -427,7 +427,7 @@ public enum ConstantWinsockErrorCodes {
 	 * 
 	 * No connection could be made because the target computer actively refused
 	 * it. This usually results from trying to connect to a service that is
-	 * inactive on the foreign host—that is, one with no server application
+	 * inactive on the foreign host that is, one with no server application
 	 * running.
 	 */
 	WSAECONNREFUSED(10061),
@@ -688,7 +688,7 @@ public enum ConstantWinsockErrorCodes {
 	 * not have the correct associated data being resolved for. The usual
 	 * example for this is a host name-to-address translation attempt (using
 	 * gethostbyname or WSAAsyncGetHostByName) which uses the DNS (Domain Name
-	 * Server). An MX record is returned but no A record—indicating the host
+	 * Server). An MX record is returned but no A record indicating the host
 	 * itself exists, but is not directly reachable.
 	 */
 	WSANO_DATA(11004),

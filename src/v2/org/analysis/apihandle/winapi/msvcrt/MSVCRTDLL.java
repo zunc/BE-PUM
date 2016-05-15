@@ -48,7 +48,7 @@ public interface MSVCRTDLL extends StdCallLibrary {
 	 *            argv[0] is the command with which the program is invoked,
 	 *            argv[1] is the first command-line argument, and so on, until
 	 *            argv[argc], which is always NULL. The first command-line
-	 *            argument is always argv[1] and the last one is argv[argc – 1].
+	 *            argument is always argv[1] and the last one is argv[argc 1].
 	 * 
 	 * @param _Env
 	 *            An array of strings that represent the variables set in the
@@ -241,7 +241,7 @@ public interface MSVCRTDLL extends StdCallLibrary {
 	 * @return If successful, returns the previous translation mode. If invalid
 	 *         parameters are passed to this function, the invalid-parameter
 	 *         handler is invoked, as described in Parameter Validation. If
-	 *         execution is allowed to continue, this function returns –1 and
+	 *         execution is allowed to continue, this function returns 1 and
 	 *         sets errno to either EBADF, which indicates an invalid file
 	 *         descriptor, or EINVAL, which indicates an invalid mode argument.
 	 */
@@ -313,7 +313,7 @@ public interface MSVCRTDLL extends StdCallLibrary {
 	 *            String result.
 	 * 
 	 * @param radix
-	 *            Base of value; which must be in the range 2–36.
+	 *            Base of value; which must be in the range 236.
 	 * 
 	 * @return Each of these functions returns a pointer to str. There is no
 	 *         error return.
@@ -331,7 +331,7 @@ public interface MSVCRTDLL extends StdCallLibrary {
 	 *            String result.
 	 * 
 	 * @param radix
-	 *            Base of value; which must be in the range 2–36.
+	 *            Base of value; which must be in the range 236.
 	 * 
 	 * @return Each of these functions returns a pointer to str. There is no
 	 *         error return.

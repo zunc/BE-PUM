@@ -777,7 +777,7 @@ public interface User32DLL extends StdCallLibrary {
 	 *         the hWndParent parameter is invalid, the return value is zero.
 	 *         The function returns zero in this case for compatibility with
 	 *         previous versions of Windows. If the function fails for any other
-	 *         reason, the return value is –1. To get extended error
+	 *         reason, the return value is  1. To get extended error
 	 *         information, call GetLastError.
 	 */
 	INT_PTR DialogBoxParam(/* _In_opt_ */HINSTANCE hInstance, /* _In_ */String lpTemplateName, /* _In_opt_ */

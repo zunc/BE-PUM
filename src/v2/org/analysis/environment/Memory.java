@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package v2.org.analysis.environment;
 
@@ -41,13 +41,14 @@ import com.twmacinta.util.MD5;
  *
  */
 public class Memory {
+
 	private static final int UNKNOWN = Integer.MAX_VALUE;
 
 	private Environment env;
 	private Map<Long, Value> memory;
 	private Program program;
 	private Map<Long, Value> reset;
-	private String hashValue = ""; 
+	private String hashValue = "";
 	private boolean isChanged = false;
 
 	public Memory() {
@@ -74,7 +75,6 @@ public class Memory {
 	}
 
 	// //////////////////////////////////////////////////////////////////
-
 	private void outputMemory(String ret) {
 		FileProcess fp = new FileProcess("/data/data/memory.txt"); // YenNguyen
 		fp.clearContentFile();
@@ -100,9 +100,9 @@ public class Memory {
 	 * Sorting the memory pair values of this instance by address (key value of
 	 * {@link HashMap} attribute). Then, appending each pair value to
 	 * {@link StringBuilder} and get {@link String} content of it.
-	 * 
+	 *
 	 * @return The string holding the ordered content of this memory.
-	 * 
+	 *
 	 * @author Yen Nguyen
 	 */
 	private String getOrderedStringContent() {
@@ -113,7 +113,7 @@ public class Memory {
 			stringBuilder.append(key);
 			stringBuilder.append(this.memory.get(key).toString());
 		}
-		
+
 		return stringBuilder.toString();
 	}
 
@@ -284,7 +284,6 @@ public class Memory {
 
 			// if (r == null || !(r instanceof LongValue))
 			// return UNKNOWN;
-
 			if (r != null && r instanceof LongValue) {
 				// PHONG: change long address here to int address
 				val += (int) ((LongValue) r).getValue();
@@ -401,7 +400,7 @@ public class Memory {
 
 		// If not exist, try to find it in the dynamic-link library
 		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
-		if (libName != null && libName != ""){
+		if (libName != null && libName != "") {
 			return new LongValue(env.getSystem().getLibraryHandle().readByte(libName, (int) address));
 		}
 
@@ -445,7 +444,6 @@ public class Memory {
 		 * TIB.getTIB_Base_Address() + d; }
 		 */
 		// ---------------------------------------------------------------------------------------
-
 		if (d == UNKNOWN) {
 			return new SymbolValue(Convert.generateString(dest));
 		}
@@ -459,7 +457,7 @@ public class Memory {
 //		}
 //
 		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
-		if (libName != null && libName != ""){
+		if (libName != null && libName != "") {
 			return new LongValue(env.getSystem().getLibraryHandle().readWord(libName, (int) address));
 		}
 
@@ -490,7 +488,6 @@ public class Memory {
 		 * TIB.getTIB_Base_Address() + d; }
 		 */
 		// ---------------------------------------------------------------------------------------
-
 		if (d == UNKNOWN) {
 			return new SymbolValue(Convert.generateString(dest));
 		}
@@ -501,7 +498,7 @@ public class Memory {
 	public Value getDoubleWordMemoryValue(long address) {
 
 		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
-		if (libName != null && libName != ""){
+		if (libName != null && libName != "") {
 			return new LongValue(env.getSystem().getLibraryHandle().readDoubleWord(libName, (int) address));
 		}
 
@@ -569,7 +566,7 @@ public class Memory {
 
 			if (t != null && t instanceof LongValue) {
 				char t1 = (charSize == 1) //
-				? (char) (byte) (((LongValue) t).getValue() & 0xFF) //
+						? (char) (byte) (((LongValue) t).getValue() & 0xFF) //
 						: (char) (((LongValue) t).getValue() & 0xFFFF);
 				if (t1 == 0 || t1 < 0) { // Over-size
 					break;
@@ -585,33 +582,101 @@ public class Memory {
 		return ret.toString();
 	}
 
+	public String getTextLimit(long addr, int charSize, int size) {
+		// YenNguyen: Using StringBuilder will help to improve executing time
+		StringBuilder ret = new StringBuilder();
+
+		int cnt = 0;
+		while (true) {
+			if (cnt++ == size) {
+				return ret.toString();
+			}
+			Value t = (charSize == 1) ? getByteMemoryValue(addr, false) : getWordMemoryValue(addr);
+
+			if (t != null && t instanceof LongValue) {
+				char t1 = (charSize == 1) //
+						? (char) (byte) (((LongValue) t).getValue() & 0xFF) //
+						: (char) (((LongValue) t).getValue() & 0xFFFF);
+				ret.append(t1);
+				addr += charSize;
+			} else if (t instanceof SymbolValue) {
+				return ret.toString();
+			}
+		}
+		//return ret.toString();
+	}
+	
+	public String getPrintableLimit(long addr, int charSize, int size) {
+		// YenNguyen: Using StringBuilder will help to improve executing time
+		StringBuilder ret = new StringBuilder();
+
+		int cnt = 0;
+		while (true) {
+			if (cnt++ == size) {
+				return ret.toString();
+			}
+			Value t = (charSize == 1) ? getByteMemoryValue(addr, false) : getWordMemoryValue(addr);
+
+			if (t != null && t instanceof LongValue) {
+				char t1 = (charSize == 1) //
+						? (char) (byte) (((LongValue) t).getValue() & 0xFF) //
+						: (char) (((LongValue) t).getValue() & 0xFFFF);
+				if (t1 == 0 || t1 < 0) { // Over-size
+					break;
+				}
+				ret.append(t1);
+				addr += charSize;
+			} else if (t instanceof SymbolValue) {
+				return ret.toString();
+			}
+		}
+		return ret.toString();
+	}
+	
 	public String getText(API api, long addr) {
 		// ASCII - 1-byte per char
 		// Unicode - 2-byte per char
 		int numOfBytes = (api.is64bit()) ? 2 : 1;
-		return getText(addr, numOfBytes);
+		String str = getText(addr, numOfBytes);
+		System.out.println(" - " + str);
+		return str;
 	}
-	
+
 	public String getText(int num, long addr) {
 		// ASCII - 1-byte per char
 		// Unicode - 2-byte per char
 		return getText(addr, num);
 	}
 
+	public String getPrintable(long addr) {
+		int ASCII = 1;
+		int UNICODE = 2;
+		String strAsc = getPrintableLimit(addr, ASCII, 24);
+		String strUni = getPrintableLimit(addr, UNICODE, 24);
+		String str = "";
+		if (!strAsc.isEmpty()) {
+			str += " [A] " + strAsc;
+		}
+		if (!strUni.isEmpty()) {
+			str += " [W] " + strUni;
+		}
+		return str;
+	}
+	
 	public Value getMemoryValue(long dest, Instruction inst) {
 		// YenNguyen: Change from conditions of "endWith(String)" method to
 		// switch/case by last character in order to reduce computing
 		char lastChar = inst.getName().charAt(inst.getName().length() - 1);
 
 		switch (lastChar) {
-		case 'b':
-			return getByteMemoryValue(dest);
-		case 's':
-		case 'w':
-			return getWordMemoryValue(dest);
-		case 'l':
-		default:
-			return getDoubleWordMemoryValue(dest);
+			case 'b':
+				return getByteMemoryValue(dest);
+			case 's':
+			case 'w':
+				return getWordMemoryValue(dest);
+			case 'l':
+			default:
+				return getDoubleWordMemoryValue(dest);
 		}
 	}
 
@@ -626,7 +691,6 @@ public class Memory {
 		// LongValue(env.getSystem().getSEHHandler().getStart().getAddrSEHRecord());
 		// }
 		// --------------------------------------------------------------------------------------
-
 		if (dest.getDataType() == DataType.INT32) {
 			return getDoubleWordMemoryValue(dest);
 		} else if (dest.getDataType() == DataType.INT8) {
@@ -766,7 +830,7 @@ public class Memory {
 
 		this.rrMemoryValue(d, v, inst);
 	}
-	
+
 	public String toHashString() {
 		if (isChanged) {
 			MD5 md5 = new MD5();
@@ -780,7 +844,7 @@ public class Memory {
 			hashValue = md5.asHex();
 			isChanged = false;
 		}
-		
+
 		return this.hashValue;
 	}
 
@@ -825,7 +889,6 @@ public class Memory {
 		/*
 		 * if (d == 4202596) { System.out.println("Debug"); }
 		 */
-
 		if (d == UNKNOWN) {
 			return;
 		}
@@ -849,17 +912,17 @@ public class Memory {
 		char lastChar = inst.getName().charAt(inst.getName().length() - 1);
 
 		switch (lastChar) {
-		case 'b':
-			setByteMemoryValue(dest, x);
-			break;
-		case 's':
-		case 'w':
-			setWordMemoryValue(dest, x);
-			break;
-		case 'l':
-		default:
-			setDoubleWordMemoryValue(dest, x);
-			break;
+			case 'b':
+				setByteMemoryValue(dest, x);
+				break;
+			case 's':
+			case 'w':
+				setWordMemoryValue(dest, x);
+				break;
+			case 'l':
+			default:
+				setDoubleWordMemoryValue(dest, x);
+				break;
 		}
 	}
 
@@ -887,6 +950,23 @@ public class Memory {
 		for (int i = 0; i < t.length; i++) {
 			int x = t[i];
 			if (api.is64bit()) {
+				this.setWordMemoryValue(address, new LongValue(x));
+			} else {
+				this.setByteMemoryValue(address, new LongValue(x));
+			}
+			address++;
+		}
+	}
+	
+	public void setText(int num, long address, String str) {
+		// ASCII - 1-byte per char
+		// Unicode - 2-byte per char
+		str = Convert.reduceText(str);
+		char[] t = str.toCharArray();
+
+		for (int i = 0; i < t.length; i++) {
+			int x = t[i];
+			if (num == 2) {
 				this.setWordMemoryValue(address, new LongValue(x));
 			} else {
 				this.setByteMemoryValue(address, new LongValue(x));
@@ -1048,6 +1128,13 @@ public class Memory {
 				// if (entry.getValue().getRight().contains("RegSetValueExA"))
 				// System.out.println("Debug");
 				long temp = getProcAddress(entry.getValue().getLeft(), entry.getValue().getRight());
+				if (temp == 0) {
+					System.out.println(" ! API not resolve address: "
+							+ entry.getValue().getRight() + "@" + entry.getValue().getLeft());
+				}
+				System.out.println(String.format(" - Import: 0x%s -> 0x%s", 
+						Long.toHexString(entry.getKey().getValue()),
+						Long.toHexString(temp)));
 				setDoubleWordMemoryValue(entry.getKey().getValue(), new LongValue(temp));
 			}
 		}
@@ -1065,7 +1152,7 @@ public class Memory {
 				}
 			}
 		} else {
-			// If can not find, xecute LoadLibrary API
+			// If can not find, execute LoadLibrary API
 			libHandle = (new LoadLibrary()).execute(libraryName);
 		}
 
@@ -1104,7 +1191,7 @@ public class Memory {
 	private Value getDoubleWordMemoryValueEx(long address) {
 		// TODO Auto-generated method stub
 		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
-		if (libName != null && libName != ""){
+		if (libName != null && libName != "") {
 			return new LongValue(env.getSystem().getLibraryHandle().readDoubleWord(libName, (int) address));
 		}
 
@@ -1192,7 +1279,6 @@ public class Memory {
 		 * TopValue(); } }
 		 */
 		// Chinh sua sau van de nay
-
 		try {
 			if (program.isInside(new AbsoluteAddress(address))) {
 				return new LongValue(program.getDoubleWordValueMemory(new AbsoluteAddress(address)));
@@ -1212,35 +1298,6 @@ public class Memory {
 			// DataType.INT32, address)));
 			return new LongValue(0);
 		}
-	}
-
-	public String getRawText(API api, long addr, int i) {
-		// TODO Auto-generated method stub
-		int numOfBytes = (api.is64bit()) ? 2 : 1;
-		return getRawText(addr, numOfBytes, i);
-	}
-
-	private String getRawText(long addr, int charSize, int num) {
-		// TODO Auto-generated method stub
-		StringBuilder ret = new StringBuilder();
-		
-		for (int i=0; i < num; i++) {
-			Value t = (charSize == 1) ? getByteMemoryValue(addr, false) : getWordMemoryValue(addr);
-
-			if (t != null && t instanceof LongValue) {
-				char t1 = (charSize == 1) //
-				? (char) (byte) (((LongValue) t).getValue() & 0xFF) //
-						: (char) (((LongValue) t).getValue() & 0xFFFF);
-
-				ret.append(t1);
-				addr += charSize;
-			} else if (t instanceof SymbolValue) {
-				return ret.toString();
-			}
-		}
-
-		return ret.toString();
-
 	}
 
 	/*
