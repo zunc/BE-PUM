@@ -22,6 +22,7 @@ import v2.org.analysis.algorithm.OTFThreadManager.OTFThreadBase;
 import v2.org.analysis.cfg.BPCFG;
 import v2.org.analysis.cfg.BPVertex;
 import v2.org.analysis.environment.Environment;
+import v2.org.analysis.environment.Memory;
 import v2.org.analysis.environment.Register;
 import v2.org.analysis.environment.processthread.TIB;
 import v2.org.analysis.olly.OllyComparisonV2;
@@ -185,16 +186,15 @@ public class OTFModelGeneration implements Algorithm {
 					location = curState.getLocation();
 
 					Register reg = curState.getEnvironement().getRegister();
-
+					Memory memory = curState.getEnvironement().getMemory();
+					// Value val = memory.getQWordMemoryValue(0x440dd0);
+					// double db = Double.longBitsToDouble(((LongValue)val).getValue());
 					// zunc: log to debug
 					if (location != null) {
 						AbsoluteAddress addr = new AbsoluteAddress(location.getValue());
 						String strInst = String.format("0x%s\t%s",
 								Long.toHexString(location.getValue()), program.getInstructionString(addr));
 						System.out.println(strInst);
-						if (location.getValue() == 0x402e47) {
-							System.out.println("debug");
-						}
 					}
 
 					if (inst != null && inst.getName().contains("addb")

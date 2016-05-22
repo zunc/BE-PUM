@@ -78,6 +78,34 @@ public class BitVector {
 		return result;
 	}
 
+	public static long bytesToLong(int b1, int b2, int b3, int b4,
+			int b5, int b6, int b7, int b8) {
+		long result = 0;
+		result <<= 8;
+		result |= (b8 & 0xFF);
+		result <<= 8;
+		result |= (b7 & 0xFF);
+		result <<= 8;
+		result |= (b6 & 0xFF);
+		result <<= 8;
+		result |= (b5 & 0xFF);
+		
+		result <<= 8;
+		result |= (b4 & 0xFF);
+		result <<= 8;
+		result |= (b3 & 0xFF);
+		result <<= 8;
+		result |= (b2 & 0xFF);
+		result <<= 8;
+		result |= (b1 & 0xFF);
+
+		// YenNguyen: API Simulator just use unsigned long value
+		result = (BitVector.isAPIHandle()) ? Convert.convetUnsignedValue(result, 64) : Convert.convertSignedValue(
+				result, 64);
+
+		return result;
+	}
+	
 	public static long bytesToLong(int b1, int b2) {
 		long result = 0;
 		result <<= 8;
@@ -250,7 +278,7 @@ public class BitVector {
 		}
 		return cut32Bit(result);
 	}
-
+	
 	private static long getRealVal(long val) {
 		val = cut32Bit(val);
 

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,6 +55,7 @@ import v2.org.analysis.complement.Convert;
 import v2.org.analysis.environment.ContextRecord;
 import v2.org.analysis.environment.Environment;
 import v2.org.analysis.environment.ExceptionRecord;
+import v2.org.analysis.environment.Stack;
 import v2.org.analysis.environment.processthread.TIB;
 import v2.org.analysis.loop.LoopAlgorithm;
 import v2.org.analysis.packer.PackerManager;
@@ -495,6 +497,30 @@ public class X86TransitionRule extends TransitionRule {
 		cfg.insertEdge(edge);
 	}
 
+	public void generateNextInstructionForce(Instruction ins, BPPath path, List<BPPath> pathList) {
+		// TODO Auto-generated method stub
+		BPState curState = path.getCurrentState();
+		BPCFG cfg = Program.getProgram().getBPCFG();
+		BPVertex src = cfg.getVertex(curState.getLocation(), ins);
+
+		AbsoluteAddress newLocation = new AbsoluteAddress(curState.getLocation().getValue() + ins.getSize());
+		Instruction newIns;
+		if (curState.getEnvironement().getSystem().isInVirtualMemory() == true) {
+			byte[] opcodes = this.getOpcodesArray(curState, newLocation.getValue());
+			newIns = Program.getProgram().getInstruction(opcodes, curState.getEnvironement());
+		} else {
+			newIns = Program.getProgram().getInstruction(newLocation, curState.getEnvironement());
+		}
+
+		curState.setInstruction(newIns);
+		curState.setLocation(newLocation);
+
+		BPVertex dest = new BPVertex(curState.getLocation(), curState.getInstruction());
+		dest = cfg.insertVertex(dest);
+		BPEdge edge = new BPEdge(src, dest);
+		cfg.insertEdge(edge);
+	}
+	
 	public int getBitCount(Instruction ins) {
 		// Yen Nguyen: Change from compare "endWith" to switch case the last
 		// char
@@ -552,7 +578,41 @@ public class X86TransitionRule extends TransitionRule {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else {
+		} else if (curState.getLocation().getValue() == 0x41be1a) { // by pass loop trap
+			System.out.println(" -> PASS");
+			Environment env = curState.getEnvironement();
+			Stack stack = env.getStack();
+			//0x41be14	pushl	%ebx
+			//0x41be15	pushl	%ebx
+			//0x41be16	pushl	$0x1<UINT8>
+			//0x41be18	pushl	%ebx
+			//0x41be19	pushl	%ebx
+			//0x41be1a	call	0x0041bfd0			//<!> wtf proc
+			// protect environement - ba?o ve^. mo^i truong
+			for (int i=1; i <= 5; i++) {
+				stack.pop();
+			}
+			this.generateNextInstructionForce(ins, path, pathList);
+		} else if (curState.getLocation().getValue() == 0x4129f0) {
+			// .text:004129F0 call    _rand
+			Environment env = curState.getEnvironement();
+			Random rnd = new Random();
+			int randVal = rnd.nextInt();
+			randVal = randVal >= 0 ? randVal : -randVal;
+			randVal = randVal % 32767;
+			System.out.println(" -> randVal: " + randVal);
+			env.getRegister().setRegisterValue("eax", new LongValue(randVal));
+			this.generateNextInstructionForce(ins, path, pathList);
+		}
+		/* else if (curState.getLocation().getValue() == 0x41168F
+				|| curState.getLocation().getValue() == 0x4116C0) {
+			System.out.println(" -> PASS");
+			Environment env = curState.getEnvironement();
+			Stack stack = env.getStack();
+			stack.pop();
+			this.generateNextInstructionForce(ins, path, pathList);
+		} */
+			else {
 			if (ins instanceof X86ArithmeticInstruction) {
 				new X86ArithmeticInterpreter().execute((X86ArithmeticInstruction) ins, path, pathList, this);
 			} else if (ins instanceof X86CallInstruction) {

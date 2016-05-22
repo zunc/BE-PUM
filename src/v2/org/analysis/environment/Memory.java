@@ -162,6 +162,16 @@ public class Memory {
 		this.andMemoryValue(d, v, inst);
 	}
 
+	private long calculateQWordValue(long r1, long r2, long r3, long r4,
+			long r5, long r6, long r7, long r8) {
+		/*
+		 * int ret = 0; ret = (int) r1; ret |= r2 << 8; ret |= r3 << 16; ret |=
+		 * r4 << 24; return ret;
+		 */
+		return BitVector.bytesToLong((int) r1, (int) r2, (int) r3, (int) r4,
+				(int) r5, (int) r6, (int) r7, (int) r8);
+	}
+	
 	private long calculateDoubleWordValue(long r1, long r2, long r3, long r4) {
 		/*
 		 * int ret = 0; ret = (int) r1; ret |= r2 << 8; ret |= r3 << 16; ret |=
@@ -523,6 +533,40 @@ public class Memory {
 		// return new LongValue(0);
 	}
 
+	public Value getQWordMemoryValue(long address) {
+
+		String libName = env.getSystem().getLibraryHandle().insideDLL(new AbsoluteAddress(address));
+		if (libName != null && libName != "") {
+			return new LongValue(env.getSystem().getLibraryHandle().readDoubleWord(libName, (int) address));
+		}
+
+		if (env.getSystem().getFileHandle().isInsideFile(new AbsoluteAddress(address))) {
+			return new LongValue(env.getSystem().getFileHandle().readDoubleWord((int) address));
+		}
+
+		Value v1 = getByteMemoryValue(address);
+		Value v2 = getByteMemoryValue(address + 1);
+		Value v3 = getByteMemoryValue(address + 2);
+		Value v4 = getByteMemoryValue(address + 3);
+		Value v5 = getByteMemoryValue(address + 4);
+		Value v6 = getByteMemoryValue(address + 5);
+		Value v7 = getByteMemoryValue(address + 6);
+		Value v8 = getByteMemoryValue(address + 7);
+
+		if (v1 != null && v1 instanceof LongValue && v2 != null && v2 instanceof LongValue && v3 != null
+				&& v3 instanceof LongValue && v4 != null && v4 instanceof LongValue) {
+			long value = calculateQWordValue(((LongValue) v1).getValue(), ((LongValue) v2).getValue(),
+					((LongValue) v3).getValue(), ((LongValue) v4).getValue(),
+					((LongValue) v5).getValue(), ((LongValue) v6).getValue(),
+					((LongValue) v7).getValue(), ((LongValue) v8).getValue());
+			// BPLogger.debugLogger.info(address + ":" + value);
+			return new LongValue(value);
+		}
+
+		return new SymbolValue(Convert.generateString(new X86MemoryOperand(DataType.INT32, address)));
+		// return new LongValue(0);
+	}
+	
 	public Value getDoubleWordMemoryValue(X86MemoryOperand dest) {
 		long d = evaluateAddress(dest);
 
@@ -541,6 +585,24 @@ public class Memory {
 		return this.getDoubleWordMemoryValue(d);
 	}
 
+	public Value getQWordMemoryValue(X86MemoryOperand dest) {
+		long d = evaluateAddress(dest);
+
+		// PHONG: 20150506 If segment is FS
+		// ------------------------------------------------------
+		/*
+		 * if (dest.getSegmentRegister() != null &&
+		 * dest.getSegmentRegister().toString() == "%fs") { d =
+		 * TIB.getTIB_Base_Address() + d; }
+		 */
+		// ---------------------------------------------------------------------------------------
+		if (d == UNKNOWN) {
+			return new SymbolValue(Convert.generateString(dest));
+		}
+
+		return this.getQWordMemoryValue(d);
+	}
+	
 	public String getText(API api, int addr, long l) {
 		// YenNguyen: Using StringBuilder will help to improve executing time
 		StringBuilder ret = new StringBuilder();
@@ -702,6 +764,21 @@ public class Memory {
 		return getDoubleWordMemoryValue(dest);
 	}
 
+	public Value getMemoryValue(DataType dt, X86MemoryOperand dest, Instruction inst) {
+
+		if (dt == DataType.INT32) {
+			return getDoubleWordMemoryValue(dest);
+		} else if (dt == DataType.INT8) {
+			return getByteMemoryValue(dest);
+		} else if (dt == DataType.INT16) {
+			return getWordMemoryValue(dest);
+		} else if (dt == DataType.INT64) {
+			return getQWordMemoryValue(dest);
+		}
+
+		return getDoubleWordMemoryValue(dest);
+	}
+	
 	public Register getRegister() {
 		return env.getRegister();
 	}
@@ -883,6 +960,35 @@ public class Memory {
 		}
 	}
 
+	public void setQWordMemoryValue(long address, Value v) {
+		isChanged = true;
+		if (v instanceof LongValue) {
+			long x = ((LongValue) v).getValue();
+			int[] t = BitVector.longToBytes(x, 8);
+
+			long x8 = t[0];
+			long x7 = t[1];
+			long x6 = t[2];
+			long x5 = t[3];
+			long x4 = t[4];
+			long x3 = t[5];
+			long x2 = t[6];
+			long x1 = t[7];
+
+			memory.put(address, new LongValue(x1));
+			memory.put(address + 1, new LongValue(x2));
+			memory.put(address + 2, new LongValue(x3));
+			memory.put(address + 3, new LongValue(x4));
+			memory.put(address + 4, new LongValue(x5));
+			memory.put(address + 5, new LongValue(x6));
+			memory.put(address + 6, new LongValue(x7));
+			memory.put(address + 7, new LongValue(x8));
+			
+		} else {
+			memory.put(address, v);
+		}
+	}
+	
 	public void setDoubleWordMemoryValue(X86MemoryOperand dest, Value v) {
 		long d = evaluateAddress(dest);
 
@@ -896,6 +1002,19 @@ public class Memory {
 		this.setDoubleWordMemoryValue(d, v);
 	}
 
+	public void setQWordMemoryValue(X86MemoryOperand dest, Value v) {
+		long d = evaluateAddress(dest);
+
+		/*
+		 * if (d == 4202596) { System.out.println("Debug"); }
+		 */
+		if (d == UNKNOWN) {
+			return;
+		}
+
+		this.setQWordMemoryValue(d, v);
+	}
+	
 	public void setEnvironment(Environment environment) {
 		env = environment;
 	}
@@ -933,7 +1052,7 @@ public class Memory {
 		}
 
 		x = this.normalizeValue(x, inst);
-
+		
 		if (dest.getDataType() == DataType.INT32) {
 			setDoubleWordMemoryValue(dest, x);
 		} else if (dest.getDataType() == DataType.INT8) {
@@ -943,6 +1062,25 @@ public class Memory {
 		}
 	}
 
+	public void setMemoryValue(DataType dt, X86MemoryOperand dest, Value x, Instruction inst) {
+		// TODO Auto-generated method stub
+		if (x == null) {
+			return;
+		}
+
+		x = this.normalizeValue(x, inst);
+		
+		if (dt == DataType.INT32) {
+			setDoubleWordMemoryValue(dest, x);
+		} else if (dt == DataType.INT8) {
+			setByteMemoryValue(dest, x);
+		} else if (dt == DataType.INT16) {
+			setWordMemoryValue(dest, x);
+		} else if (dt == DataType.INT64) {
+			setQWordMemoryValue(dest, x);
+		}
+	}
+	
 	public void setText(API api, long address, String str) {
 		str = Convert.reduceText(str);
 		char[] t = str.toCharArray();

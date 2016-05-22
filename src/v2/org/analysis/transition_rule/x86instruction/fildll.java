@@ -10,7 +10,7 @@ import v2.org.analysis.transition_rule.stub.X86InstructionStub;
 import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
 
-public class fld extends X86InstructionStub {
+public class fildll extends X86InstructionStub {
 
 	@Override
 	public BPState execute() {
@@ -46,14 +46,14 @@ public class fld extends X86InstructionStub {
 			d = env.getRegister().getRegisterValue(dest.toString());
 		}
 
-		DoubleValue dvVal = new DoubleValue(0.0);
+		// tempo use long
+		double dbVal = 0;
 		if (d instanceof LongValue) {
-			double dbVal = Double.longBitsToDouble(((LongValue) d).getValue());
-			dvVal = new DoubleValue(dbVal);
-		} else if (d instanceof DoubleValue) {
-			dvVal = (DoubleValue) d;
+			dbVal = ((LongValue) d ).getValue();
+		} if (d instanceof DoubleValue) {
+			dbVal = ((DoubleValue) d ).getValue();
 		}
-		env.getRegister().pushFPU(dvVal);
+		env.getRegister().pushFPU(new DoubleValue(dbVal));
 		return null;
 	}
 

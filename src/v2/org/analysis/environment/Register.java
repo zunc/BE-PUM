@@ -23,6 +23,7 @@ public class Register {
 
 	private Value dr0, dr1, dr2, dr3, dr4, dr5, dr6, dr7;
 	private Value mm0, mm1, mm2, mm3, mm4, mm5, mm6, mm7;
+	private FPUStack st;
 	private String hashValue = "";
 	private boolean isChanged = false;
 		
@@ -95,6 +96,8 @@ public class Register {
 		ret.setRegisterValue("mm6", mm6.clone());
 		ret.setRegisterValue("mm7", mm7.clone());
 		
+		// clone FPU Stack
+		//
 		return ret;
 	}
 
@@ -156,8 +159,10 @@ public class Register {
 		mm5 = new SymbolValue("mm5");
 		mm6 = new SymbolValue("mm6");
 		mm7 = new SymbolValue("mm7");
+		
+		st = new FPUStack();
 	}
-
+	
 	public Value getRegisterValue(String registerName) {
 		String reg = checkRegisterName(registerName);
 
@@ -333,6 +338,9 @@ public class Register {
 			return mm7;
 		}
 		
+		if (reg.startsWith("st")) {
+			return st.getByName(reg);
+		}
 		return null;
 	}
 
@@ -385,7 +393,9 @@ public class Register {
 			gs = v;
 		} else if (reg.equals("ss")) {
 			ss = v;
-		} 
+		} else if (reg.startsWith("st")) {
+			st.setByName(reg, v);
+		}
 
 		if (v instanceof LongValue) {
 			long p = ((LongValue) v).getValue();
@@ -1621,4 +1631,19 @@ public class Register {
 		return this.hashValue;
 	}
 
+	public void pushFPU(Value val) {
+		st.push(val);
+	}
+	
+	public Value popFPU() {
+		return st.pop();
+	}
+	
+	public Value getSt() {
+		return st.getSt();
+	}
+	
+	public void setSt(Value val) {
+		st.setSt(val);
+	}
 }

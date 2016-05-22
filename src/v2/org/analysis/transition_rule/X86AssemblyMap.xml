@@ -31,7 +31,19 @@
 		<API assemblyName="daa" className="v2.org.analysis.transition_rule.x86instruction.daa" />
 		<API assemblyName="das" className="v2.org.analysis.transition_rule.x86instruction.das" />
 		<API assemblyName="enter" className="v2.org.analysis.transition_rule.x86instruction.enter" />
+                <API assemblyName="fdiv" className="v2.org.analysis.transition_rule.x86instruction.fdiv" />
+                <API assemblyName="fild" className="v2.org.analysis.transition_rule.x86instruction.fild" />
+                <API assemblyName="fildl" className="v2.org.analysis.transition_rule.x86instruction.fildl" />
+                <API assemblyName="fildll" className="v2.org.analysis.transition_rule.x86instruction.fildll" />
+                <API assemblyName="fistp" className="v2.org.analysis.transition_rule.x86instruction.fistp" />
+                <API assemblyName="fistpll" className="v2.org.analysis.transition_rule.x86instruction.fistpll" />
 		<API assemblyName="fld" className="v2.org.analysis.transition_rule.x86instruction.fld" />
+                <API assemblyName="fmul" className="v2.org.analysis.transition_rule.x86instruction.fmul" />
+                <API assemblyName="fst" className="v2.org.analysis.transition_rule.x86instruction.fst" />
+                <API assemblyName="fstp" className="v2.org.analysis.transition_rule.x86instruction.fstp" />
+                <API assemblyName="fstps" className="v2.org.analysis.transition_rule.x86instruction.fstps" />
+                <API assemblyName="fsts" className="v2.org.analysis.transition_rule.x86instruction.fsts" />
+                <API assemblyName="fsubp" className="v2.org.analysis.transition_rule.x86instruction.fsubp" />
 		<API assemblyName="in" className="v2.org.analysis.transition_rule.x86instruction.in" />
 		<API assemblyName="int1" className="v2.org.analysis.transition_rule.x86instruction.int1" />
 		<API assemblyName="int3" className="v2.org.analysis.transition_rule.x86instruction.int3" />
