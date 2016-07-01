@@ -5,7 +5,7 @@
  */
 package v2.org.analysis.environment;
 
-import v2.org.analysis.value.DoubleValue;
+import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
 /**
@@ -61,7 +61,7 @@ public class FPUStack {
 	
 	public void reset() {
 		for (int i = 0; i < NSTACK; i++) {
-			set(i, new DoubleValue(0));
+			set(i, new LongValue(0));
 		}
 		bottom = top = 0;
 	}
@@ -91,14 +91,14 @@ public class FPUStack {
 		// set
 		for (int i = 0; i < NSTACK; i++) {
 			String name = "st" + i;
-			DoubleValue val = new DoubleValue(i);
+			LongValue val = new LongValue(i);
 			st.setByName(name, val);
 		}
 		
 		// get
 		for (int i = 0; i < NSTACK; i++) {
 			String name = "st" + i;
-			DoubleValue val = (DoubleValue) st.getByName(name);
+			LongValue val = (LongValue) st.getByName(name);
 			System.out.println(String.format("[%d]=%s", i, val));
 		}
 		
@@ -106,13 +106,13 @@ public class FPUStack {
 		System.out.println("--- Test 2");
 		st.reset();
 		for (int i = 0; i < NSTACK - 1; i++) {
-			DoubleValue val = new DoubleValue(i);
+			LongValue val = new LongValue(i);
 			st.push(val);
 		}
 		
 		// get
 		for (int i = 0; i < NSTACK - 1; i++) {
-			DoubleValue val = (DoubleValue) st.pop();
+			LongValue val = (LongValue) st.pop();
 			System.out.println(String.format("[%d]=%s", i, val));
 		}
 		System.out.println("DONE");

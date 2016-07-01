@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package v2.org.analysis.transition_rule;
 
@@ -63,6 +63,7 @@ import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.system.VirtualMemory;
 import v2.org.analysis.transition_rule.stub.AssemblyInstructionStub;
+import v2.org.analysis.value.BooleanValue;
 import v2.org.analysis.value.Formula;
 import v2.org.analysis.value.Formulas;
 import v2.org.analysis.value.HybridBooleanValue;
@@ -72,9 +73,10 @@ import v2.org.analysis.value.Value;
 
 /**
  * @author NMHai
- * 
+ *
  */
 public class X86TransitionRule extends TransitionRule {
+
 	static long MAX_LOOP_MULTI = 20;
 	private long loop_mullti = 0;
 	private boolean setCFG = false;
@@ -155,7 +157,7 @@ public class X86TransitionRule extends TransitionRule {
 
 		String asmName = asm.getName().trim().toLowerCase();
 		Map<String, String> map = null;
-		
+
 		if (asm instanceof X86MoveInstruction) {
 			map = moveInstructionMapping;
 		} else {
@@ -164,7 +166,7 @@ public class X86TransitionRule extends TransitionRule {
 
 		String fullClassName = null;
 		fullClassName = map.get(asmName);
-		
+
 		if (fullClassName == null) {
 			char lastChar = asmName.charAt(asmName.length() - 1);
 
@@ -199,7 +201,6 @@ public class X86TransitionRule extends TransitionRule {
 	}
 
 	// ------------------------------------------------------------------------
-
 	public boolean checkAddressValid(Environment env, X86MemoryOperand d) {
 		// TODO Auto-generated method stub
 
@@ -241,7 +242,6 @@ public class X86TransitionRule extends TransitionRule {
 		// if (ret != null && ret.isValidAddress) {
 		// return true;
 		// }
-
 		if (env.getSystem().getFileHandle().isInsideFile(addr)) {
 			return true;
 		}
@@ -292,7 +292,6 @@ public class X86TransitionRule extends TransitionRule {
 		}
 
 		// if ()
-
 		try {
 			// System.out.println();
 			this.writeZ3Input(System.getProperty("user.dir") + "/data/z3Input.smt", formulas);
@@ -520,22 +519,22 @@ public class X86TransitionRule extends TransitionRule {
 		BPEdge edge = new BPEdge(src, dest);
 		cfg.insertEdge(edge);
 	}
-	
+
 	public int getBitCount(Instruction ins) {
 		// Yen Nguyen: Change from compare "endWith" to switch case the last
 		// char
 		char lastChar = ins.getName().charAt(ins.getName().length() - 1);
 
 		switch (lastChar) {
-		case 'b':
-			return 8;
-		case 's':
-		case 'w':
-			return 16;
-		case 'l':
-			return 32;
-		default:
-			break;
+			case 'b':
+				return 8;
+			case 's':
+			case 'w':
+				return 16;
+			case 'l':
+				return 32;
+			default:
+				break;
 		}
 
 		return 0;
@@ -546,7 +545,7 @@ public class X86TransitionRule extends TransitionRule {
 		String result[] = line.split(" ");
 		return result[0];
 	}
-	
+
 	public static BPState currentState = null;
 
 	@Override
@@ -560,12 +559,10 @@ public class X86TransitionRule extends TransitionRule {
 
 		String className = findClassName(ins);
 		currentState = curState;
-		
 
 //		if (curState.getLocation().getValue() >= 0x401af4L && curState.getLocation().getValue() <= 0x401b0dL) {
 //			System.out.println("BUSTED!!!");
 //		}
-		
 
 		if (className != null) {
 			try {
@@ -578,41 +575,7 @@ public class X86TransitionRule extends TransitionRule {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else if (curState.getLocation().getValue() == 0x41be1a) { // by pass loop trap
-			System.out.println(" -> PASS");
-			Environment env = curState.getEnvironement();
-			Stack stack = env.getStack();
-			//0x41be14	pushl	%ebx
-			//0x41be15	pushl	%ebx
-			//0x41be16	pushl	$0x1<UINT8>
-			//0x41be18	pushl	%ebx
-			//0x41be19	pushl	%ebx
-			//0x41be1a	call	0x0041bfd0			//<!> wtf proc
-			// protect environement - ba?o ve^. mo^i truong
-			for (int i=1; i <= 5; i++) {
-				stack.pop();
-			}
-			this.generateNextInstructionForce(ins, path, pathList);
-		} else if (curState.getLocation().getValue() == 0x4129f0) {
-			// .text:004129F0 call    _rand
-			Environment env = curState.getEnvironement();
-			Random rnd = new Random();
-			int randVal = rnd.nextInt();
-			randVal = randVal >= 0 ? randVal : -randVal;
-			randVal = randVal % 32767;
-			System.out.println(" -> randVal: " + randVal);
-			env.getRegister().setRegisterValue("eax", new LongValue(randVal));
-			this.generateNextInstructionForce(ins, path, pathList);
-		}
-		/* else if (curState.getLocation().getValue() == 0x41168F
-				|| curState.getLocation().getValue() == 0x4116C0) {
-			System.out.println(" -> PASS");
-			Environment env = curState.getEnvironement();
-			Stack stack = env.getStack();
-			stack.pop();
-			this.generateNextInstructionForce(ins, path, pathList);
-		} */
-			else {
+		} else {
 			if (ins instanceof X86ArithmeticInstruction) {
 				new X86ArithmeticInterpreter().execute((X86ArithmeticInstruction) ins, path, pathList, this);
 			} else if (ins instanceof X86CallInstruction) {
@@ -667,7 +630,7 @@ public class X86TransitionRule extends TransitionRule {
 		byte[] opcodes = new byte[(int) vM.getSize()];
 		// can modify here for best result, i < 10, because one asm statement
 		// needs 10 bytes or less
-		for (int i = 0; i < /* vM.getSize() - offset */10; i++) {
+		for (int i = 0; i < /* vM.getSize() - offset */ 10; i++) {
 			long virtualAdrr = vM.getAddress() + i;
 			opcodes[i] = (byte) ((LongValue) curState.getEnvironement().getMemory().getByteMemoryValue(virtualAdrr))
 					.getValue();
@@ -891,7 +854,6 @@ public class X86TransitionRule extends TransitionRule {
 	}
 
 	// ---------------------------------------------------------------------------
-
 	// PHONG - 20150422
 	public BPState processSEH(BPState curState) {
 //		Program.getProgram().setTechnique("SEH");
@@ -970,7 +932,6 @@ public class X86TransitionRule extends TransitionRule {
 	 * 
 	 * return var; }
 	 */
-
 	private Map<String, Long> readZ3Output(String filePath) {
 		// TODO Auto-generated method stub
 		InputStream fis;
@@ -1058,7 +1019,6 @@ public class X86TransitionRule extends TransitionRule {
 	}
 
 	// -----------------------------------------------------------------------------------------
-
 	public void setSEH(BPState curState) {
 		// TODO Auto-generated method stub
 		Program.getProgram().setTechnique("SetUpException");
@@ -1068,20 +1028,20 @@ public class X86TransitionRule extends TransitionRule {
 		Value stack0 = env.getStack().getValueStackFromIndex(0);
 		Value esp = env.getRegister().getRegisterValue("esp");
 		Value stack4 = env.getStack().getValueStackFromIndex(4);
-		
-		if (stack0 != null && stack0 instanceof LongValue  
+
+		if (stack0 != null && stack0 instanceof LongValue
 				&& stack4 != null && stack4 instanceof LongValue
 				&& esp != null && esp instanceof LongValue) {
 			env.getSystem()
-				.getSEHHandler()
-				.getStart()
-				.setNextSEHRecord(((LongValue) env.getStack().getValueStackFromIndex(0)).getValue(),
-						((LongValue) env.getRegister().getRegisterValue("esp")).getValue());
+					.getSEHHandler()
+					.getStart()
+					.setNextSEHRecord(((LongValue) env.getStack().getValueStackFromIndex(0)).getValue(),
+							((LongValue) env.getRegister().getRegisterValue("esp")).getValue());
 			env.getSystem()
-				.getSEHHandler()
-				.getStart()
-				.setSEHHandler(((LongValue) env.getStack().getValueStackFromIndex(4)).getValue(),
-						((LongValue) env.getRegister().getRegisterValue("esp")).getValue() + 4);
+					.getSEHHandler()
+					.getStart()
+					.setSEHHandler(((LongValue) env.getStack().getValueStackFromIndex(4)).getValue(),
+							((LongValue) env.getRegister().getRegisterValue("esp")).getValue() + 4);
 			env.getSystem().getSEHHandler().setSEHReady(true);
 		}
 		TIB.setBeUpdated(true);
@@ -1110,7 +1070,7 @@ public class X86TransitionRule extends TransitionRule {
 	 * 
 	 * return null; }
 	 */
-	/*
+ /*
 	 * BPState specialProcessSEH(BPState curState) { // TODO Auto-generated
 	 * method stub // PHONG Environment env = curState.getEnvironement();
 	 * env.getRegister().mov("ebp", "esp"); env.getRegister().add("ebp", new
@@ -1273,9 +1233,8 @@ public class X86TransitionRule extends TransitionRule {
 				BPPath newP = path.clone();
 				newP.setPathCondition(p2);
 
-				if (path.getLoopHandle().isCheck()
-				// && path.getLoopHandle().isStop()
-				) {
+				if (path.getLoopHandle().isCheck() // && path.getLoopHandle().isStop()
+						) {
 					path.getLoopHandle().setStop(
 							newP.getLoopHandle().checkFormulas(inst.getName(), newP.getCurrentState()));
 				}
@@ -1298,23 +1257,20 @@ public class X86TransitionRule extends TransitionRule {
 			path.getCurrentState().setFeasiblePath(true);
 
 			LoopAlgorithm.getInstance().halt(path, this);
-		} else {
-			if (new X86ConditionalJumpInterpreter().execute(inst, p2, path, false, this)) {
-				path.setPathCondition(p2);
-				if (path.getLoopHandle().isCheck()
-				// && path.getLoopHandle().isStop()
-				) {
-					path.getLoopHandle().setStop(
-							path.getLoopHandle().checkFormulas(inst.getName(), path.getCurrentState()));
-				}
-
-				this.generateNextInstruction(inst, path, pathList, false);
-				path.getCurrentState().setFeasiblePath(true);
-
-				LoopAlgorithm.getInstance().halt(path, this);
-			} else {
-				path.getCurrentState().setFeasiblePath(false);
+		} else if (new X86ConditionalJumpInterpreter().execute(inst, p2, path, false, this)) {
+			path.setPathCondition(p2);
+			if (path.getLoopHandle().isCheck() // && path.getLoopHandle().isStop()
+					) {
+				path.getLoopHandle().setStop(
+						path.getLoopHandle().checkFormulas(inst.getName(), path.getCurrentState()));
 			}
+
+			this.generateNextInstruction(inst, path, pathList, false);
+			path.getCurrentState().setFeasiblePath(true);
+
+			LoopAlgorithm.getInstance().halt(path, this);
+		} else {
+			path.getCurrentState().setFeasiblePath(false);
 		}
 	}
 
@@ -1399,17 +1355,17 @@ public class X86TransitionRule extends TransitionRule {
 				clone.put("dl", x % 256);
 			} else if (t.equals("esi")) {
 				long x = v % 65536;
-				clone.put("si", x);				
+				clone.put("si", x);
 			} else if (t.equals("edi")) {
 				long x = v % 65536;
-				clone.put("di", x);				
+				clone.put("di", x);
 			} else if (t.equals("esp")) {
 				long x = v % 65536;
-				clone.put("sp", x);				
+				clone.put("sp", x);
 			} else if (t.equals("ebp")) {
 				long x = v % 65536;
-				clone.put("bp", x);				
-			} 				
+				clone.put("bp", x);
+			}
 		}
 		return clone;
 	}

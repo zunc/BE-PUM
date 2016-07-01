@@ -6,7 +6,6 @@ import v2.org.analysis.complement.Convert;
 
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.stub.X86InstructionStub;
-import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
@@ -22,15 +21,11 @@ public class fsubp extends X86InstructionStub {
 		s = env.getRegister().getRegisterValue(src.toString());
 		
 		double dbOp1, dbOp2;
-		dbOp1 = d instanceof DoubleValue ?
-				((DoubleValue) d).getValue() :
-				((LongValue) d).getValue();
-		dbOp2 = s instanceof DoubleValue ?
-				((DoubleValue) s).getValue() :
-				((LongValue) s).getValue();
+		dbOp1 = Double.longBitsToDouble(((LongValue) d).getValue());
+		dbOp2 = Double.longBitsToDouble(((LongValue) s).getValue());
 		double dbRet = dbOp2 - dbOp1;
-		DoubleValue ret = new DoubleValue(dbRet);
-		System.out.println(String.format(" -> %.2f - %.2f = %.2f", dbOp1, dbOp2, ret.getValue()));
+		LongValue ret = new LongValue(Double.doubleToLongBits(dbRet));
+		System.out.println(String.format(" -> %.2f - %.2f = %.2f", dbOp2, dbOp1, dbRet));
 		env.getRegister().setRegisterValue(dest.toString(), ret);
 		env.getRegister().popFPU();
 		return null;

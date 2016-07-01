@@ -1,16 +1,15 @@
 package v2.org.analysis.transition_rule.x86instruction;
 
-import org.jakstab.asm.DataType;
 import org.jakstab.asm.Immediate;
 import org.jakstab.asm.x86.X86MemoryOperand;
 import v2.org.analysis.complement.Convert;
 
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.stub.X86InstructionStub;
-import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
+import v2.org.analysis.value.Value;
 
-public class fild extends X86InstructionStub {
+public class fdivl extends X86InstructionStub {
 
 	@Override
 	public BPState execute() {
@@ -37,22 +36,23 @@ public class fild extends X86InstructionStub {
 				d = new LongValue(env.getSystem().getSEHHandler().getStart().getAddrSEHRecord());
 				// ---------------------------------------
 			} else {
-				d = env.getMemory().getMemoryValue(DataType.INT64, t, inst);
+				d = env.getMemory().getQWordMemoryValue(t);
 			}
+
 		} else if (dest.getClass().getSimpleName().equals("X86SegmentRegister")) {
 			d = env.getRegister().getRegisterValue(dest.toString());
 		} else if (dest.getClass().getSimpleName().equals("X86FloatRegister")) {
 			d = env.getRegister().getRegisterValue(dest.toString());
 		}
-
-		// tempo use long
-		double dbVal = 0;
-		if (d instanceof LongValue) {
-			dbVal = ((LongValue) d ).getValue();
-		} if (d instanceof DoubleValue) {
-			dbVal = ((DoubleValue) d ).getValue();
-		}
-		env.getRegister().pushFPU(new DoubleValue(dbVal));
+		
+		Value st = env.getRegister().getSt();
+		double dbOp1, dbOp2;
+		dbOp1 = Double.longBitsToDouble(((LongValue) d).getValue());
+		dbOp2 = Double.longBitsToDouble(((LongValue) st).getValue());
+		double dbRet = dbOp2 != 0 ? dbOp2 / dbOp1 : 0.0;
+		LongValue ret = new LongValue(Double.doubleToLongBits(dbRet));
+		env.getRegister().setSt(ret);
+		System.out.println(String.format(" -> %.2f / %.2f = %.2f", dbOp2, dbOp1, dbRet));
 		return null;
 	}
 

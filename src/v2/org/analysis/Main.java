@@ -206,7 +206,7 @@ public class Main {
 		//path = "E:/dev/BE-PUM/asm/testcase/SampleVirus-1.exe";
 //		path = "C:/Users/Delta/Desktop/sample/Win32_MultiThread.exe";
 		path = "C:/Users/Delta/Desktop/sample/mal/emdivi.exe.bin";
-//		path = "C:/Users/Delta/Desktop/sample/hi.exe";
+//		path = "C:/Users/Delta/Desktop/sample/hic.exe";
 		isGui = false;
 		
 //		// zunc: for log

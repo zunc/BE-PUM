@@ -7,7 +7,6 @@ import v2.org.analysis.complement.Convert;
 
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.stub.X86InstructionStub;
-import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
 
 public class fld extends X86InstructionStub {
@@ -37,7 +36,7 @@ public class fld extends X86InstructionStub {
 				d = new LongValue(env.getSystem().getSEHHandler().getStart().getAddrSEHRecord());
 				// ---------------------------------------
 			} else {
-				d = env.getMemory().getMemoryValue(DataType.INT64, t, inst);
+				d = env.getMemory().getMemoryValue(t, inst);
 			}
 
 		} else if (dest.getClass().getSimpleName().equals("X86SegmentRegister")) {
@@ -45,15 +44,8 @@ public class fld extends X86InstructionStub {
 		} else if (dest.getClass().getSimpleName().equals("X86FloatRegister")) {
 			d = env.getRegister().getRegisterValue(dest.toString());
 		}
-
-		DoubleValue dvVal = new DoubleValue(0.0);
-		if (d instanceof LongValue) {
-			double dbVal = Double.longBitsToDouble(((LongValue) d).getValue());
-			dvVal = new DoubleValue(dbVal);
-		} else if (d instanceof DoubleValue) {
-			dvVal = (DoubleValue) d;
-		}
-		env.getRegister().pushFPU(dvVal);
+		System.out.println(" -> fld: " + d);
+		env.getRegister().pushFPU(d);
 		return null;
 	}
 

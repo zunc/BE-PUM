@@ -7,7 +7,6 @@ import v2.org.analysis.complement.Convert;
 
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.stub.X86InstructionStub;
-import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
 
 public class fildll extends X86InstructionStub {
@@ -39,21 +38,16 @@ public class fildll extends X86InstructionStub {
 			} else {
 				d = env.getMemory().getMemoryValue(DataType.INT64, t, inst);
 			}
-
 		} else if (dest.getClass().getSimpleName().equals("X86SegmentRegister")) {
 			d = env.getRegister().getRegisterValue(dest.toString());
 		} else if (dest.getClass().getSimpleName().equals("X86FloatRegister")) {
 			d = env.getRegister().getRegisterValue(dest.toString());
 		}
-
-		// tempo use long
-		double dbVal = 0;
-		if (d instanceof LongValue) {
-			dbVal = ((LongValue) d ).getValue();
-		} if (d instanceof DoubleValue) {
-			dbVal = ((DoubleValue) d ).getValue();
-		}
-		env.getRegister().pushFPU(new DoubleValue(dbVal));
+		System.out.println(" -> fildll: " + d);
+		
+		// int -> double -> float_int64
+		LongValue lvVal = new LongValue(Double.doubleToLongBits(((LongValue) d).getValue()));
+		env.getRegister().pushFPU(lvVal);
 		return null;
 	}
 

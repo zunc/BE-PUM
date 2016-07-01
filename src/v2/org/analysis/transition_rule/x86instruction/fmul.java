@@ -6,7 +6,6 @@ import v2.org.analysis.complement.Convert;
 
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.stub.X86InstructionStub;
-import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
@@ -38,8 +37,6 @@ public class fmul extends X86InstructionStub {
 				// ---------------------------------------
 			} else {
 				d = env.getMemory().getQWordMemoryValue(t);
-				long lngD = ((LongValue) d).getValue();
-				d = new DoubleValue(Double.longBitsToDouble(lngD));
 			}
 
 		} else if (dest.getClass().getSimpleName().equals("X86SegmentRegister")) {
@@ -50,16 +47,12 @@ public class fmul extends X86InstructionStub {
 		
 		Value st = env.getRegister().getSt();
 		double dbOp1, dbOp2;
-		dbOp1 = d instanceof DoubleValue ?
-				((DoubleValue) d).getValue() :
-				((LongValue) d).getValue();
-		dbOp2 = st instanceof DoubleValue ?
-				((DoubleValue) st).getValue() :
-				((LongValue) st).getValue();
-		double dbRet = dbOp2 != 0 ? dbOp1 * dbOp2 : 0.0;
-		DoubleValue ret = new DoubleValue(dbRet);
+		dbOp1 = Double.longBitsToDouble(((LongValue) d).getValue());
+		dbOp2 = Double.longBitsToDouble(((LongValue) st).getValue());
+		double dbRet = dbOp2 != 0 ? dbOp2 * dbOp1 : 0.0;
+		LongValue ret = new LongValue(Double.doubleToLongBits(dbRet));
 		env.getRegister().setSt(ret);
-		System.out.println(String.format(" -> %.2f * %.2f = %.2f", dbOp1, dbOp2, ret.getValue()));
+		System.out.println(String.format(" -> %.2f * %.2f = %.2f", dbOp2, dbOp1, dbRet));
 		return null;
 	}
 

@@ -7,7 +7,6 @@ import v2.org.analysis.complement.Convert;
 
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.stub.X86InstructionStub;
-import v2.org.analysis.value.DoubleValue;
 import v2.org.analysis.value.LongValue;
 import v2.org.analysis.value.Value;
 
@@ -27,9 +26,7 @@ public class fstps extends X86InstructionStub {
 		} else if (dest.getClass().getSimpleName().equals("Immediate")) {
 			;
 		} else if (dest.getClass().getSimpleName().equals("X86MemoryOperand")) {
-			DoubleValue dvVal = (DoubleValue) val;
-			long lngVal = Double.doubleToLongBits(dvVal.getValue());
-			env.getMemory().setMemoryValue(DataType.INT64, (X86MemoryOperand) dest, new LongValue(lngVal), inst);
+			env.getMemory().setMemoryValue((X86MemoryOperand) dest, val, inst);
 		}
 		return null;
 	}

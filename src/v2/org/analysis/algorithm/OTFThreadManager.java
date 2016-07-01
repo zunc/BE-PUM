@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import v2.org.analysis.AnalysisEmdivi;
 
 import v2.org.analysis.algorithm.OTFModelGeneration.OTFThread;
 import v2.org.analysis.log.BPLogger;
@@ -186,6 +187,7 @@ public class OTFThreadManager {
 				BPPath path = pathList.remove(pathList.size() - 1);
 
 				OTFThread thread = otfModelGeneration.new OTFThread(path);
+				thread.setInteractive(new AnalysisEmdivi(otfModelGeneration.getProgram()));
 				thread.start();
 				BPLogger.debugLogger.info(String
 						.format("[OTFThreadManager] START location:%s,numOfCurrentThreads:%d/%d", path

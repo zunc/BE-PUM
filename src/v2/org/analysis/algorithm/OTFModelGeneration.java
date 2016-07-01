@@ -17,6 +17,7 @@ import org.jakstab.asm.Instruction;
  *
  */
 import org.jakstab.asm.x86.X86CondJmpInstruction;
+import v2.org.analysis.IInteractive;
 
 import v2.org.analysis.algorithm.OTFThreadManager.OTFThreadBase;
 import v2.org.analysis.cfg.BPCFG;
@@ -57,6 +58,10 @@ public class OTFModelGeneration implements Algorithm {
 		this.program = program;
 	}
 
+	public Program getProgram() {
+		return program;
+	}
+	
 	@Override
 	public void run() {
 		overallStartTime = System.currentTimeMillis();
@@ -141,6 +146,7 @@ public class OTFModelGeneration implements Algorithm {
 		Instruction inst = null;
 		AbsoluteAddress location = null;
 		int numAddStop = 0;
+		IInteractive dynamicAnalysis = null;
 
 		public OTFThread(BPPath bpPath) {
 			this.pathList.add(bpPath);
@@ -148,6 +154,10 @@ public class OTFModelGeneration implements Algorithm {
 			this.curState = path.getCurrentState();
 			this.inst = this.curState.getInstruction();
 			this.location = this.curState.getLocation();
+		}
+		
+		public void setInteractive(IInteractive inter) {
+			dynamicAnalysis = inter;
 		}
 
 		@Override
@@ -185,18 +195,6 @@ public class OTFModelGeneration implements Algorithm {
 					inst = curState.getInstruction();
 					location = curState.getLocation();
 
-					Register reg = curState.getEnvironement().getRegister();
-					Memory memory = curState.getEnvironement().getMemory();
-					// Value val = memory.getQWordMemoryValue(0x440dd0);
-					// double db = Double.longBitsToDouble(((LongValue)val).getValue());
-					// zunc: log to debug
-					if (location != null) {
-						AbsoluteAddress addr = new AbsoluteAddress(location.getValue());
-						String strInst = String.format("0x%s\t%s",
-								Long.toHexString(location.getValue()), program.getInstructionString(addr));
-						System.out.println(strInst);
-					}
-
 					if (inst != null && inst.getName().contains("addb")
 							&& inst.getOperand(0) != null && inst.getOperand(0).toString().contains("eax")
 							&& inst.getOperand(1) != null && inst.getOperand(1).toString().contains("al")) {
@@ -220,6 +218,13 @@ public class OTFModelGeneration implements Algorithm {
 					}
 					path.addTrace(curState.getLocation());
 
+					if (dynamicAnalysis != null) {
+						IInteractive.ACTION_OP op = dynamicAnalysis.onInstruction(rule, path, pathList);
+						if (op == IInteractive.ACTION_OP.PASS) {
+							continue;
+						}
+					}
+					
 					if (inst instanceof X86CondJmpInstruction) {
 						rule.getNewState((X86CondJmpInstruction) inst, path, pathList);
 						if (!curState.checkFeasiblePath()) {
