@@ -48,6 +48,10 @@ public class LongValue implements Value {
 		return value;
 	}
 
+	public void setValue(long val) {
+		value = val;
+	}
+	
 	@Override
 	public String toString() {
 		return Convert.longToHex(value) + "";

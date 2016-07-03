@@ -5,13 +5,11 @@
  */
 package v2.org.analysis;
 
-import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Random;
 import org.jakstab.Program;
 import org.jakstab.asm.AbsoluteAddress;
 import org.jakstab.asm.Instruction;
-import org.jakstab.asm.x86.X86Instruction;
 import v2.org.analysis.cfg.BPCFG;
 import v2.org.analysis.cfg.BPVertex;
 import v2.org.analysis.environment.Environment;
@@ -21,8 +19,6 @@ import v2.org.analysis.environment.Stack;
 import v2.org.analysis.path.BPPath;
 import v2.org.analysis.path.BPState;
 import v2.org.analysis.transition_rule.X86TransitionRule;
-import v2.org.analysis.transition_rule.stub.AssemblyInstructionStub;
-import v2.org.analysis.value.BooleanValue;
 import v2.org.analysis.value.LongValue;
 
 /**

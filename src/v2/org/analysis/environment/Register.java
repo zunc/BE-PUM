@@ -18,7 +18,12 @@ import com.twmacinta.util.MD5;
  * 
  */
 public class Register {
-	public Value eax, ebx, ecx, edx, esi, edi, esp, ebp, eip, ax, ah, al, bx, bh, bl, cx, ch, cl, dx, dh, dl, si, di,
+	public Value eax, ebx, ecx, edx, esi, edi, esp, ebp, eip,
+//			ax, ah, al,
+//			bx, bh, bl,
+//			cx, ch, cl,
+//			dx, dh, dl,
+			si, di,
 			sp, bp, ds, es, fs, cs, ss, gs;
 
 	private Value dr0, dr1, dr2, dr3, dr4, dr5, dr6, dr7;
@@ -31,24 +36,24 @@ public class Register {
 	public Register clone() {
 		Register ret = new Register();
 		ret.setRegisterValue("eax", eax.clone());
-		ret.setRegisterValue("ax", ax.clone());
-		ret.setRegisterValue("ah", ah.clone());
-		ret.setRegisterValue("al", al.clone());
+//		ret.setRegisterValue("ax", ax.clone());
+//		ret.setRegisterValue("ah", ah.clone());
+//		ret.setRegisterValue("al", al.clone());
 
 		ret.setRegisterValue("ebx", ebx.clone());
-		ret.setRegisterValue("bx", bx.clone());
-		ret.setRegisterValue("bh", bh.clone());
-		ret.setRegisterValue("bl", bl.clone());
+//		ret.setRegisterValue("bx", bx.clone());
+//		ret.setRegisterValue("bh", bh.clone());
+//		ret.setRegisterValue("bl", bl.clone());
 
 		ret.setRegisterValue("ecx", ecx.clone());
-		ret.setRegisterValue("cx", cx.clone());
-		ret.setRegisterValue("ch", ch.clone());
-		ret.setRegisterValue("cl", cl.clone());
+//		ret.setRegisterValue("cx", cx.clone());
+//		ret.setRegisterValue("ch", ch.clone());
+//		ret.setRegisterValue("cl", cl.clone());
 
 		ret.setRegisterValue("edx", edx.clone());
-		ret.setRegisterValue("dx", dx.clone());
-		ret.setRegisterValue("dh", dh.clone());
-		ret.setRegisterValue("dl", dl.clone());
+//		ret.setRegisterValue("dx", dx.clone());
+//		ret.setRegisterValue("dh", dh.clone());
+//		ret.setRegisterValue("dl", dl.clone());
 
 		ret.setRegisterValue("esi", esi.clone());
 		ret.setRegisterValue("si", si.clone());
@@ -103,24 +108,24 @@ public class Register {
 
 	public Register() {
 		eax = new SymbolValue("eax");
-		ax = new SymbolValue("ax");
-		ah = new SymbolValue("ah");
-		al = new SymbolValue("al");
+//		ax = new SymbolValue("ax");
+//		ah = new SymbolValue("ah");
+//		al = new SymbolValue("al");
 
 		ebx = new SymbolValue("ebx");
-		bx = new SymbolValue("bx");
-		bh = new SymbolValue("bh");
-		bl = new SymbolValue("bl");
+//		bx = new SymbolValue("bx");
+//		bh = new SymbolValue("bh");
+//		bl = new SymbolValue("bl");
 
 		ecx = new SymbolValue("ecx");
-		cx = new SymbolValue("cx");
-		ch = new SymbolValue("ch");
-		cl = new SymbolValue("cl");
+//		cx = new SymbolValue("cx");
+//		ch = new SymbolValue("ch");
+//		cl = new SymbolValue("cl");
 
 		edx = new SymbolValue("edx");
-		dx = new SymbolValue("dx");
-		dh = new SymbolValue("dh");
-		dl = new SymbolValue("dl");
+//		dx = new SymbolValue("dx");
+//		dh = new SymbolValue("dh");
+//		dl = new SymbolValue("dl");
 
 		esi = new SymbolValue("esi");
 		si = new SymbolValue("si");
@@ -163,6 +168,75 @@ public class Register {
 		st = new FPUStack();
 	}
 	
+	private static int BIT_WORD = 16;
+	private static int BIT_BYTE = 8;
+	private static int MAX_WORD = 0xffff;
+	private static int MAX_BYTE = 0xff;
+	
+	private Value getHighWord(Value v) {
+		if (v instanceof LongValue) {
+			long lngValue = ((LongValue) v).getValue();
+			long ret = (lngValue >> BIT_WORD) & MAX_WORD;
+//			System.out.println(" - getHighWord: " + Long.toBinaryString(lngValue) + "  -> " + Long.toBinaryString(ret));
+			return new LongValue(ret);
+		}
+		return v;
+	}
+	
+	private Value getHighByte(Value v) {
+		if (v instanceof LongValue) {
+			long lngValue = ((LongValue) v).getValue();
+			long ret = lngValue >> BIT_BYTE & MAX_BYTE;
+//			System.out.println(" - getHighByte: " + Long.toBinaryString(lngValue) + "  -> " + Long.toBinaryString(ret));
+			return new LongValue(ret);
+		}
+		return v;
+	}
+	
+	private Value getLowByte(Value v) {
+		if (v instanceof LongValue) {
+			long lngValue = ((LongValue) v).getValue();
+			long ret = lngValue & MAX_BYTE;
+//			System.out.println(" - getLowByte: " + Long.toBinaryString(lngValue) + "  -> " + Long.toBinaryString(ret));
+			return new LongValue(ret);
+		}
+		return v;
+	}
+	
+	private void setHighWord(Value v, long word) {
+		if (v instanceof LongValue) {
+			long lngValue = ((LongValue) v).getValue();
+			long ret = lngValue & 0xffff | (word << BIT_WORD & 0xffff0000);
+//			System.out.println(" - setHighWord: " + Long.toBinaryString(lngValue)
+//					+ " + " + Long.toBinaryString(word)
+//					+ "  -> " + Long.toBinaryString(ret));
+			((LongValue) v).setValue(ret);
+		}
+	}
+	
+	private void setHighByte(Value v, long bVal) {
+		if (v instanceof LongValue) {
+			long lngValue = ((LongValue) v).getValue();
+			long lowByte = lngValue & MAX_BYTE;
+			long ret = lngValue & 0xffff00ff | (bVal << BIT_BYTE & 0xff00);
+//			System.out.println(" - setHighByte: " + Long.toBinaryString(lngValue)
+//					+ " + " + Long.toBinaryString(bVal)
+//					+ "  -> " + Long.toBinaryString(ret));
+			((LongValue) v).setValue(ret);
+		}
+	}
+	
+	private void setLowByte(Value v, long bVal) {
+		if (v instanceof LongValue) {
+			long lngValue = ((LongValue) v).getValue();
+			long ret = lngValue & 0xffffff00 | bVal;
+//			System.out.println(" - setLowByte: " + Long.toBinaryString(lngValue)
+//					+ " + " + Long.toBinaryString(bVal)
+//					+ "  -> " + Long.toBinaryString(ret));
+			((LongValue) v).setValue(ret);
+		}
+	}
+	
 	public Value getRegisterValue(String registerName) {
 		String reg = checkRegisterName(registerName);
 
@@ -170,52 +244,52 @@ public class Register {
 			return eax;
 		}
 		if (reg.equals("ax")) {
-			return ax;
+			return getHighWord(eax);
 		}
 		if (reg.equals("ah")) {
-			return ah;
+			return getHighByte(eax);
 		}
 		if (reg.equals("al")) {
-			return al;
+			return getLowByte(eax);
 		}
 
 		if (reg.equals("ebx")) {
 			return ebx;
 		}
 		if (reg.equals("bx")) {
-			return bx;
+			return getHighWord(ebx);
 		}
 		if (reg.equals("bh")) {
-			return bh;
+			return getHighByte(ebx);
 		}
 		if (reg.equals("bl")) {
-			return bl;
+			return getLowByte(ebx);
 		}
 
 		if (reg.equals("ecx")) {
 			return ecx;
 		}
 		if (reg.equals("cx")) {
-			return cx;
+			return getHighWord(ecx);
 		}
 		if (reg.equals("ch")) {
-			return ch;
+			return getHighByte(ecx);
 		}
 		if (reg.equals("cl")) {
-			return cl;
+			return getLowByte(ecx);
 		}
 
 		if (reg.equals("edx")) {
 			return edx;
 		}
 		if (reg.equals("dx")) {
-			return dx;
+			return getHighWord(edx);
 		}
 		if (reg.equals("dh")) {
-			return dh;
+			return getHighByte(edx);
 		}
 		if (reg.equals("dl")) {
-			return dl;
+			return getLowByte(edx);
 		}
 
 		if (reg.equals("esi")) {
@@ -399,6 +473,7 @@ public class Register {
 
 		if (v instanceof LongValue) {
 			long p = ((LongValue) v).getValue();
+			long lngVal = ((LongValue) v).getValue();
 			if (reg.equals("bp")) {
 				bp = v;
 				Value t = getRegisterValue("ebp");
@@ -432,197 +507,64 @@ public class Register {
 					edi = new LongValue((long) (t2 * Math.pow(2, 16) + p));
 				}
 			} else if (reg.equals("ax")) {
-				ax = v;
 				Value t = getRegisterValue("eax");
-				ah = new LongValue((long) (p / Math.pow(2, 8)));
-				al = new LongValue((long) (p % Math.pow(2, 8)));
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					eax = new LongValue((long) (t1 * Math.pow(2, 16) + p));
+					setHighWord(eax, lngVal);
 				}
 			} else if (reg.equals("ah")) {
-				ah = v;
 				Value t = getRegisterValue("eax");
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					long t2 = h % (long) Math.pow(2, 16);
-					long t3 = t2 % (long) Math.pow(2, 8);
-					ax = new LongValue((long) (p * Math.pow(2, 8) + t3));
-					// al = new LongValue(t3);
-					eax = new LongValue((long) (t1 * Math.pow(2, 16) + p * Math.pow(2, 8) + t3));
-				} else {
-					Value g = getRegisterValue("al");
-
-					if (g instanceof LongValue) {
-						long al = ((LongValue) g).getValue();
-						ax = new LongValue((long) (p * Math.pow(2, 8) + al));
-					}
+					setHighByte(eax, lngVal);
 				}
 			} else if (reg.equals("al")) {
-				p = p & 0xFF;
-				al = new LongValue(p);
 				Value t = getRegisterValue("eax");
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 8));
-					long t2 = (long) (t1 % Math.pow(2, 8));
-					ax = new LongValue((long) (t2 * Math.pow(2, 8) + p));
-					eax = new LongValue((long) (t1 * Math.pow(2, 8) + p));
-				} else {
-					Value g = getRegisterValue("ah");
-
-					if (g instanceof LongValue) {
-						long ah = ((LongValue) g).getValue();
-						ax = new LongValue((long) (ah * Math.pow(2, 8) + p));
-					}
+					setLowByte(eax, lngVal);
 				}
 			} else if (reg.equals("bx")) {
-				bx = v;
 				Value t = getRegisterValue("ebx");
-				bh = new LongValue((long) (p / Math.pow(2, 8)));
-				bl = new LongValue((long) (p % Math.pow(2, 8)));
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					ebx = new LongValue((long) (t1 * Math.pow(2, 16) + p));
+					setHighWord(ebx, lngVal);
 				}
 			} else if (reg.equals("bh")) {
-				bh = v;
 				Value t = getRegisterValue("ebx");
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					long t2 = h % (long) Math.pow(2, 16);
-					long t3 = t2 % (long) Math.pow(2, 8);
-					bx = new LongValue((long) (p * Math.pow(2, 8) + t3));
-					// al = new LongValue(t3);
-					ebx = new LongValue((long) (t1 * Math.pow(2, 16) + p * Math.pow(2, 8) + t3));
-				} else {
-					Value g = getRegisterValue("bl");
-
-					if (g instanceof LongValue) {
-						long bl = ((LongValue) g).getValue();
-						bx = new LongValue((long) (p * Math.pow(2, 8) + bl));
-					}
+					setHighByte(ebx, lngVal);
 				}
 			} else if (reg.equals("bl")) {
-				bl = v;
 				Value t = getRegisterValue("ebx");
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 8));
-					long t2 = (long) (t1 % Math.pow(2, 8));
-					bx = new LongValue((long) (t2 * Math.pow(2, 8) + p));
-					ebx = new LongValue((long) (t1 * Math.pow(2, 8) + p));
-				} else {
-					Value g = getRegisterValue("bh");
-
-					if (g instanceof LongValue) {
-						long bh = ((LongValue) g).getValue();
-						bx = new LongValue((long) (bh * Math.pow(2, 8) + p));
-					}
+					setLowByte(ebx, lngVal);
 				}
 			} else if (reg.equals("cx")) {
-				cx = v;
 				Value t = getRegisterValue("ecx");
-				ch = new LongValue((long) (p / Math.pow(2, 8)));
-				cl = new LongValue((long) (p % Math.pow(2, 8)));
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					ecx = new LongValue((long) (t1 * Math.pow(2, 16) + p));
+					setHighWord(ecx, lngVal);
 				}
 			} else if (reg.equals("ch")) {
-				ch = v;
 				Value t = getRegisterValue("ecx");
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					long t2 = h % (long) Math.pow(2, 16);
-					long t3 = t2 % (long) Math.pow(2, 8);
-					cx = new LongValue((long) (p * Math.pow(2, 8) + t3));
-					// al = new LongValue(t3);
-					ecx = new LongValue((long) (t1 * Math.pow(2, 16) + p * Math.pow(2, 8) + t3));
-				} else {
-					Value g = getRegisterValue("cl");
-
-					if (g instanceof LongValue) {
-						long cl = ((LongValue) g).getValue();
-						cx = new LongValue((long) (p * Math.pow(2, 8) + cl));
-					}
+					setHighByte(ecx, lngVal);
 				}
 			} else if (reg.equals("cl")) {
-				cl = v;
 				Value t = getRegisterValue("ecx");
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 8));
-					long t2 = (long) (t1 % Math.pow(2, 8));
-					cx = new LongValue((long) (t2 * Math.pow(2, 8) + p));
-					ecx = new LongValue((long) (t1 * Math.pow(2, 8) + p));
-				} else {
-					Value g = getRegisterValue("ch");
-
-					if (g instanceof LongValue) {
-						long ch = ((LongValue) g).getValue();
-						cx = new LongValue((long) (ch * Math.pow(2, 8) + p));
-					}
+					setLowByte(ecx, lngVal);
 				}
 			} else if (reg.equals("dx")) {
-				dx = v;
 				Value t = getRegisterValue("edx");
-				dh = new LongValue((long) (p / Math.pow(2, 8)));
-				dl = new LongValue((long) (p % Math.pow(2, 8)));
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					edx = new LongValue((long) (t1 * Math.pow(2, 16) + p));
+					setHighWord(edx, lngVal);
 				}
 			} else if (reg.equals("dh")) {
-				dh = v;
 				Value t = getRegisterValue("edx");
-
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 16));
-					long t2 = h % (long) Math.pow(2, 16);
-					long t3 = t2 % (long) Math.pow(2, 8);
-					dx = new LongValue((long) (p * Math.pow(2, 8) + t3));
-					// al = new LongValue(t3);
-					edx = new LongValue((long) (t1 * Math.pow(2, 16) + p * Math.pow(2, 8) + t3));
-				} else {
-					Value g = getRegisterValue("dl");
-
-					if (g instanceof LongValue) {
-						long dl = ((LongValue) g).getValue();
-						dx = new LongValue((long) (p * Math.pow(2, 8) + dl));
-					}
+					setHighByte(edx, lngVal);
 				}
 			} else if (reg.equals("dl")) {
-				dl = v;
 				Value t = getRegisterValue("edx");
 				if (t instanceof LongValue) {
-					long h = ((LongValue) t).getValue();
-					long t1 = (long) (h / Math.pow(2, 8));
-					long t2 = (long) (t1 % Math.pow(2, 8));
-					dx = new LongValue((long) (t2 * Math.pow(2, 8) + p));
-					edx = new LongValue((long) (t1 * Math.pow(2, 8) + p));
-				} else {
-					Value g = getRegisterValue("dh");
-
-					if (g instanceof LongValue) {
-						long dh = ((LongValue) g).getValue();
-						dx = new LongValue((long) (dh * Math.pow(2, 8) + p));
-					}
+					setLowByte(edx, lngVal);
 				}
 			} else if (reg.equals("esi")) {
 				si = new LongValue(p % (long) Math.pow(2, 16));
@@ -637,28 +579,12 @@ public class Register {
 				sp = new LongValue(p % (long) Math.pow(2, 16));
 				esp = v;
 			} else if (reg.equals("eax")) {
-				long t = p % (long) Math.pow(2, 16);
-				ax = new LongValue(t);
-				ah = new LongValue(t / (long) Math.pow(2, 8));
-				al = new LongValue(t % (long) Math.pow(2, 8));
 				eax = v;
 			} else if (reg.equals("ebx")) {
-				long t = p % (long) Math.pow(2, 16);
-				bx = new LongValue(t);
-				bh = new LongValue(t / (long) Math.pow(2, 8));
-				bl = new LongValue(t % (long) Math.pow(2, 8));
 				ebx = v;
 			} else if (reg.equals("ecx")) {
-				long t = p % (long) Math.pow(2, 16);
-				cx = new LongValue(t);
-				ch = new LongValue(t / (long) Math.pow(2, 8));
-				cl = new LongValue(t % (long) Math.pow(2, 8));
 				ecx = v;
 			} else if (reg.equals("edx")) {
-				long t = p % (long) Math.pow(2, 16);
-				dx = new LongValue(t);
-				dh = new LongValue(t / (long) Math.pow(2, 8));
-				dl = new LongValue(t % (long) Math.pow(2, 8));
 				edx = v;
 			}
 		} else {
@@ -670,14 +596,15 @@ public class Register {
 				// ah = ax.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("ax")) {
-				ax = v;
+				System.out.println("wtf. ax register");
+				//ax = v;
 				// al = ax.modFunction(new LongValue((long) Math.pow(2, 8)));
 				// ah = ax.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("ah")) {
-				ah = v;
+				System.out.println("wtf. ah register");
 			} else if (reg.equals("al")) {
-				al = v;
+				System.out.println("wtf. al register");
 			} else if (reg.equals("ebx")) {
 				ebx = v;
 				// bx = v.modFunction(new LongValue((long) Math.pow(2, 16)));
@@ -685,14 +612,14 @@ public class Register {
 				// bh = bx.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("bx")) {
-				bx = v;
+				System.out.println("wtf. bx register");
 				// bl = bx.modFunction(new LongValue((long) Math.pow(2, 8)));
 				// bh = bx.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("bh")) {
-				bh = v;
+				System.out.println("wtf. bh register");
 			} else if (reg.equals("bl")) {
-				bl = v;
+				System.out.println("wtf. bl register");
 			} else if (reg.equals("ecx")) {
 				ecx = v;
 				// cx = v.modFunction(new LongValue((long) Math.pow(2, 16)));
@@ -700,14 +627,14 @@ public class Register {
 				// ch = cx.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("cx")) {
-				cx = v;
+				System.out.println("wtf. cx register");
 				// cl = cx.modFunction(new LongValue((long) Math.pow(2, 8)));
 				// ch = cx.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("ch")) {
-				ch = v;
+				System.out.println("wtf. ch register");
 			} else if (reg.equals("cl")) {
-				cl = v;
+				System.out.println("wtf. cl register");
 			} else if (reg.equals("edx")) {
 				edx = v;
 				// dx = v.modFunction(new LongValue((long) Math.pow(2, 16)));
@@ -715,14 +642,14 @@ public class Register {
 				// dh = dx.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("dx")) {
-				dx = v;
+				System.out.println("wtf. dx register");
 				// dl = dx.modFunction(new LongValue((long) Math.pow(2, 8)));
 				// dh = dx.unsignedDivFunction(new LongValue((long) Math.pow(2,
 				// 8)));
 			} else if (reg.equals("dh")) {
-				dh = v;
+				System.out.println("wtf. dh register");
 			} else if (reg.equals("dl")) {
-				dl = v;
+				System.out.println("wtf. dl register");
 			} else if (reg.equals("esi")) {
 				esi = v;
 				// si = v.modFunction(new LongValue((long) Math.pow(2, 16)));
@@ -1080,14 +1007,10 @@ public class Register {
 		// TODO Auto-generated method stub
 		System.out.println("Information of Register:");
 		// String []reg = new String[] {"eax", "ebx", "ecx", "edx"};
-		System.out.println("eax:" + eax.toString() + " ax:" + ax.toString() + " ah:" + ah.toString() + " al:"
-				+ al.toString());
-		System.out.println("ebx:" + ebx.toString() + " bx:" + bx.toString() + " bh:" + bh.toString() + " bl:"
-				+ bl.toString());
-		System.out.println("ecx:" + ecx.toString() + " cx:" + cx.toString() + " ch:" + ch.toString() + " cl:"
-				+ cl.toString());
-		System.out.println("edx:" + edx.toString() + " dx:" + dx.toString() + " dh:" + dh.toString() + " dl:"
-				+ dl.toString());
+		System.out.println("eax:" + eax.toString());
+		System.out.println("ebx:" + ebx.toString());
+		System.out.println("ecx:" + ecx.toString());
+		System.out.println("edx:" + edx.toString());
 
 		System.out.println("esi:" + esi.toString() + " si:" + si.toString());
 		System.out.println("edi:" + edi.toString() + " di:" + di.toString());
@@ -1581,24 +1504,24 @@ public class Register {
 	public void reset() {
 		// TODO Auto-generated method stub
 		eax = new SymbolValue("eax");
-		ax = new SymbolValue("ax");
-		ah = new SymbolValue("ah");
-		al = new SymbolValue("al");
+//		ax = new SymbolValue("ax");
+//		ah = new SymbolValue("ah");
+//		al = new SymbolValue("al");
 
 		ebx = new SymbolValue("ebx");
-		bx = new SymbolValue("bx");
-		bh = new SymbolValue("bh");
-		bl = new SymbolValue("bl");
+//		bx = new SymbolValue("bx");
+//		bh = new SymbolValue("bh");
+//		bl = new SymbolValue("bl");
 
 		ecx = new SymbolValue("ecx");
-		cx = new SymbolValue("cx");
-		ch = new SymbolValue("ch");
-		cl = new SymbolValue("cl");
+//		cx = new SymbolValue("cx");
+//		ch = new SymbolValue("ch");
+//		cl = new SymbolValue("cl");
 
 		edx = new SymbolValue("edx");
-		dx = new SymbolValue("dx");
-		dh = new SymbolValue("dh");
-		dl = new SymbolValue("dl");
+//		dx = new SymbolValue("dx");
+//		dh = new SymbolValue("dh");
+//		dl = new SymbolValue("dl");
 
 		esi = new SymbolValue("esi");
 		si = new SymbolValue("si");
